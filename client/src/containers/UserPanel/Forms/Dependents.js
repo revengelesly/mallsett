@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
-import { Form, Icon, Input, Button, Select } from 'antd';
+import { Upload, message, Form, Icon, Input, Button, Select } from 'antd';
 import axios from 'axios';
+const Dragger = Upload.Dragger;
+
 const { Option, OptGroup } = Select;
 const primaryType = ['Family', 'Friends', 'Pet Animal', 'Others'];
 const secondaryType = {
@@ -10,7 +12,21 @@ const secondaryType = {
   Others: ['Others']
 };
 const { TextArea } = Input;
-
+const uploadProps = {
+  name: 'file',
+  action: '//jsonplaceholder.typicode.com/posts/',
+  onChange(info) {
+    const status = info.file.status;
+    if (status !== 'uploading') {
+      console.log(info.file, info.fileList);
+    }
+    if (status === 'done') {
+      message.success(`${info.file.name} file uploaded successfully.`);
+    } else if (status === 'error') {
+      message.error(`${info.file.name} file upload failed.`);
+    }
+  },
+};
 
 const FormItem = Form.Item;
 function handleSpecialConsiderationChange(value) {
@@ -80,10 +96,13 @@ class SettingsUserForm extends Component {
     };
     return (
 <div>
-  <Form onSubmit={this.handleSubmit} className="login-form">
-  <FormItem label="Fullname" {...formItemLayout} >
-    {getFieldDecorator('fullname', {
-    rules: [{ required: true, message: 'please enter your dependent full name' }],
+
+
+<Form onSubmit={this.handleSubmit} className="login-form">
+  
+  <FormItem label="User Code" {...formItemLayout} >
+    {getFieldDecorator('User Code', {
+    rules: [{ required: true, message: 'please enter you user code' }],
     })(
       <Input autocomplete='name' prefix={<Icon type="user-add" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="Enter dependent name here" />
     )}
@@ -135,16 +154,63 @@ class SettingsUserForm extends Component {
     {getFieldDecorator('short bio', {
     rules: [{ required: false, message: 'Please input your Password!' }],
     })(
-      <TextArea row={5} prefix={<Icon type="edit" style={{ color: 'rgba(0,0,0,.25)' }} />} type="password" placeholder="Tell us a little bit about your dependent. Teachers, Merchants, and others will be able to better assist your dependent" />
+      <TextArea row={6} prefix={<Icon type="edit" style={{ color: 'rgba(0,0,0,.25)' }} />} type="password" placeholder="Tell us a little bit about your dependent. Teachers, Merchants, and others will be able to better assist your dependent" />
     )}
   </FormItem>
-    <FormItem >
+  <FormItem  {...formItemLayout} label="Photo for Receiving" >
+    <Dragger {...uploadProps}>
+      <p className="ant-upload-drag-icon">
+        <Icon type="inbox" />
+      </p>
+      <p className="ant-upload-text">Click or drag file to this area to upload</p>
+      <p className="ant-upload-hint">Please upload one file at a time. We are strict on organization.</p>
+    </Dragger>
+    Not Required.
+  </FormItem>
+   <FormItem label="Location" {...formItemLayout} >
+    {getFieldDecorator('Add Delivery Location', {
+    rules: [{ required: false, message: 'Add delivery Address for dependent' }],
+    })(
+    <Select
+    defaultValue=""
+    mode="multiple"
+    style={{ width: "100%" }}
+    onChange={handleSpecialConsiderationChange}
+  >
+      <Option value="2">1280 NW 9999 Street</Option>
+      <Option value="3">4111 NW 9999 Street</Option>
+    
+  </Select>
+    )}
+        <p>add new location? <a href="#"> Add New </a></p>
+
+  </FormItem>
+  <FormItem label="Files" {...formItemLayout} >
+    {getFieldDecorator('Add Files ', {
+    rules: [{ required: false, message: 'Add a file for dependent' }],
+    })(
+    <Select
+    defaultValue=""
+    mode="multiple"
+    style={{ width: "100%" }}
+    onChange={handleSpecialConsiderationChange}
+  >
+      <Option value="2">File name 1</Option>
+      <Option value="3">file name 2</Option>
+    
+  </Select>
+    )}
+        <p>add new file? <a href="#"> Add New </a></p>
+
+  </FormItem>
+    <FormItem label="." {...formItemLayout} >
     
       <Button type="primary" style={{ width: '100%'}} onClick={this.check} htmlType="submit" className="login-form-button">
       Add Dependent
       </Button>
     </FormItem>
   </Form>
+
 </div>
     );
   }

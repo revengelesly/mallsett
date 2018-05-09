@@ -8,9 +8,13 @@ import RegisterUser from './Forms/RegisterUser';
 import LoginUser from './Forms/LoginUser';
 import RequestUserPassword from './Forms/RequestUserPassword';
 import SettingsUser from './Forms/SettingsUser';
-import ItemUser from './Lists/ItemUser';
+import WrapAboutUsItems from './Lists/WrapAboutUsItems';
+import WrapLocationItems from './Lists/WrapLocationItems';
+import WrapFileItems from './Lists/WrapFileItems';
+import WrapDependentItems from './Lists/WrapDependentItems';
 import Dependents from './Forms/Dependents';
 import Location from './Forms/Location';
+import FileManagement from './Forms/FileManagement';
 
 import TabsComponents from '../Topbar/tabsComponents';
 
@@ -24,7 +28,7 @@ export default class UserPanel extends Component {
           icon: "usergroup-add",
           nav: "Add Dependents",
           form:  <Dependents />,
-          item: <ItemUser />,
+          item: <WrapDependentItems />,
           formWidth: "12",
           itemWidth: '12'
         }      ,    
@@ -33,7 +37,16 @@ export default class UserPanel extends Component {
           icon: "environment-o",
           nav: "Delivery Locations",
           form:  <Location />,
-          item: <ItemUser />,
+          item: <WrapLocationItems />,
+          formWidth: "12",
+          itemWidth: '12'
+        }  ,
+        {
+          header: "Files and Documents Management",
+          icon: "paper-clip",
+          nav: "Files and Documents",
+          form:  <FileManagement />,
+          item: <WrapFileItems />,
           formWidth: "12",
           itemWidth: '12'
         }  ,
@@ -43,7 +56,7 @@ export default class UserPanel extends Component {
           nav: "Register",
           header: "Register",
           form:  <RegisterUser />,
-          item: <ItemUser />,
+          item: <WrapAboutUsItems />,
           formWidth: "12",
           itemWidth: '12'
         },
@@ -52,7 +65,7 @@ export default class UserPanel extends Component {
           icon: "unlock",
           header: "Login",
           form:  <LoginUser />,
-          item: <ItemUser />,
+          item: <WrapAboutUsItems />,
           formWidth: "12",
           itemWidth: '12'
         } ,
@@ -61,7 +74,7 @@ export default class UserPanel extends Component {
           icon: "question-circle-o",
           nav: "Forgot Password",
           form:  <RequestUserPassword />,
-          item: <ItemUser />,
+          item: <WrapAboutUsItems />,
           formWidth: "12",
           itemWidth: '12'
         } ,
@@ -70,7 +83,7 @@ export default class UserPanel extends Component {
           icon: "tool",
           nav: "Account Settings",
           form:  <SettingsUser />,
-          item: <ItemUser />,
+          item: <WrapAboutUsItems />,
           formWidth: "12",
           itemWidth: '12'
         } 

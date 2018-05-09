@@ -11,6 +11,10 @@ const FormItem = Form.Item;
 function handleProfileChange(value) {
   console.log(`selected ${value}`);
 }
+
+function handleLocationTypeChange(value) {
+  console.log(`selected ${value}`);
+}
 class SettingsUserForm extends Component {
   state = {
     checkDob: false,
@@ -49,39 +53,49 @@ class SettingsUserForm extends Component {
   }
   render() {
     const { getFieldDecorator } = this.props.form;
+    const formItemLayout = {
+      labelCol: {
+        xs: { span: 24 },
+        sm: { span: 8 },
+      },
+      wrapperCol: {
+        xs: { span: 24 },
+        sm: { span: 16 },
+      },
+    };
+    
     return (
 <div>
   <Form onSubmit={this.handleSubmit} className="login-form">
-  <FormItem>
+  <FormItem label="Enter Full Address"  {...formItemLayout} >
     {getFieldDecorator('address', {
     rules: [{ required: true, message: 'address' }],
     })(
       <Input autocomplete='address' prefix={<Icon type="environment-o" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="Enter Location Here" />
     )}
   </FormItem>
-  <FormItem>
+  <FormItem label="Apt or Suite"  {...formItemLayout} >
     {getFieldDecorator('apt', {
     rules: [{ required: false, message: 'Add apt. here!' }],
     })(
       <Input prefix={<Icon type="pushpin-o" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="Apartment or Suite" />
     )}
   </FormItem>
-  <FormItem>
+  <FormItem label="Phone Number"  {...formItemLayout} >
     {getFieldDecorator('phone', {
     rules: [{ required: false, message: 'Please input your phone!' }],
     })(
       <Input prefix={<Icon type="phone" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="Phone Number" />
     )}
   </FormItem>
-  <FormItem>
+  <FormItem label="Special Notes"  {...formItemLayout} >
     {getFieldDecorator('Notes', {
     rules: [{ required: false, message: 'Special notes for delivery drivers' }],
     })(
       <TextArea row={2} prefix={<Icon type="edit" style={{ color: 'rgba(0,0,0,.25)' }} />} type="text" placeholder="Leave a note for delivery services" />
     )}
   </FormItem>
-  <FormItem>
-  Who does this address belongs to?
+  <FormItem label="Owner"  {...formItemLayout} >
     {getFieldDecorator('profile', {
     rules: [{ required: true, message: 'Who does this address belongs to?' }],
     })(
@@ -107,10 +121,29 @@ class SettingsUserForm extends Component {
     <Option value="self"><b>ADD NEW DEPENDENT</b></Option>
   </Select>
     )}
+     Click here to add new dependent or spouse <a href="#">Add New </a>
   </FormItem>
-    <FormItem >
+  <FormItem label="Address Type" {...formItemLayout} >
+    {getFieldDecorator('Add Delivery Location', {
+    rules: [{ required: false, message: 'Add delivery Address for dependent' }],
+    })(
+    <Select
+    defaultValue=""
+    mode="multiple"
+    style={{ width: "100%" }}
+    onChange={handleLocationTypeChange}
+  >
+      <Option value="2">Home</Option>
+      <Option value="3">Work</Option>
+    
+  </Select>
+  
+    )}
+  </FormItem>
+  
+    <FormItem  label="."  {...formItemLayout} >
       <Button type="primary" style={{ width: '100%'}} onClick={this.check} htmlType="submit" className="login-form-button">
-      Submit
+      Add Location
       </Button>
     </FormItem>
     
