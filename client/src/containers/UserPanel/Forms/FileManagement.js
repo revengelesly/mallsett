@@ -152,7 +152,6 @@ class FileManagementForm extends Component {
     </OptGroup>
     <OptGroup label="Others">
     </OptGroup>
-    <Option value="self"><b>ADD NEW DEPENDENT</b></Option>
   </Select>
   
     )}

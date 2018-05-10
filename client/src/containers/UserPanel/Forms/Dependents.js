@@ -100,11 +100,18 @@ class SettingsUserForm extends Component {
 
 <Form onSubmit={this.handleSubmit} className="login-form">
   
-  <FormItem label="User Code" {...formItemLayout} >
-    {getFieldDecorator('User Code', {
+  <FormItem label="Dependent Name" {...formItemLayout} >
+    {getFieldDecorator('Dependent Name', {
     rules: [{ required: true, message: 'please enter you user code' }],
     })(
       <Input autocomplete='name' prefix={<Icon type="user-add" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="Enter dependent name here" />
+    )}
+  </FormItem>
+  <FormItem label="Dependent Phone" {...formItemLayout} >
+    {getFieldDecorator('Dependent Phone', {
+    rules: [{ required: true, message: 'please enter you user code' }],
+    })(
+      <Input autocomplete='phone number' prefix={<Icon type="phone" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="Enter dependent name here" />
     )}
   </FormItem>
   <FormItem label="Dependent Age" {...formItemLayout} >
@@ -114,7 +121,7 @@ class SettingsUserForm extends Component {
       <Input prefix={<Icon type="calendar" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="age" />
     )}
   </FormItem>
-  <FormItem label="dependety type" {...formItemLayout} >
+  <FormItem label="Dependent type" {...formItemLayout} >
    <Select defaultValue={primaryType[0]} style={{ width: "100%" }} onChange={this.handleCategoryChange}>
           {categoryOptions}
         </Select>
@@ -167,6 +174,7 @@ class SettingsUserForm extends Component {
     </Dragger>
     Not Required.
   </FormItem>
+   
    <FormItem label="Location" {...formItemLayout} >
     {getFieldDecorator('Add Delivery Location', {
     rules: [{ required: false, message: 'Add delivery Address for dependent' }],

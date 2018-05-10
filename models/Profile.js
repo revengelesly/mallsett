@@ -18,6 +18,21 @@ const ProfileSchema = new Schema({
         displayName: {
             type: String
         },
+        dob: {
+            type: Date,
+            required: false
+        },
+        category: {
+            type: String,
+            required: false
+        },
+        considerations: {
+            type: [String]
+        },
+        bio: {
+            type: String,
+            required: false
+        },
         phone: {
             type: String
         },
@@ -26,115 +41,20 @@ const ProfileSchema = new Schema({
             required: true,
             max: 40
         },
-        dob: {
-            type: Date,
-            required: false
-        },
+        
         status: {
             type: String,
-            required: true
+            required: true,
+            default: 'restricted'
         },
-        skills: {
-            type: [String]
+        locations: {
+            type: [Schema.Types.ObjectId],
+            ref: 'locations'    
         },
-        pitch: {
-            type: String,
-            required: false
+        files: {
+            type: [Schema.Types.ObjectId],
+            ref: 'files'    
         },
-        bio: {
-            type: String,
-            required: false
-        },
-        location: [
-            {
-                name: {
-                    type: String,
-                    required: true
-                },
-                address: {
-                    type: String,
-                    required: true
-                },
-                // phone for that particular location
-                phone: {
-                    type: String,
-                    required: true
-                },
-                googlePlaceId: {
-                    type: String
-                },
-                apartment: {
-                    type: String,
-                    default: "Not an Apartment or Suite"
-                },
-                categories: {
-                    type: [String],
-                    required: true
-                },
-                created_at: {
-                    type: Date,
-                    default: Date.now
-                },
-                updated_at: {
-                    type: Date
-                },
-                notes: {
-                    type: String,
-                    default: "This address is visible, is not behind another building, does not require special codes, and delivery services should have no problem finding it."
-                }
-            }
-        ],
-        files: [
-            {
-                categories: {
-                   type: String,
-                   required: true
-                },
-                subject: {
-                    type: [String]
-                },
-                displayName: {
-                    type: String,
-                    required: true
-                },
-                directory: {
-                    type: String,
-                    required: true
-                },
-                notes: {
-                    type: String,
-                    required: true
-                },
-                created_at: {
-                    type: Date,
-                    default: Date.now
-                },
-                updated_at: {
-                    type: Date
-                }
-            }
-        ],
-        socialMedia: [
-            {
-                channel: {
-                    type: String,
-                    required: true
-                },
-                link: {
-                    type: String,
-                    required: true
-                },
-                created_at: {
-                  type: Date,
-                  default: Date.now
-                },
-                updated_at: {
-                  type: Date
-                }
-            }
-        ],
-        
-        
         attribute: [
             {
                 category: {

@@ -118,7 +118,6 @@ class SettingsUserForm extends Component {
     </OptGroup>
     <OptGroup label="Others">
     </OptGroup>
-    <Option value="self"><b>ADD NEW DEPENDENT</b></Option>
   </Select>
     )}
      Click here to add new dependent or spouse <a href="#">Add New </a>
