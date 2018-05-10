@@ -26,7 +26,7 @@ export default class UserPanel extends Component {
          {
           header: "My Dependents",
           icon: "usergroup-add",
-          nav: "Add Dependents",
+          nav: "Dependents",
           form:  <Dependents />,
           item: <WrapDependentItems />,
           formWidth: "12",
@@ -35,16 +35,16 @@ export default class UserPanel extends Component {
         {
           header: "My Locations",
           icon: "environment-o",
-          nav: "Delivery Locations",
+          nav: "Locations",
           form:  <Location />,
           item: <WrapLocationItems />,
           formWidth: "12",
           itemWidth: '12'
         }  ,
         {
-          header: "Files and Documents Management",
+          header: "My Files and Documents",
           icon: "paper-clip",
-          nav: "Files and Documents",
+          nav: "Documents",
           form:  <FileManagement />,
           item: <WrapFileItems />,
           formWidth: "12",
@@ -81,7 +81,7 @@ export default class UserPanel extends Component {
          {
           header: "Account Settings",
           icon: "tool",
-          nav: "Account Settings",
+          nav: "Settings",
           form:  <SettingsUser />,
           item: <WrapAboutUsItems />,
           formWidth: "12",
@@ -99,7 +99,8 @@ export default class UserPanel extends Component {
           
             <Tabs
               defaultActiveKey="1"
-              tabPosition="right"
+              tabPosition="top"
+              size="small"
             >
               {this.state.data.map((compData, i) => (
               <TabPane   tab={<span><Icon type={compData.icon} />{compData.nav}</span>} key={i}>

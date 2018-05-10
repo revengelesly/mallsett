@@ -43,7 +43,7 @@ export default class FileItem extends Component {
                 <TabPane tab={this.state.list.nav} key={this.state.list.key}>
                 <h4>School</h4>
                 <Row gutter={6}>
-                  <Col className="gutter-row" span={12}>
+                  <Col className="gutter-row"  xs={24} sm={24} md={14} lg={12} xl={12}>
                     <Row gutter={6}>
                       <Col className="gutter-row" span={24}>
                       {this.state.list.item}
@@ -55,30 +55,30 @@ export default class FileItem extends Component {
                   </Col>
                   <Col className="gutter-row" span={12}>
                     <Row gutter={6}>
-                      <Col className="gutter-row" span={24}>
+                      <Col className="gutter-row" span={24} xs={24} sm={24} md={14} lg={12} xl={12}>
                       {this.state.list.item}
                       </Col>
-                      <Col className="gutter-row" span={24}>
+                      <Col className="gutter-row" span={24} xs={24} sm={24} md={14} lg={12} xl={12}>
                       {this.state.list.item}
                       </Col>
                     </Row>
                   </Col>
                 </Row>
                 <h4>Personal</h4>
-                <Row gutter={6}>
+                <Row gutter={6} xs={24} sm={24} md={14} lg={12} xl={12}>
                   <Col className="gutter-row" span={12}>
                     <Row gutter={6}>
-                      <Col className="gutter-row" span={24}>
+                      <Col className="gutter-row" span={24} xs={24} sm={24} md={14} lg={12} xl={12}>
                       {this.state.list.item}
                       </Col>
-                      <Col className="gutter-row" span={24}>
+                      <Col className="gutter-row" span={24} xs={24} sm={24} md={14} lg={12} xl={12}>
                       {this.state.list.item}
                       </Col>
                     </Row>
                   </Col>
                   <Col className="gutter-row" span={12}>
                     <Row gutter={6}>
-                      <Col className="gutter-row" span={24}>
+                      <Col className="gutter-row" span={24} xs={24} sm={24} md={14} lg={12} xl={12}>
                       {this.state.list.item}
                       </Col>
                       
