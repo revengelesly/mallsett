@@ -32,4 +32,4 @@ const FileSchema = new Schema({
    
 });
 
-module.exports = MerchantFile = mongoose.model('profiles', FileSchema);
+module.exports = MerchantFile = mongoose.model('files', FileSchema);

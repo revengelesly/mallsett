@@ -74,28 +74,7 @@ class SettingsUserForm extends Component {
       <Input autocomplete='address' prefix={<Icon type="environment-o" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="Enter Location Here" />
     )}
   </FormItem>
-  <FormItem label="Apt or Suite"  {...formItemLayout} >
-    {getFieldDecorator('apt', {
-    rules: [{ required: false, message: 'Add apt. here!' }],
-    })(
-      <Input prefix={<Icon type="pushpin-o" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="Apartment or Suite" />
-    )}
-  </FormItem>
-  <FormItem label="Phone Number"  {...formItemLayout} >
-    {getFieldDecorator('phone', {
-    rules: [{ required: false, message: 'Please input your phone!' }],
-    })(
-      <Input prefix={<Icon type="phone" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="Phone Number" />
-    )}
-  </FormItem>
-  <FormItem label="Special Notes"  {...formItemLayout} >
-    {getFieldDecorator('Notes', {
-    rules: [{ required: false, message: 'Special notes for delivery drivers' }],
-    })(
-      <TextArea row={2} prefix={<Icon type="edit" style={{ color: 'rgba(0,0,0,.25)' }} />} type="text" placeholder="Leave a note for delivery services" />
-    )}
-  </FormItem>
-  <FormItem label="Owner"  {...formItemLayout} >
+    <FormItem label="Owner"  {...formItemLayout} >
     {getFieldDecorator('profile', {
     rules: [{ required: true, message: 'Who does this address belongs to?' }],
     })(
@@ -122,6 +101,22 @@ class SettingsUserForm extends Component {
     )}
      Click here to add new dependent or spouse <a href="#">Add New </a>
   </FormItem>
+  <FormItem label="Apt or Suite"  {...formItemLayout} >
+    {getFieldDecorator('apt', {
+    rules: [{ required: false, message: 'Add apt. here!' }],
+    })(
+      <Input prefix={<Icon type="pushpin-o" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="Apartment or Suite" />
+    )}
+  </FormItem>
+ 
+  <FormItem label="Special Notes"  {...formItemLayout} >
+    {getFieldDecorator('Notes', {
+    rules: [{ required: false, message: 'Special notes for delivery drivers' }],
+    })(
+      <TextArea row={2} prefix={<Icon type="edit" style={{ color: 'rgba(0,0,0,.25)' }} />} type="text" placeholder="Leave a note for delivery services" />
+    )}
+  </FormItem>
+
   <FormItem label="Address Type" {...formItemLayout} >
     {getFieldDecorator('Add Delivery Location', {
     rules: [{ required: false, message: 'Add delivery Address for dependent' }],

@@ -8,6 +8,10 @@ const LocationSchema = new Schema({
     googlePlaceId: {
         type: String
     },
+    name: {
+        type: String,
+        required: true
+    },
     address: {
         type: String,
         required: true
@@ -40,4 +44,4 @@ const LocationSchema = new Schema({
             
 });
 
-module.exports = Locations = mongoose.model('profiles', LocationSchema);
+module.exports = MerchantLocation = mongoose.model('locations', LocationSchema);

@@ -38,7 +38,7 @@ const ProfileSchema = new Schema({
         },
         handle: {
             type: String,
-            required: true,
+            required: false,
             max: 40
         },
         
@@ -47,14 +47,64 @@ const ProfileSchema = new Schema({
             required: true,
             default: 'restricted'
         },
-        locations: {
-            type: [Schema.Types.ObjectId],
-            ref: 'locations'    
-        },
-        files: {
-            type: [Schema.Types.ObjectId],
-            ref: 'files'    
-        },
+        locations: [
+            {
+                address: {
+                    type: String,
+                    required: true
+                },
+                apartment: {
+                    type: String,
+                    default: "Not an Apartment or Suite"
+                },
+                categories: {
+                    type: [String],
+                    required: true
+                },
+                notes: {
+                    type: String,
+                    default: "This address is visible, is not behind another building, does not require special codes, and delivery services should have no problem finding it."
+                },
+                // this will go to address categories
+                
+                created_at: {
+                    type: Date,
+                    default: Date.now
+                },
+                updated_at: {
+                    type: Date
+                }
+            }
+        ],
+        files: [
+            {
+                displayName: {
+                    type: String,
+                    required: true
+                },
+                notes: {
+                    type: String,
+                    required: true
+                },
+                categories: {
+                   type: String,
+                   required: true
+                },
+                directory: {
+                    type: String,
+                    required: true
+                },
+                
+                created_at: {
+                    type: Date,
+                    default: Date.now
+                },
+                updated_at: {
+                    type: Date
+                }
+            }
+        ],
+       
         attribute: [
             {
                 category: {
