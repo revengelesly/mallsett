@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { Form, Icon, Input, Button, Select, Upload, message } from 'antd';
-import axios from 'axios';
+import { addFile } from '../../../redux/documents/middlewares';
 const Dragger = Upload.Dragger;
 
 
@@ -14,6 +15,10 @@ const FormItem = Form.Item;
 function handleProfileChange(value) {
   console.log(`selected ${value}`);
 }
+
+const info = (info) => {
+  message.info(info);
+};
 
 const uploadProps = {
   name: 'file',
@@ -58,9 +63,7 @@ class FileManagementForm extends Component {
     this.props.form.validateFields((err, newUser) => {
       if (!err) {
         console.log('Received values of form: ', newUser);
-        axios.post('http://mallsett-revengelesly.c9users.io/api/users/register', newUser)
-        .then(res => console.log(res.data))
-        .catch(err => console.log(err));
+        this.props.uploadFile(newUser);
       }
     });
   }
@@ -129,7 +132,7 @@ class FileManagementForm extends Component {
     )}
   </FormItem>
   <FormItem  label="Owner" {...formItemLayout}  >
-  
+
     {getFieldDecorator('profile', {
     rules: [{ required: true, message: 'Who does this address belongs to?' }],
     })(
@@ -152,8 +155,9 @@ class FileManagementForm extends Component {
     </OptGroup>
     <OptGroup label="Others">
     </OptGroup>
+    <Option value="self"><b>ADD NEW DEPENDENT</b></Option>
   </Select>
-  
+
     )}
     Click here to add new dependent or spouse <a href="#">Add New </a>
   </FormItem>
@@ -162,13 +166,25 @@ class FileManagementForm extends Component {
       Add File
       </Button>
     </FormItem>
-    
+
   </Form>
 </div>
     );
   }
 }
 
+function mapStateToProps({ Documents }) {
+  return {
+    loading: Documents.loading,
+    error: Documents.error,
+  }
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    uploadFile: file => dispatch(addFile(file)),
+  }
+}
 
 const WrappedFileManagementForm= Form.create()(FileManagementForm);
-export default WrappedFileManagementForm;
+export default connect(mapStateToProps, mapDispatchToProps)(WrappedFileManagementForm);
