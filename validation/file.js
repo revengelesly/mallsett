@@ -1,7 +1,7 @@
 const Validator = require('validator');
 const isEmpty = require('./is-empty');
 
-module.exports = function validatelocationInput(data) {
+module.exports = function validateFileInput(data) {
   let errors = {};
 
   data.displayName = !isEmpty(data.displayName) ? data.displayName : '';

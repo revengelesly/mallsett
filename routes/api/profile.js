@@ -213,7 +213,12 @@ module.exports = router;
  * 
  * ******************************************************/
  
- /**** Create and Update **/
+// @route   GET api/profile/file/test
+// @desc    Tests profile route
+// @access  Public
+router.get('/location/test', (req, res) => res.json({ msg: 'location  Works' }));
+ 
+/**** Create and Update **/
  
 // @route   POST api/profile/location
 // @desc    Add location to profile
@@ -230,9 +235,9 @@ router.post(
       return res.status(400).json(errors);
     }
 
-    Profile.findOne({ user: req.user.id }).then(profile => {
+    Profile.findOne({ user: req.user.id, _id: req.body.profile }).then(profile => {
       
-      const newLocation = {
+      const newFile = {
         address: req.body.address,
         apartment: req.body.apartment,
         categories: function(){
@@ -242,19 +247,18 @@ router.post(
           return req.body.categories;
         }(),
         notes: req.body.notes,
-        current: req.body.current,
         updated_at: MomentNow
-        
-        
       };
 
       // Add to exp array
-      profile.location.unshift(newLocation);
+      profile.locations.unshift(newFile);
 
       profile.save().then(profile => res.json(profile));
+   
     });
   }
 );
+
 
 
 /**** Read **/
@@ -294,7 +298,7 @@ router.delete(
  // @route   GET api/profile/file/test
 // @desc    Tests profile route
 // @access  Public
-router.get('/file/test', (req, res) => res.json({ msg: 'file works Works' }));
+router.get('/file/test', (req, res) => res.json({ msg: 'file  Works' }));
 
 /**** Create and Update **/
  

@@ -1,14 +1,14 @@
 const Validator = require('validator');
 const isEmpty = require('./is-empty');
 
-module.exports = function validatelocationInput(data) {
+module.exports = function validateLocationInput(data) {
   let errors = {};
 
   data.address = !isEmpty(data.address) ? data.address : '';
  
 
-  if (Validator.isEmpty(data.name)) {
-    errors.name = 'You must enter an address';
+  if (Validator.isEmpty(data.address)) {
+    errors.address = 'You must enter an address';
   }
 
 

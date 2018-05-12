@@ -85,7 +85,7 @@ class SettingsUserForm extends Component {
     onChange={handleProfileChange}
   >
     <OptGroup label="Family">
-      <Option value="self">Self</Option>
+      <Option value="5af71fed734d1d04f610d87c">Self</Option>
       <Option value="jessica">Jessica (Daughter)</Option>
     </OptGroup>
     <OptGroup label="Friends">
