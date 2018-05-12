@@ -291,6 +291,11 @@ router.delete(
  * 
  * ******************************************************/
  
+ // @route   GET api/profile/file/test
+// @desc    Tests profile route
+// @access  Public
+router.get('/file/test', (req, res) => res.json({ msg: 'file works Works' }));
+
 /**** Create and Update **/
  
 // @route   POST api/profile/file
@@ -308,7 +313,7 @@ router.post(
       return res.status(400).json(errors);
     }
 
-    Profile.findOne({ user: req.user.id }).then(profile => {
+    Profile.findOne({ user: req.user.id, _id: req.body.profile }).then(profile => {
       
       const newFile = {
         displayName: req.body.displayName,
@@ -321,14 +326,13 @@ router.post(
         }(),
         directory: req.body.directory,
         updated_at: MomentNow
-        
-        
       };
 
       // Add to exp array
-      profile.file.unshift(newFile);
+      profile.files.unshift(newFile);
 
       profile.save().then(profile => res.json(profile));
+   
     });
   }
 );

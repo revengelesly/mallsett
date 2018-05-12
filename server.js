@@ -5,6 +5,7 @@ const passport = require('passport');
 
 const users = require('./routes/api/users');
 const profile = require('./routes/api/profile');
+const file = require('./routes/api/profile');
 const posts = require('./routes/api/posts');
 const merchant = require('./routes/api/merchant');
 const products = require('./routes/api/merchants/products');
@@ -33,6 +34,7 @@ require('./config/passport')(passport);
 // Use Routes
 app.use('/api/users', users);
 app.use('/api/profile', profile);
+app.use('/api/profile/file', file);
 app.use('/api/posts', posts);
 app.use('/api/merchant', merchant);
 app.use('/api/merchants/products', products);

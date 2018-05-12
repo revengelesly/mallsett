@@ -22,9 +22,11 @@ const ProfileSchema = new Schema({
             type: Date,
             required: false
         },
+        // default to self
         category: {
-            type: String,
-            required: false
+            type: [String],
+            required: true,
+            default: "self"
         },
         considerations: {
             type: [String]
@@ -94,7 +96,6 @@ const ProfileSchema = new Schema({
                     type: String,
                     required: true
                 },
-                
                 created_at: {
                     type: Date,
                     default: Date.now

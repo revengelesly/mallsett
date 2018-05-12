@@ -140,7 +140,7 @@ class FileManagementForm extends Component {
     onChange={handleProfileChange}
   >
     <OptGroup label="Family">
-      <Option value="self">Self</Option>
+      <Option value="5af604cffc22683d49f3a993">Self</Option>
       <Option value="jessica">Jessica (Daughter)</Option>
     </OptGroup>
     <OptGroup label="Friends">

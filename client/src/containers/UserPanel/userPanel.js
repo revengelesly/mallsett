@@ -99,7 +99,7 @@ export default class UserPanel extends Component {
           
             <Tabs
               defaultActiveKey="1"
-              tabPosition="top"
+              tabPosition="right"
               size="small"
             >
               {this.state.data.map((compData, i) => (

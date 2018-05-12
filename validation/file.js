@@ -7,7 +7,6 @@ module.exports = function validatelocationInput(data) {
   data.displayName = !isEmpty(data.displayName) ? data.displayName : '';
   data.notes = !isEmpty(data.notes) ? data.notes : '';
   data.categories = !isEmpty(data.categories) ? data.categories : '';
-  data.directory = !isEmpty(data.directory) ? data.directory : '';
 
   if (Validator.isEmpty(data.displayName)) {
     errors.displayName = 'Location name is required';
@@ -18,9 +17,7 @@ module.exports = function validatelocationInput(data) {
     errors.categories = 'Must select at least one category';
   }
   
-  if (Validator.directory(data.directory)) {
-    errors.categories = 'Must have a directory directory';
-  }
+ 
 
 
   return {
