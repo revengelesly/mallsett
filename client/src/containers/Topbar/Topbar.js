@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import { Layout } from "antd";
 import appActions from "../../redux/app/actions";
 import TopbarUser from "./topbarUser";
+import TopbarAddBusiness from './topbarAddBusiness'; 
 import TopbarWrapper from "./topbar.style";
 import themes from "../../settings/themes";
 import { themeConfig } from "../../settings";
@@ -40,6 +41,9 @@ class Topbar extends Component {
           </div>
 
           <ul className="isoRight">
+            <li>
+              <TopbarAddBusiness />
+            </li>
             <li
               onClick={() => this.setState({ selectedItem: "user" })}
               className="isoUser"

@@ -1,0 +1,34 @@
+
+{
+  "sidebar.blankPage": "Blank Page",
+  "page.signInTitle": "Isomorphic",
+  "page.signInRememberMe": "Remember me",
+  "page.signInButton": "Sign in",
+  "page.signInPreview":"username: demo   password: demodemo   or just click on any button.",
+  "page.signInFacebook": "Sign in with Facebook",
+  "page.signInGoogle": "Sign in with Google",
+  "page.signInAuth0": "Sign in with Auth0",
+  "page.signInForgotPass": "Forgot password",
+  "page.signInCreateAccount": "Create an Isomorphoic account",
+  
+  "forms.Tabs.UserPanel.Header": "User Panel",
+  "Panel.Merchant.Header" : "Plug my Business",
+  
+  "Panel.Merchant.Start": "Introduction",
+  "Panel.Merchant.FindMyBusiness": "Find my Business",
+  "Panel.Merchant.AssignedPhoneNumber": "Assigned Phone Number",
+  "Panel.Merchant.BusinessDetail": "Business Detail",
+  "Panel.Merchant.BusinessLogo": "Business Logo",
+  "Panel.Merchant.Competitors": "Competitors",
+  "Panel.Merchant.Suppliers": "Suppliers",
+  "Panel.Merchant.PosSystems": "POS Systems",
+  "Panel.Merchant.Customers": "B2B Customers",
+  "Panel.Merchant.CreditCardProcessor": "Credit Card Processing",
+  "Panel.Merchant.BusinessAssociations": "Business Associations",
+  "Panel.Merchant.ProfessionalServices": "Professional Services",
+  "Panel.Merchant.OnlineListingApi": "Online Listings API",
+  "Panel.Merchant.CompletePlugBusiness": "Next Steps",
+  "Panel.Merchant.Profile": "Business Profile",
+  
+  "uiElements.tags.MerchantCategoryInputTag": "add tag"
+}
