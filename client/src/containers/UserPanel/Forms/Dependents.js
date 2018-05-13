@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import { Upload, message, Form, Icon, Input, Button, Select } from 'antd';
 import axios from 'axios';
+import { getAgeStatement, getView } from '../../../helpers/utility';
+import {ViewPort} from '../../../helpers/constants';
+
 const Dragger = Upload.Dragger;
 
 const { Option, OptGroup } = Select;
@@ -37,6 +40,8 @@ class SettingsUserForm extends Component {
   state = {
     cities: secondaryType[primaryType[0]],
     secondSubCategory: secondaryType[primaryType[0]][0],
+    ageStatement: '',
+    formItemLayout: {}
   }
   handleCategoryChange = (value) => {
     this.setState({
@@ -77,6 +82,50 @@ class SettingsUserForm extends Component {
     });
   }
 
+  handleAgeTextChange = (event) => {
+    if (event && event.target && event.target.value) {
+      this.setState({
+        ageStatement: getAgeStatement(event.target.value)
+      });
+    }
+  }
+
+  handleWindowResize = () => {
+    this.setState({
+      formItemLayout: getView() === ViewPort.TabView ?
+        {} :
+        {
+          labelCol: {
+            xs: { span: 24 },
+            sm: { span: 8 },
+          },
+          wrapperCol: {
+            xs: { span: 24 },
+            sm: { span: 16 },
+          },
+        }
+    });
+  }
+
+  handleItemActiveTab = (e) => {
+    e.preventDefault();
+    if (e && e.target && e.target.name) {
+      switch (e.target.name.toLowerCase()) {
+        case 'newlocation':
+          this.props.handleItemActiveTab('3')
+          break;
+        case 'newfile':
+        this.props.handleItemActiveTab('4')
+          break;
+      }
+    }
+  }
+
+  componentDidMount = () => {
+    this.handleWindowResize();
+    window.addEventListener('resize', this.handleWindowResize);
+  }
+
   ageInfoHandler = (e) => {
     console.log("was click");
   }
@@ -84,22 +133,14 @@ class SettingsUserForm extends Component {
     const { getFieldDecorator } = this.props.form;
     const categoryOptions = primaryType.map(category => <Option key={category}>{category}</Option>);
     const subCategoryOptions = this.state.cities.map(subCategory => <Option key={subCategory}>{subCategory}</Option>);
-   const formItemLayout = {
-      labelCol: {
-        xs: { span: 24 },
-        sm: { span: 8 },
-      },
-      wrapperCol: {
-        xs: { span: 24 },
-        sm: { span: 16 },
-      },
-    };
+    const formItemLayout = this.state.formItemLayout;
+
     return (
 <div>
 
 
 <Form onSubmit={this.handleSubmit} className="login-form">
-  
+
   <FormItem label="Dependent Name" {...formItemLayout} >
     {getFieldDecorator('Dependent Name', {
     rules: [{ required: true, message: 'please enter you user code' }],
@@ -118,8 +159,9 @@ class SettingsUserForm extends Component {
     {getFieldDecorator('age', {
     rules: [{ required: true, message: 'How old is your dependent?' }],
     })(
-      <Input prefix={<Icon type="calendar" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="age" />
+      <Input onChange={this.handleAgeTextChange} prefix={<Icon type="calendar" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="age" />
     )}
+    { this.state.ageStatement && <div>{this.state.ageStatement}</div> }
   </FormItem>
   <FormItem label="Dependent type" {...formItemLayout} >
    <Select defaultValue={primaryType[0]} style={{ width: "100%" }} onChange={this.handleCategoryChange}>
@@ -128,14 +170,14 @@ class SettingsUserForm extends Component {
     {getFieldDecorator('type', {
     rules: [{ required: true, message: 'How is this person a dependent?' }],
     })(
-     
+
         <Select value={this.state.secondSubCategory}  style={{ width: "100%"}}  onChange={this.onSecondSubCategoryChange}>
           {subCategoryOptions}
         </Select>
     )}
   </FormItem>
-  
-  
+
+
   <FormItem label="Considerations" {...formItemLayout} >
     {getFieldDecorator('special considerations', {
     rules: [{ required: false, message: 'Does you dependent have any health issue or situations' }],
@@ -174,7 +216,7 @@ class SettingsUserForm extends Component {
     </Dragger>
     Not Required.
   </FormItem>
-   
+
    <FormItem label="Location" {...formItemLayout} >
     {getFieldDecorator('Add Delivery Location', {
     rules: [{ required: false, message: 'Add delivery Address for dependent' }],
@@ -187,10 +229,10 @@ class SettingsUserForm extends Component {
   >
       <Option value="2">1280 NW 9999 Street</Option>
       <Option value="3">4111 NW 9999 Street</Option>
-    
+
   </Select>
     )}
-        <p>add new location? <a href="#"> Add New </a></p>
+        <p>add new location? <a href="#" name="newLocation" onClick={this.handleItemActiveTab}> Add New </a></p>
 
   </FormItem>
   <FormItem label="Files" {...formItemLayout} >
@@ -205,14 +247,14 @@ class SettingsUserForm extends Component {
   >
       <Option value="2">File name 1</Option>
       <Option value="3">file name 2</Option>
-    
+
   </Select>
     )}
-        <p>add new file? <a href="#"> Add New </a></p>
+        <p>add new file? <a href="#" name="newFile" onClick={this.handleItemActiveTab}> Add New </a></p>
 
   </FormItem>
     <FormItem label="." {...formItemLayout} >
-    
+
       <Button type="primary" style={{ width: '100%'}} onClick={this.check} htmlType="submit" className="login-form-button">
       Add Dependent
       </Button>

@@ -1,7 +1,11 @@
 import React, { Component } from 'react';
 import { Form, Icon, Input, Button, Select } from 'antd';
 import axios from 'axios';
+import {getView} from '../../../helpers/utility';
+import {ViewPort} from '../../../helpers/constants';
+
 const { Option, OptGroup } = Select;
+
 
 const { TextArea } = Input;
 
@@ -18,7 +22,8 @@ function handleLocationTypeChange(value) {
 class SettingsUserForm extends Component {
   state = {
     checkDob: false,
-    ageInfo: ''
+    ageInfo: '',
+    formItemLayout: {}
   };
   check = () => {
     this.props.form.validateFields(
@@ -48,22 +53,42 @@ class SettingsUserForm extends Component {
     });
   }
 
+  handleWindowResize = () => {
+    this.setState({
+      formItemLayout: getView() === ViewPort.TabView ?
+        {} :
+        {
+          labelCol: {
+            xs: { span: 24 },
+            sm: { span: 8 },
+          },
+          wrapperCol: {
+            xs: { span: 24 },
+            sm: { span: 16 },
+          },
+        }
+    });
+  }
+
+  handleItemActiveTab = (e) => {
+    e.preventDefault();
+    if (e && e.target && e.target.name) {
+      this.props.handleItemActiveTab('2')
+    }
+  }
+
+  componentDidMount = () => {
+    this.handleWindowResize();
+    window.addEventListener('resize', this.handleWindowResize);
+  }
+
   ageInfoHandler = (e) => {
     console.log("was click");
   }
   render() {
     const { getFieldDecorator } = this.props.form;
-    const formItemLayout = {
-      labelCol: {
-        xs: { span: 24 },
-        sm: { span: 8 },
-      },
-      wrapperCol: {
-        xs: { span: 24 },
-        sm: { span: 16 },
-      },
-    };
-    
+    const formItemLayout = this.state.formItemLayout;
+
     return (
 <div>
   <Form onSubmit={this.handleSubmit} className="login-form">
@@ -99,7 +124,7 @@ class SettingsUserForm extends Component {
     </OptGroup>
   </Select>
     )}
-     Click here to add new dependent or spouse <a href="#">Add New </a>
+     Click here to add new dependent or spouse <a href="#" name="newDependent" onClick={this.handleItemActiveTab}>Add New </a>
   </FormItem>
   <FormItem label="Apt or Suite"  {...formItemLayout} >
     {getFieldDecorator('apt', {
@@ -108,7 +133,7 @@ class SettingsUserForm extends Component {
       <Input prefix={<Icon type="pushpin-o" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="Apartment or Suite" />
     )}
   </FormItem>
- 
+
   <FormItem label="Special Notes"  {...formItemLayout} >
     {getFieldDecorator('Notes', {
     rules: [{ required: false, message: 'Special notes for delivery drivers' }],
@@ -129,18 +154,18 @@ class SettingsUserForm extends Component {
   >
       <Option value="2">Home</Option>
       <Option value="3">Work</Option>
-    
+
   </Select>
-  
+
     )}
   </FormItem>
-  
+
     <FormItem  label="."  {...formItemLayout} >
       <Button type="primary" style={{ width: '100%'}} onClick={this.check} htmlType="submit" className="login-form-button">
       Add Location
       </Button>
     </FormItem>
-    
+
   </Form>
 </div>
     );

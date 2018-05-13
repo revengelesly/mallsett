@@ -37,6 +37,19 @@ class LoginUser extends Component {
     });
   }
 
+  handleButtonClick = (event) => {
+    if (event && event.target && event.target.name) {
+      switch(event.target.name.toLowerCase()) {
+        case 'register':
+          this.props.handleTabChange('3');
+          break;
+        case 'forgotpassword':
+          this.props.handleTabChange('5');
+          break;
+      }
+    }
+  }
+
   ageInfoHandler = (e) => {
     console.log("was click");
   }
@@ -53,7 +66,7 @@ class LoginUser extends Component {
     )}
   </FormItem>
 
-  
+
   <FormItem>
     {getFieldDecorator('password', {
     rules: [{ required: true, message: 'Please input your Password!' }],
@@ -77,13 +90,13 @@ class LoginUser extends Component {
 <InputGroup size="large" style={{ marginBottom: '15px' }}>
 <Row  gutter={24} >
 <Col span="12">
-<Button type="dashed" style={{ width: '100%', color: '#999', border: 'dashed 1px #999'}} ghost>register</Button>
+<Button type="dashed" name="register" onClick={this.handleButtonClick} style={{ width: '100%', color: '#999', border: 'dashed 1px #999'}} ghost>Register</Button>
 </Col>
 <Col span="12">
-<Button type="dashed"  style={{ width: '100%', color: '#999', border: 'dashed 1px #999'}} ghost>forgot password</Button>
+<Button type="dashed" name="forgotpassword" onClick={this.handleButtonClick} style={{ width: '100%', color: '#999', border: 'dashed 1px #999'}} ghost>Forgot password</Button>
 </Col>
 </Row>
-</InputGroup>   
+</InputGroup>
 </SigninWrapper>
 </div>
     );

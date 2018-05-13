@@ -3,7 +3,7 @@ import { Slider, Form, Icon, Input, Button, Col, Row } from 'antd';
 import  { InputGroup } from '../../../components/uielements/input';
 import SigninWrapper from '../signin.style';
 import IntlMessages from '../../../components/utility/intlMessages';
-
+import { getAgeStatement } from '../../../helpers/utility';
 import axios from 'axios';
 
 
@@ -11,9 +11,12 @@ const FormItem = Form.Item;
 
 
 class RegisterUser extends Component {
+  defaultAge = 18;
+
   state = {
     checkDob: false,
-    ageInfo: ''
+    ageInfo: '',
+    ageStatement: ''
   };
   check = () => {
     this.props.form.validateFields(
@@ -40,6 +43,31 @@ class RegisterUser extends Component {
   ageInfoHandler = (e) => {
     console.log("was click");
   }
+
+  handleButtonClick = (event) => {
+    if (event && event.target && event.target.name) {
+      switch(event.target.name.toLowerCase()) {
+        case 'login':
+          this.props.handleTabChange('4');
+          break;
+        case 'forgotpassword':
+          this.props.handleTabChange('5');
+          break;
+      }
+    }
+  }
+
+  handleAgeChange = (value) => {
+    this.setState({
+      ageStatement: getAgeStatement(value)
+    });
+  }
+
+  componentDidMount = () => {
+    // init the age statement
+    this.handleAgeChange(this.defaultAge);
+  }
+
   render() {
     const { getFieldDecorator } = this.props.form;
     return (
@@ -66,7 +94,7 @@ class RegisterUser extends Component {
       <Input prefix={<Icon type="phone" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="Cell Phone" />
     )}
   </FormItem>
-  
+
   <FormItem>
     {getFieldDecorator('password', {
     rules: [{ required: true, message: 'Please input your Password!' }],
@@ -84,8 +112,9 @@ class RegisterUser extends Component {
   <FormItem
   >
     {getFieldDecorator('userAge')(
-      <Slider  marks={{ 0: '0', 13: '13', 18: '18' , 21: '21', 35: '35', 55: '55+' }} max={55}  step={null} defaultValue={18}/>
+      <Slider  marks={{ 0: '0', 13: '13', 18: '18' , 21: '21', 35: '35', 55: '55+' }} max={55}  step={null} defaultValue={this.defaultAge} onChange={this.handleAgeChange}/>
     )}
+    { this.state.ageStatement && <div>{this.state.ageStatement}</div> }
   <div>{this.ageInfo}</div>
   </FormItem>
     <FormItem >
@@ -103,13 +132,13 @@ class RegisterUser extends Component {
 <InputGroup size="large" style={{ marginBottom: '15px' }}>
 <Row  gutter={24} >
 <Col span="12">
-<Button type="dashed" style={{ width: '100%', color: '#999', border: 'dashed 1px #999'}} ghost>Login</Button>
+<Button type="dashed" onClick={this.handleButtonClick} name="login" style={{ width: '100%', color: '#999', border: 'dashed 1px #999'}} ghost>Login</Button>
 </Col>
 <Col span="12">
-<Button type="dashed"  style={{ width: '100%', color: '#999', border: 'dashed 1px #999'}} ghost>forgot password</Button>
+<Button type="dashed" onClick={this.handleButtonClick} name="forgotPassword" style={{ width: '100%', color: '#999', border: 'dashed 1px #999'}} ghost>Forgot password</Button>
 </Col>
 </Row>
-</InputGroup>   
+</InputGroup>
 </SigninWrapper>
 </div>
     );

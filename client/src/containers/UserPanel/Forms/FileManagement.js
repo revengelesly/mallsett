@@ -2,6 +2,9 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Form, Icon, Input, Button, Select, Upload, message } from 'antd';
 import { addFile } from '../../../redux/documents/middlewares';
+import {getView} from '../../../helpers/utility';
+import {ViewPort} from '../../../helpers/constants';
+
 const Dragger = Upload.Dragger;
 
 
@@ -40,7 +43,8 @@ const uploadProps = {
 class FileManagementForm extends Component {
   state = {
     checkDob: false,
-    ageInfo: ''
+    ageInfo: '',
+    formItemLayout: {}
   };
   check = () => {
     this.props.form.validateFields(
@@ -71,18 +75,37 @@ class FileManagementForm extends Component {
   ageInfoHandler = (e) => {
     console.log("was click");
   }
+
+  handleWindowResize = () => {
+    this.setState({
+      formItemLayout: getView() === ViewPort.TabView ?
+        {} :
+        {
+          labelCol: {
+            xs: { span: 24 },
+            sm: { span: 8 },
+          },
+          wrapperCol: {
+            xs: { span: 24 },
+            sm: { span: 16 },
+          },
+        }
+    });
+  }
+
+  handleItemTabChange = () => {
+    this.props.handleItemActiveTab('2');
+  }
+
+  componentDidMount = () => {
+    this.handleWindowResize();
+    window.addEventListener('resize', this.handleWindowResize);
+  }
+
   render() {
     const { getFieldDecorator } = this.props.form;
-    const formItemLayout = {
-      labelCol: {
-        xs: { span: 24 },
-        sm: { span: 8 },
-      },
-      wrapperCol: {
-        xs: { span: 24 },
-        sm: { span: 16 },
-      },
-    };
+    const formItemLayout = this.state.formItemLayout;
+
     return (
 <div>
   <Form onSubmit={this.handleSubmit} className="login-form">
@@ -159,7 +182,7 @@ class FileManagementForm extends Component {
   </Select>
 
     )}
-    Click here to add new dependent or spouse <a href="#">Add New </a>
+    Click here to add new dependent or spouse <a href="#" onClick={this.handleItemTabChange}>Add New </a>
   </FormItem>
     <FormItem label="." {...formItemLayout}  >
       <Button type="primary" style={{ width: '100%'}} onClick={this.check} htmlType="submit" className="login-form-button">

@@ -8,7 +8,8 @@ const { TabPane } = Tabs;
 export default class FileItem extends Component {
     constructor(props) {
       super(props);
-      this.state = { 
+      this.state = {
+        activeKey: '1',
        list:  {
           header: "List of My Dependents",
           icon: "edit",
@@ -26,8 +27,8 @@ export default class FileItem extends Component {
           formWidth: "12",
           itemWidth: '12',
           key: 2
-        },  
-        
+        },
+
        addLocations:  {
           header: "Add a new location",
           icon: "link",
@@ -36,8 +37,8 @@ export default class FileItem extends Component {
           formWidth: "12",
           itemWidth: '12',
           key: 3
-        },  
-        
+        },
+
        addFiles:  {
           header: "Add a new file",
           icon: "link",
@@ -46,9 +47,23 @@ export default class FileItem extends Component {
           formWidth: "12",
           itemWidth: '12',
           key: 4
-        }   
+        }
       };
     }
+
+  componentWillReceiveProps = (nextProps) => {
+    if (this.state.activeKey !== nextProps.activeKey && nextProps.activeKey < 5) {
+      this.setState({
+        activeKey: nextProps.activeKey
+      });
+    }
+  }
+
+  handleTabChange = (key) => {
+    this.setState({
+      activeKey: key
+    });
+  }
 
   render(props){
     return (
@@ -58,9 +73,11 @@ export default class FileItem extends Component {
               defaultActiveKey="1"
               tabPosition="top"
               size="small"
+              activeKey={this.state.activeKey}
+              onChange={this.handleTabChange}
             >
                 <TabPane tab={this.state.list.nav} key={this.state.list.key}>
-                
+
                 <h4>Family</h4>
                 <Row gutter={6} xs={2} sm={4} md={6} lg={8} xl={10}>
                   <Col className="gutter-row" span={12}>
@@ -101,17 +118,17 @@ export default class FileItem extends Component {
                       <Col className="gutter-row" span={24}>
                       {this.state.list.item}
                       </Col>
-                      
+
                     </Row>
                   </Col>
                 </Row>
-                
-                
+
+
                 </TabPane>
-              
+
                 <TabPane tab={this.state.addLocations.nav} key={this.state.addLocations.key}>{this.state.addLocations.item}</TabPane>
                 <TabPane tab={this.state.addFiles.nav} key={this.state.addFiles.key}>{this.state.addFiles.item}</TabPane>
-                
+
             </Tabs>
 
     );

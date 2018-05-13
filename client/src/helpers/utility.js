@@ -1,4 +1,5 @@
 import { Map } from 'immutable';
+import { ViewPort } from './constants';
 
 export function clearToken() {
   localStorage.removeItem('id_token');
@@ -65,4 +66,35 @@ export function timeDifference(givenTime) {
     return 'a few seconds ago';
   };
   return getTime();
+}
+
+export function getAgeStatement(age) {
+  if (age < 0) {
+    return '';
+  } else if (age < 13) {
+    return 'You just a baby';
+  } else if (age < 18) {
+    return 'Teenager';
+  } else if (age < 21) {
+    return 'You are an adult';
+  } else if (age < 35) {
+    return 'You can purchase alcohol';
+  } else if (age < 55){
+    return 'You are marturing';
+  } else {
+    return 'You are well matured';
+  }
+
+  return '';
+}
+
+export function getView(width) {
+  width = width || window.innerWidth;
+  let newView = ViewPort.MobileView;
+  if (width > 1220) {
+    newView = ViewPort.DesktopView;
+  } else if (width > 767) {
+    newView = ViewPort.TabView;
+  }
+  return newView;
 }

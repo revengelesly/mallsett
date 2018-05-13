@@ -37,6 +37,19 @@ class RequestUserPassword extends Component {
     });
   }
 
+  handleButtonClick = (event) => {
+    if (event && event.target && event.target.name) {
+      switch(event.target.name.toLowerCase()) {
+        case 'register':
+          this.props.handleTabChange('3');
+          break;
+        case 'login':
+          this.props.handleTabChange('4');
+          break;
+      }
+    }
+  }
+
   ageInfoHandler = (e) => {
     console.log("was click");
   }
@@ -53,7 +66,7 @@ class RequestUserPassword extends Component {
       <Input prefix={<Icon type="mail" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="Email Address" />
     )}
   </FormItem>
- 
+
     <FormItem >
       <Button type="primary" style={{ width: '100%'}} onClick={this.check} htmlType="submit" className="login-form-button">
       Reset Password
@@ -69,13 +82,13 @@ class RequestUserPassword extends Component {
 <InputGroup size="large" style={{ marginBottom: '15px' }}>
 <Row  gutter={24} >
 <Col span="12">
-<Button type="dashed" style={{ width: '100%', color: '#999', border: 'dashed 1px #999'}} ghost>Login</Button>
+<Button type="dashed" name="login" onClick={this.handleButtonClick} style={{ width: '100%', color: '#999', border: 'dashed 1px #999'}} ghost>Login</Button>
 </Col>
 <Col span="12">
-<Button type="dashed"  style={{ width: '100%', color: '#999', border: 'dashed 1px #999'}} ghost>Register</Button>
+<Button type="dashed" name="register" onClick={this.handleButtonClick} style={{ width: '100%', color: '#999', border: 'dashed 1px #999'}} ghost>Register</Button>
 </Col>
 </Row>
-</InputGroup>   
+</InputGroup>
 </SigninWrapper>
 </div>
     );
