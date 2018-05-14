@@ -43,6 +43,8 @@ router.post('/register', (req, res) => {
       const newUser = new User({
         name: req.body.name,
         email: req.body.email,
+        phone: req.body.phone,
+        dob: req.body.dob,
         avatar,
         password: req.body.password,
         age: req.body.age
@@ -88,7 +90,7 @@ router.post('/login', (req, res) => {
     bcrypt.compare(password, user.password).then(isMatch => {
       if (isMatch) {
         // User Matched
-        const payload = { id: user.id, name: user.name, avatar: user.avatar }; // Create JWT Payload
+        const payload = { id: user.id, name: user.name, avatar: user.avatar, dob: user.dob, phone: user.phone }; // Create JWT Payload
 
         // Sign Token
         jwt.sign(
@@ -120,7 +122,9 @@ router.get(
     res.json({
       id: req.user.id,
       name: req.user.name,
-      email: req.user.email
+      email: req.user.email,
+      dob: req.user.dob,
+      phone: req.user.phone
     });
   }
 );

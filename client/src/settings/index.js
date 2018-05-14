@@ -1,11 +1,11 @@
 export default {
-  apiUrl: 'http://yoursite.com/api/',
+  apiUrl: 'http://mallsett.com/api/',
 };
 
 const siteConfig = {
-  siteName: 'ISOMORPHIC',
+  siteName: 'MALLSETT',
   siteIcon: 'ion-flash',
-  footerText: 'Isomorphic ©2017 Created by RedQ, Inc',
+  footerText: 'Mallsett ©2017 Created by LeCelie Inc',
 };
 const themeConfig = {
   topbar: 'themedefault',

@@ -18,13 +18,26 @@ const UserSchema = new Schema({
   avatar: {
     type: String
   },
-  age: {
+  dob: {
+    type: Date
+  },
+  phone: {
     type: String
   },
-  date: {
+  created_at: {
     type: Date,
     default: Date.now
+  },
+  updated_at: {
+    type: Date
   }
 });
 
 module.exports = User = mongoose.model('users', UserSchema);
+
+
+export const logoutUser = () => dispatch => {
+  // remove token from localStorage
+  localStorage.removeItem('jwtToken');
+  
+}
