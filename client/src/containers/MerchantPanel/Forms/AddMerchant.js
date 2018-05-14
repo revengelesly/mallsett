@@ -73,27 +73,14 @@ class AddMerchantForm extends Component {
 
 
 <Form onSubmit={this.handleSubmit} className="login-form">
-  
-  <FormItem label="Business Name" >
-    {getFieldDecorator('Business Name', {
-    rules: [{ required: true, message: 'please enter you user code' }],
-    })(
-      <Input autocomplete='business name' prefix={<Icon type="shop" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="Enter your buisness name here" />
-    )}
-  </FormItem>
-  <FormItem label="Business Address" >
-    {getFieldDecorator('Business Address', {
-    rules: [{ required: true, message: 'please enter you Business Address' }],
-    })(
-      <Input autocomplete='Business Address' prefix={<Icon type="environment-o" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="Enter Business address here" />
-    )}
-  </FormItem>
-  <FormItem label="Business Phone" >
-    {getFieldDecorator('Business Phone', {
-    rules: [{ required: true, message: 'please enter you Business phone number' }],
-    })(
-      <Input autocomplete='phone number' prefix={<Icon type="phone" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="Enter Business name here" />
-    )}
+<FormItem label="Business Logo" >
+    <Dragger {...uploadProps}>
+      <p className="ant-upload-drag-icon">
+        <Icon type="inbox" />
+      </p>
+      <p className="ant-upload-text">Click or drag file to this area to upload</p>
+      <p className="ant-upload-hint">Please upload one file at a time. We are strict on organization.</p>
+    </Dragger>
   </FormItem>
   <FormItem label="Business Type"  >
     {getFieldDecorator('Business Type', {
@@ -105,13 +92,36 @@ class AddMerchantForm extends Component {
     style={{ width: "100%" }}
     onChange={handleBusinessTypeChange}
   >
-      <Option value="b2b">Business 2 Business</Option>
-      <Option value="b2c">Business 2 Customer</Option>
+      <Option value="merchant">Merchant</Option>
       <Option value="delivery">Delivery Service</Option>
-    
+      <Option value="wholesale">Wholesale</Option>
+      <Option value="brands">Brands</Option>
+      <Option value="associations">Associations</Option>
   </Select>
     )}
   </FormItem>
+  <FormItem label="Personal Phone" >
+    {getFieldDecorator('Personal Phone', {
+    rules: [{ required: true, message: 'please enter you personal phone number.' }],
+    })(
+      <Input autocomplete='phone number' prefix={<Icon type="phone" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="Enter Business name here" />
+    )}
+  </FormItem>
+  <FormItem label="Personal Email" >
+    {getFieldDecorator('Personal Email', {
+    rules: [{ required: true, message: 'please enter you Personal Email' }],
+    })(
+      <Input autocomplete='Personal email' prefix={<Icon type="phone" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="Enter Personal email here" />
+    )}
+  </FormItem>
+  <FormItem label="Business Email" >
+    {getFieldDecorator('Business Email', {
+    rules: [{ required: true, message: 'please enter you Business Email' }],
+    })(
+      <Input autocomplete='business email' prefix={<Icon type="phone" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="Enter Business email here" />
+    )}
+  </FormItem>
+  
   <FormItem  label="About the Business"  >
     {getFieldDecorator('Short Introduction', {
     rules: [{ required: true, message: 'Please tell us a little bit about your business.' }],
@@ -134,15 +144,7 @@ class AddMerchantForm extends Component {
      <TextArea placeholder="Let customers know your Privacy Policy." autosize={{ minRows: 2}} />
     )}
   </FormItem>
-  <FormItem label="Business Logo" >
-    <Dragger {...uploadProps}>
-      <p className="ant-upload-drag-icon">
-        <Icon type="inbox" />
-      </p>
-      <p className="ant-upload-text">Click or drag file to this area to upload</p>
-      <p className="ant-upload-hint">Please upload one file at a time. We are strict on organization.</p>
-    </Dragger>
-  </FormItem>
+  
 
   </Form>
 

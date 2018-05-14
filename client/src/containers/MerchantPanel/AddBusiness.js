@@ -6,6 +6,7 @@ import FindMyBusiness from './Forms/FindMyBusiness';
 import TouchUp from './Forms/TouchUp';
 import Suppliers from './Forms/Suppliers';
 import Services from './Forms/Services';
+import AddMerchant from './Forms/AddMerchant';
 
 import { InputGroup } from '../../components/uielements/input';
 
@@ -79,20 +80,30 @@ const steps = [{
   content: <Suppliers />,
   description: '',
   help: 'soemthing here to help'
-}, {
+}, 
+{
   title: 'POS Systems',
   icon: 'desktop',
   content: <Services />,
   description: '',
   help: 'soemthing here to help'
-}, {
+}, 
+{
   title: 'Credit Card Processor',
   icon: 'credit-card',
   content: <Services />,
   description: '',
   help: 'soemthing here to help'
-}, {
-  title: 'Finalize',
+}, 
+{
+  title: 'Lastly',
+  icon: 'profile',
+  content: <AddMerchant />,
+  description: '',
+  help: 'soemthing here to help'
+},
+{
+  title: 'Preview',
   icon: 'trophy',
   content: <TouchUp />,
   description: '',
@@ -126,9 +137,6 @@ class PlugBusiness extends React.Component {
     return (
       <LayoutWrapper>
       
-      <PageHeader>
-          {<IntlMessages id="Panel.Merchant.Header" />}
-        </PageHeader>
      <Box>
       
                 <Row gutter={24}>
