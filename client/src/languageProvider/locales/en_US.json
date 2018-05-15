@@ -633,5 +633,22 @@
   "topbar.logout": "Logout",
   "topbar.viewAll": "View All",
   "topbar.viewCart": "View Cart",
-  "topbar.totalPrice": "Total Price"
+  "topbar.totalPrice": "Total Price",
+  "sidebar.businessSettings": "Business Settings",
+  "sidebar.manageProducts": "Products",
+  "sidebar.manageDeliveryService": "Delivery Services",
+  "sidebar.maangeRentals": "Rentals",
+  "sidebar.manageShoppingService": "Shopping Services",
+  "sidebar.manageIndemandServices": "Indemand Services",
+  "sidebar.manageEvents": "Events",
+  "sidebar.manageWholeSale": "Wholesale",
+  "sidebar.manageBrands": "Brands",
+  "sidebar.manageAssociations": "Associations",
+  "sidebar.marketingAgency": "Marketing Agencies",
+  "sidebar.manageCourse": "Courses",
+  "sidebar.manageNonProfit": "Not For Profit",
+  "sidebar.manageBooks": "Books",
+  "sidebar.manageMusic": "Music",
+  "sidebar.manageFilms": "Films",
+  "sidebar.newspaper": "News Paper"
 }
