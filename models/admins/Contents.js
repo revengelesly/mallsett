@@ -3,11 +3,11 @@ const Schema = mongoose.Schema;
 
 
 //create schema
-const AdminContentsOptionSchema = new Schema({
+const AdminContentsSchema = new Schema({
     
-    creditCards: [{
+     merchantsSelectOptions: [{
         //personal
-        admin: {
+        creator: {
             type: Schema.Types.ObjectId,
             ref: 'profiles'    
         },
@@ -19,101 +19,37 @@ const AdminContentsOptionSchema = new Schema({
             type: String,
             required: true
         },
-        available: {
+        availability: {
              type: Boolean,
             required: true,
             default: true
         },
-        created_at: {
-            type: Date,
-            default: Date.now
-        },
-        updated_at: {
-            type: Date
-        }
-    }],
-     posSystems: [{
-        //personal
-        admin: {
-            type: Schema.Types.ObjectId,
-            ref: 'profiles'    
-        },
-        category: {
-            type: String,
-            required: true
-        },
-        content: {
-            type: String,
-            required: true
-        },
-        available: {
+        private: {
              type: Boolean,
             required: true,
             default: true
         },
-        created_at: {
-            type: Date,
-            default: Date.now
-        },
-        updated_at: {
-            type: Date
-        }
-    }],
-     businessType: [{
-        //personal
-        admin: {
-            type: Schema.Types.ObjectId,
-            ref: 'profiles'    
-        },
-        category: {
+        accountType: {
             type: String,
-            required: true
-        },
-        content: {
-            type: String,
-            required: true
-        },
-        available: {
-             type: Boolean,
             required: true,
-            default: true
+            default: "Product"
         },
-        created_at: {
-            type: Date,
-            default: Date.now
-        },
-        updated_at: {
-            type: Date
-        }
-    }],
-    businessRecomendation: [{
-        //personal
-        admin: {
-            type: Schema.Types.ObjectId,
-            ref: 'profiles'    
-        },
-        category: {
-            type: String,
-            required: true
-        },
-        content: {
-            type: String,
-            required: true
-        },
-        available: {
-             type: Boolean,
-            required: true,
-            default: true
-        },
-        created_at: {
-            type: Date,
-            default: Date.now
-        },
-        updated_at: {
-            type: Date
-        }
-    }],
+        allowed: [{
+             type: String        
             
+        }],
+        banned: [{
+             type: String        
+            
+        }],
+        created_at: {
+            type: Date,
+            default: Date.now
+        },
+        updated_at: {
+            type: Date
+        }
+    }]
 });
 
-module.exports = AdminContentsOption = mongoose.model('locations', AdminContentsOptionSchema);
+module.exports = AdminContentsOption = mongoose.model('contents', AdminContentsSchema);
