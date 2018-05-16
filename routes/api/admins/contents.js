@@ -40,6 +40,7 @@ router.post('/admin/contents/selectOptions', passport.authenticate('jwt', { sess
     if (req.body.content) selectOptionsFields.content = req.body.content;
     if (req.body.availability) selectOptionsFields.availability = req.body.availability;
     if (req.body.private) selectOptionsFields.private = req.body.private;
+    if (req.body.accountType) selectOptionsFields.accountType = req.body.accountType;
     if (typeof req.body.allowed !== 'undefined') {
       selectOptionsFields.allowed = req.body.allowed.split(',');
     }
