@@ -39,7 +39,7 @@ class TopbarUser extends Component {
       <div>
         {this.props.isLoggedIn &&
           <div className="isoImgWrapper" onClick={this.showModal}>
-            <img alt="user default" src={this.props.profile.avatar} />
+            <img alt="user default" src={this.props.profile && this.props.profile.avatar ? this.props.profile.avatar : userpic} />
             <span className="userActivity online" />
           </div>
         }
