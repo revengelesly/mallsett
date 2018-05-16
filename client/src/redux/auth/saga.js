@@ -1,20 +1,32 @@
-import { all, takeEvery, put, fork } from 'redux-saga/effects';
+import { all, takeEvery, put, call, fork } from 'redux-saga/effects';
 import { push } from 'react-router-redux';
-import { getToken, clearToken } from '../../helpers/utility';
+import { getToken, getProfile, clearToken } from '../../helpers/utility';
 import actions from './actions';
+import { login } from './api';
 
-const fakeApiCall = true; // auth0 or express JWT
+const fakeApiCall = false; // auth0 or express JWT
 
 export function* loginRequest() {
-  yield takeEvery('LOGIN_REQUEST', function*() {
-    if (fakeApiCall) {
+  yield takeEvery('LOGIN_REQUEST', function*(action = {}) {
+    if (fakeApiCall || Object.keys(action).length === 0) {
       yield put({
         type: actions.LOGIN_SUCCESS,
         token: 'secret token',
         profile: 'Profile'
       });
     } else {
-      yield put({ type: actions.LOGIN_ERROR });
+      const user = yield call(login, action.user);
+      if (user && user.success) {
+        yield put({
+          type: actions.LOGIN_SUCCESS,
+          token: user.token,
+          profile: user.profile
+        });
+      } else {
+        yield put({
+          type: actions.LOGIN_ERROR
+        });
+      }
     }
   });
 }
@@ -22,15 +34,17 @@ export function* loginRequest() {
 export function* loginSuccess() {
   yield takeEvery(actions.LOGIN_SUCCESS, function*(payload) {
     yield localStorage.setItem('id_token', payload.token);
+    yield localStorage.setItem('profile', JSON.stringify(payload.profile));
   });
 }
 
 export function* loginError() {
-  yield takeEvery(actions.LOGIN_ERROR, function*() {});
+  yield takeEvery(actions.LOGIN_ERROR, function*() { return false; });
 }
 
 export function* logout() {
   yield takeEvery(actions.LOGOUT, function*() {
+    console.log('logout')
     clearToken();
     yield put(push('/'));
   });
@@ -38,11 +52,12 @@ export function* logout() {
 export function* checkAuthorization() {
   yield takeEvery(actions.CHECK_AUTHORIZATION, function*() {
     const token = getToken().get('idToken');
+    const profile = getProfile().get('profile');
     if (token) {
       yield put({
         type: actions.LOGIN_SUCCESS,
         token,
-        profile: 'Profile'
+        profile
       });
     }
   });

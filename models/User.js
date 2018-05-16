@@ -36,8 +36,7 @@ const UserSchema = new Schema({
 module.exports = User = mongoose.model('users', UserSchema);
 
 
-export const logoutUser = () => dispatch => {
-  // remove token from localStorage
-  localStorage.removeItem('jwtToken');
-  
-}
+// export const logoutUser = () => dispatch => {
+//   // remove token from localStorage
+//   localStorage.removeItem('jwtToken');
+// }

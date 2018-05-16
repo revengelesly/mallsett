@@ -9,6 +9,8 @@ const passport = require('passport');
 // Load Input Validation
 const validateRegisterInput = require('../../validation/register');
 const validateLoginInput = require('../../validation/login');
+const validateSettingInput = require('../../validation/setting');
+const sendMail = require('../../utilities/mailer');
 
 // Load User model
 const User = require('../../models/User');
@@ -31,8 +33,8 @@ router.post('/register', (req, res) => {
 
   User.findOne({ email: req.body.email }).then(user => {
     if (user) {
-      errors.email = 'Email already exists';
-      return res.status(400).json(errors);
+      errors.message = 'Email already exists';
+      return res.status(409).json(errors);
     } else {
       const avatar = gravatar.url(req.body.email, {
         s: '200', // Size
@@ -82,7 +84,7 @@ router.post('/login', (req, res) => {
   User.findOne({ email }).then(user => {
     // Check for user
     if (!user) {
-      errors.email = 'User not found';
+      errors.message = 'User not found';
       return res.status(404).json(errors);
     }
 
@@ -100,7 +102,14 @@ router.post('/login', (req, res) => {
           (err, token) => {
             res.json({
               success: true,
-              token: 'Bearer ' + token
+              token: 'Bearer ' + token,
+              profile: {
+                avatar: user.avatar,
+                email: user.email,
+                name: user.name,
+                age: user.age,
+                dob: user.dob
+              }
             });
           }
         );
@@ -109,6 +118,99 @@ router.post('/login', (req, res) => {
         return res.status(400).json(errors);
       }
     });
+  });
+});
+
+// @route   GET api/users/update
+// @desc    Update User / Returning JWT Token
+// @access  Public
+
+router.post('/update', (req, res) => {
+  const { errors, isValid } = validateSettingInput(req.body);
+
+  if (!isValid) {
+    return res.status(400).json(errors);
+  }
+
+  const email = req.body.currentEmail;
+  const password = req.body.currentPassword;
+
+  // Find user by email
+  User.findOne({ email }).then(user => {
+    if (!user) {
+      return res.status(404).json({email: 'User not found'});
+    }
+
+    // Check Password
+    bcrypt.compare(password, user.password).then(isMatch => {
+      if (isMatch) {
+        // User Matched
+        user.name = req.body.name ? req.body.name : user.name;
+        user.email = req.body.email ? req.body.email : user.email;
+        user.phone = req.body.phone ? req.body.phone : user.phone;
+        user.dob = req.body.dob ? req.body.dob : user.dob;
+        user.avatar = req.body.avatar ? req.body.avatar : user.avatar;
+        user.age = req.body.age ? req.body.age : user.age;
+
+        if (req.body.password) {
+          user.password = req.body.password,
+          bcrypt.genSalt(10, (err, salt) => {
+            bcrypt.hash(user.password, salt, (err, hash) => {
+              if (err) throw err;
+              user.password = hash;
+              user
+                .save()
+                .then(user => res.json(user))
+                .catch(err => console.log(err));
+            })
+          });
+        } else {
+          user.save()
+            .then(user => res.json(user))
+            .catch(err => console.log(err));
+        }
+      } else {
+        return res.status(400).json({message: 'Password incorrect'});
+      }
+    }).catch(err => {
+      console.log(err)
+    });
+  });
+});
+
+// @route   GET api/users/fogotpassword
+// @desc    Create new password then send email to user
+// @access  Public
+
+router.post('/fogotpassword', (req, res) => {
+  const email = req.body.email;
+
+  // Find user by email
+  User.findOne({ email }).then(user => {
+    if (user) {
+      user.password = bcrypt.genSaltSync(2);
+
+      bcrypt.genSalt(10, (err, salt) => {
+        bcrypt.hash(user.password, salt, (err, hash) => {
+          if (err) throw err;
+          let newPassword = user.password;
+          user.password = hash;
+          user
+            .save()
+            .then(user => {
+              const mailOptions = {
+                from: 'email@gmail.com',
+                to: user.email,
+                subject: 'Your new password',
+                text: `Your new password is ${newPassword}`
+              };
+              sendMail(mailOptions);
+              res.json(user);
+            })
+            .catch(err => console.log(err));
+        })
+      });
+    }
   });
 });
 
