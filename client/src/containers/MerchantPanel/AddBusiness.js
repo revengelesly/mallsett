@@ -5,6 +5,7 @@ import AddBusinessIntro from './Forms/AddBusinessIntro';
 import FindMyBusiness from './Forms/FindMyBusiness';
 import TouchUp from './Forms/TouchUp';
 import Suppliers from './Forms/Suppliers';
+import BusinessCardHorizontal from './Forms/BusinessCardHorizontal';
 import Services from './Forms/Services';
 import AddMerchant from './Forms/AddMerchant';
 
@@ -34,50 +35,50 @@ const steps = [{
 },{
   title: 'Find my Business',
   icon: 'environment-o',
-  content: <Suppliers />,
+  content: <BusinessCardHorizontal />,
   description: '',
   help: 'soemthing here to help'
 }, {
   title: 'Parent Company',
   icon: 'team',
-  content: <Suppliers />,
+  content: <BusinessCardHorizontal />,
   description: '',
   help: 'soemthing here to help'
 }, {
   title: 'Child Company',
   icon: 'usergroup-add',
-  content: <Suppliers />,
+  content: <BusinessCardHorizontal />,
   description: '',
   help: 'soemthing here to help'
 },  {
   title: 'Find my Suppliers',
   icon: 'shopping-cart',
-  content: <Suppliers />,
+  content: <BusinessCardHorizontal />,
   description: '',
   help: 'soemthing here to help'
 }, {
   title: 'Find My B2B Customers',
   icon: 'shop',
-  content: <Suppliers />,
+  content: <BusinessCardHorizontal />,
   description: '',
   help: 'soemthing here to help'
 }, {
   title: 'Find my Professional Services',
   icon: 'user',
-  content: <Suppliers />,
+  content: <BusinessCardHorizontal />,
   description: '',
   help: 'soemthing here to help'
 }, {
   title: 'Track my Competitors',
   content: 'Second-content',
   icon: 'meh-o',
-  content: <Suppliers />,
+  content: <BusinessCardHorizontal />,
   description: '',
   help: 'soemthing here to help'
 }, {
   title: 'Join Business Associations',
   icon: 'global',
-  content: <Suppliers />,
+  content: <BusinessCardHorizontal />,
   description: '',
   help: 'soemthing here to help'
 }, 

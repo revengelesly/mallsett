@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Upload, message, Form, Icon, Input, Select } from 'antd';
+import { Upload,  Modal, message, Form, Icon, Input, Select } from 'antd';
 import axios from 'axios';
 const { TextArea } = Input;
 const Dragger = Upload.Dragger;
@@ -28,6 +28,11 @@ function handleBusinessTypeChange(value) {
 }
 
 class AddMerchantForm extends Component {
+ state = {
+    previewVisible: false,
+    previewImage: '',
+    fileList: [],
+  };
 
   onSecondSubCategoryChange = (value) => {
     this.setState({
@@ -65,15 +70,49 @@ class AddMerchantForm extends Component {
   ageInfoHandler = (e) => {
     console.log("was click");
   }
+  handleCancel = () => this.setState({ previewVisible: false })
+
+  handlePreview = (file) => {
+    this.setState({
+      previewImage: file.url || file.thumbUrl,
+      previewVisible: true,
+    });
+  }
+
+  handleChange = ({ fileList }) => this.setState({ fileList })
+  
+  
   render() {
     const { getFieldDecorator } = this.props.form;
+    const { previewVisible, previewImage, fileList } = this.state;
+    const uploadButton = (
+      <div  style={{ width: '100%' }}>
+        <Icon type="plus" />
+        <div className="ant-upload-text"> Add Logo </div>
+      </div>
+    );
 
     return (
 <div>
 
 
 <Form onSubmit={this.handleSubmit} className="login-form">
-<FormItem label="Business Logo" >
+    <FormItem label="Business Logo"  >
+    <Upload
+          action="//jsonplaceholder.typicode.com/posts/"
+          listType="picture-card"
+          fileList={fileList}
+          onPreview={this.handlePreview}
+          onChange={this.handleChange}
+          
+        >
+          {fileList.length >= 1 ? null : uploadButton}
+        </Upload>
+        <Modal visible={previewVisible} footer={null} onCancel={this.handleCancel}>
+          <img alt="example" style={{ width: '100%' }} src={previewImage} />
+        </Modal>
+      </FormItem>
+<FormItem label="Business Gallery" >
     <Dragger {...uploadProps}>
       <p className="ant-upload-drag-icon">
         <Icon type="inbox" />
@@ -89,14 +128,27 @@ class AddMerchantForm extends Component {
     <Select
     defaultValue=""
     mode="multiple"
+    maxTagCount=""
     style={{ width: "100%" }}
     onChange={handleBusinessTypeChange}
   >
-      <Option value="merchant">Merchant</Option>
-      <Option value="delivery">Delivery Service</Option>
-      <Option value="wholesale">Wholesale</Option>
-      <Option value="brands">Brands</Option>
-      <Option value="associations">Associations</Option>
+      <Option value="manageProducts">Business to Customers</Option>
+      <Option value="manageWholeSale">Business to Business</Option>
+      <Option value="manageDeliveryService">Delivery Services</Option>
+      <Option value="maangeRentals">Rent and Lease</Option>
+      <Option value="manageShoppingService">Shopping and Styling</Option>
+      <Option value="manageIndemandServices">Indemand Services</Option>
+      <Option value="manageEvents">Events and Entertainment</Option>
+      <Option value="manageCourse">Schools and Courses</Option>
+      <Option value="manageBrands">Brand Management</Option>
+      <Option value="marketingAgency">Marketing Agencies</Option>
+      <Option value="manageAssociations">Associations</Option>
+      <Option value="manageChurch">Church</Option>
+      <Option value="manageNews">News and Contents</Option>
+      <Option value="manageFilms">Films</Option>
+      <Option value="manageMusic">Music</Option>
+      <Option value="manageBooks">Books</Option>
+      <Option value="manageNonProfit">Non-Profit</Option>
   </Select>
     )}
   </FormItem>
@@ -128,6 +180,20 @@ class AddMerchantForm extends Component {
     })(
      <TextArea placeholder="Autosize height with minimum and maximum number of lines" autosize={{ minRows: 2}} />
 
+    )}
+  </FormItem>
+  <FormItem label="Customers Commercial" >
+    {getFieldDecorator('Commercial', {
+    rules: [{ required: false, message: 'add commercial you would like to show to your customers..' }],
+    })(
+      <Input autocomplete='youtube link' prefix={<Icon type="text" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="add youtube link here" />
+    )}
+  </FormItem>
+  <FormItem label="B2B Commercial" >
+    {getFieldDecorator('Commercial', {
+    rules: [{ required: false, message: 'add commercial you would like to show to your business..' }],
+    })(
+      <Input autocomplete='youtube link' prefix={<Icon type="text" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="add youtube link here" />
     )}
   </FormItem>
   <FormItem  label="Terms and Conditions"  >
