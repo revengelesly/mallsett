@@ -21,19 +21,24 @@ import { getView } from '../../helpers/utility';
 import { ViewPort } from '../../helpers/constants';
 
 export default class UserPanel extends Component {
-    constructor(props) {
-      super(props);
-      this.state = {
-        activeTab: '1',
-        itemActiveTab: '1',
-        tabMenuPositon: 'top'
-      };
-    }
+  constructor(props) {
+    super(props);
+    this.state = {
+      activeTab: this.props.isLoggedIn ? '1' : '4',
+      itemActiveTab: '1',
+      tabMenuPositon: 'top'
+    };
+  }
+  LOG_OUT = 'logout';
 
   handleTabChange = (key) => {
-    this.setState({
-      activeTab: key
-    });
+    if (key === this.LOG_OUT) {
+      this.props.logout();
+    } else {
+      this.setState({
+        activeTab: key
+      });
+    }
   }
 
   handleItemActiveTab = (key) => {
@@ -53,6 +58,16 @@ export default class UserPanel extends Component {
     window.addEventListener('resize', this.handleWindowResize);
   }
 
+  componentDidUpdate = (prevProps, prevState) => {
+    if (this.props.isLoggedIn !== prevProps.isLoggedIn) {
+      if (this.props.isLoggedIn) {
+        this.handleTabChange('1');
+      } else {
+        this.handleTabChange('4');
+      }
+    }
+  }
+
   render(props){
     let data = [
       {
@@ -62,7 +77,8 @@ export default class UserPanel extends Component {
         form:  <Dependents handleItemActiveTab={this.handleItemActiveTab} />,
         item: <WrapDependentItems activeKey={this.state.itemActiveTab} />,
         formWidth: "12",
-        itemWidth: '12'
+        itemWidth: '12',
+        isDisplay: this.props.isLoggedIn
       }      ,
       {
         header: "My Locations",
@@ -71,7 +87,8 @@ export default class UserPanel extends Component {
         form:  <Location handleItemActiveTab={this.handleItemActiveTab} />,
         item: <WrapLocationItems activeKey={this.state.itemActiveTab} />,
         formWidth: "12",
-        itemWidth: '12'
+        itemWidth: '12',
+        isDisplay: this.props.isLoggedIn
       }  ,
       {
         header: "My Files and Documents",
@@ -80,25 +97,28 @@ export default class UserPanel extends Component {
         form:  <FileManagement handleItemActiveTab={this.handleItemActiveTab} />,
         item: <WrapFileItems activeKey={this.state.itemActiveTab} />,
         formWidth: "12",
-        itemWidth: '12'
+        itemWidth: '12',
+        isDisplay: this.props.isLoggedIn
       }  ,
       {
         icon: "lock",
         nav: "Register",
         header: "Register",
-        form:  <RegisterUser  handleTabChange={this.handleTabChange} />,
+        form:  <RegisterUser login={this.props.login} handleTabChange={this.handleTabChange} />,
         item: <WrapAboutUsItems />,
         formWidth: "12",
-        itemWidth: '12'
+        itemWidth: '12',
+        isDisplay: !this.props.isLoggedIn
       },
       {
         nav: "Login",
         icon: "unlock",
         header: "Login",
-        form:  <LoginUser  handleTabChange={this.handleTabChange} />,
+        form:  <LoginUser login={this.props.login} handleTabChange={this.handleTabChange} idToken={this.props.idToken} />,
         item: <WrapAboutUsItems />,
         formWidth: "12",
-        itemWidth: '12'
+        itemWidth: '12',
+        isDisplay: !this.props.isLoggedIn
       } ,
       {
         header: "Forgot Password",
@@ -107,16 +127,18 @@ export default class UserPanel extends Component {
         form:  <RequestUserPassword  handleTabChange={this.handleTabChange} />,
         item: <WrapAboutUsItems />,
         formWidth: "12",
-        itemWidth: '12'
+        itemWidth: '12',
+        isDisplay: !this.props.isLoggedIn
       } ,
        {
         header: "Account Settings",
         icon: "tool",
         nav: "Settings",
-        form:  <SettingsUser />,
+        form:  <SettingsUser login={this.props.login} profile={this.props.profile} />,
         item: <WrapAboutUsItems />,
         formWidth: "12",
-        itemWidth: '12'
+        itemWidth: '12',
+        isDisplay: this.props.isLoggedIn
       }
     ]
     return (
@@ -125,20 +147,21 @@ export default class UserPanel extends Component {
           <div className="card-container">
 
             <Tabs
-              defaultActiveKey="1"
               tabPosition={this.state.tabMenuPositon}
               size="small"
               activeKey={this.state.activeTab}
               onChange={this.handleTabChange}
             >
               {data.map((compData, i) => (
+                compData.isDisplay &&
               <TabPane   tab={<span><Icon type={compData.icon} />{compData.nav}</span>} key={i}>
                 <TabsComponents key={i} data={compData} itemActiveTab={this.state.itemActiveTab} />
               </TabPane>
               ))}
-              <TabPane  tab={<span><Icon type="logout" />Logout</span>} key='logout'>
 
-              </TabPane>
+              {this.props.isLoggedIn &&
+                <TabPane  tab={<span><Icon type="logout" />Logout</span>} key={this.LOG_OUT} />
+              }
             </Tabs>
           </div>
         </Box>

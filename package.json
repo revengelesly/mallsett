@@ -9,7 +9,7 @@
     "client": "npm start --prefix client --port 8081",
     "start": "node server.js",
     "required": "concurrently nvm install 8",
-    "dev": "concurrently \"npm run server\" \"npm run client\""
+    "dev": "concurrently --kill-others-on-fail \"npm run server\" \"npm run client\""
   },
   "author": "Brad Traversy",
   "license": "MIT",
@@ -23,7 +23,9 @@
     "gravatar": "^1.6.0",
     "jsonwebtoken": "^8.2.0",
     "moment": "^2.22.1",
+    "mongodb": "^3.1.0-beta4",
     "mongoose": "^5.0.12",
+    "nodemailer": "^4.6.4",
     "passport": "^0.4.0",
     "passport-jwt": "^4.0.0",
     "react-vis": "^1.8.1",

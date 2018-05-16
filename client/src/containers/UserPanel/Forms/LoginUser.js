@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {Form, Icon, Input, Button, Col, Row } from 'antd';
+import { Alert, Form, Icon, Input, Button, Col, Row } from 'antd';
 import  { InputGroup } from '../../../components/uielements/input';
 import SigninWrapper from '../signin.style';
 import IntlMessages from '../../../components/utility/intlMessages';
@@ -15,6 +15,7 @@ class LoginUser extends Component {
     checkDob: false,
     ageInfo: ''
   };
+
   check = () => {
     this.props.form.validateFields(
       (err) => {
@@ -27,14 +28,11 @@ class LoginUser extends Component {
 
   handleSubmit = (e) => {
     e.preventDefault();
-    this.props.form.validateFields((err, newUser) => {
+    this.props.form.validateFields((err, user) => {
       if (!err) {
-        console.log('Received values of form: ', newUser);
-        axios.post('http://mallsett-revengelesly.c9users.io/api/users/register', newUser)
-        .then(res => console.log(res.data))
-        .catch(err => console.log(err));
-      }
-    });
+        console.log('Received values of form: ', user);
+        this.props.login(user);
+    }});
   }
 
   handleButtonClick = (event) => {
@@ -76,8 +74,9 @@ class LoginUser extends Component {
   </FormItem>
 
     <FormItem >
+      {this.props.idToken === 'LOGIN_ERROR' && <Alert message='Email or Password is incorrect' type="error" showIcon banner closable />}
       <Button type="primary" style={{ width: '100%'}} onClick={this.check} htmlType="submit" className="login-form-button">
-      Register
+      Login
       </Button>
     </FormItem>
   </Form>
