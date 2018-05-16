@@ -94,5 +94,10 @@ const options = [
     label: "sidebar.manageNonProfit",
     leftIcon: "fa fa-hand-holding-usd"
   },
+  {
+    key: "manageNonProfit",
+    label: "sidebar.manageNonProfit",
+    leftIcon: "fa fa-hand-holding-usd"
+  },
 ];
 export default options;
