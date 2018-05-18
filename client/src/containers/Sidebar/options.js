@@ -1,103 +1,221 @@
 const options = [
   {
-    key: "blankPage",
-    label: "sidebar.blankPage",
-    leftIcon: "ion-document"
+    key: "dashboard",
+    label: "sidebar.dashboard",
+    leftIcon: "fa fa-tachometer-alt"
   },
   {
-    key: "businessSettings",
-    label: "sidebar.businessSettings",
-    leftIcon: "ion-briefcase"
+    key: "orderTracking",
+    label: "sidebar.orderTracking",
+    leftIcon: "fa fa-shipping-fast"
   },
   {
-    key: "manageProducts",
-    label: "sidebar.manageProducts",
-    leftIcon: "ion-pricetags"
+    key: "messages",
+    label: "sidebar.messages",
+    leftIcon: "fa fa-comment"
   },
   {
-    key: "manageDeliveryService",
-    label: "sidebar.manageDeliveryService",
-    leftIcon: "fa fa-truck"
+    key: "myBusiness",
+    label: "sidebar.myBusiness",
+    leftIcon: "fa fa-store"
   },
-   {
-    key: "maangeRentals",
-    label: "sidebar.maangeRentals",
+  {
+    key: "myRentals",
+    label: "sidebar.myRentals",
     leftIcon: "fa fa-building"
   },
   {
-    key: "manageShoppingService",
-    label: "sidebar.manageShoppingService",
-    leftIcon: "fa fa-shopping-bag"
+    key: "mySchedule",
+    label: "sidebar.mySchedule",
+    leftIcon: "fa fa-clock"
   },
   {
-    key: "manageIndemandServices",
-    label: "sidebar.manageIndemandServices",
-    leftIcon: "fa fa-car"
-  },
-  {
-    key: "manageEvents",
-    label: "sidebar.manageEvents",
-    leftIcon: "ion-bowtie"
-  },
-  {
-    key: "manageWholeSale",
-    label: "sidebar.manageWholeSale",
-    leftIcon: "fa fa-dolly"
-  },
-  {
-    key: "manageBrands",
-    label: "sidebar.manageBrands",
-    leftIcon: "ion-easel"
-  },
-  {
-    key: "manageAssociations",
-    label: "sidebar.manageAssociations",
-    leftIcon: "fa fa-handshake"
-  },
-  {
-    key: "marketingAgency",
-    label: "sidebar.marketingAgency",
-    leftIcon: "fa fa-bullhorn"
-  },
-  {
-    key: "manageCourse",
-    label: "sidebar.manageCourse",
-    leftIcon: "fa fa-bell"
-  },
-  {
-    key: "manageChurch",
-    label: "sidebar.manageChurch",
-    leftIcon: "fa fa-church"
+    key: "Products and Services",
+    label: "sidebar.productServices",
+    leftIcon: "fa fa-tags",
+    children: [
+      {
+       key: "addProductServices",
+       label: "sidebar.addProductServices",
+      },
+      {
+       key: "addCourses",
+       label: "sidebar.addCourses",
+      },
+      {
+       key: "deliveryServices",
+       label: "sidebar.deliveryServices",
+      },
+      {
+       key: "shoppingServices",
+       label: "sidebar.shoppingServices",
+      },
+      {
+       key: "indemandServices",
+       label: "sidebar.indemandServices",
+      },
+      {
+       key: "addContents",
+       label: "sidebar.addContents",
+      },
+      
+      {
+       key: "donationRequests",
+       label: "sidebar.donationRequests",
+      }
+
+    ]
   },
    {
-    key: "manageNews",
-    label: "sidebar.manageNews",
-    leftIcon: "fa fa-newspaper"
+    key: "outsourced",
+    label: "sidebar.outsourced",
+    leftIcon: "fa fa-dolly",
+    children: [
+      {
+       key: "buyWholesale",
+       label: "sidebar.buyWholesale",
+      },
+      {
+       key: "temporaryLabor",
+       label: "sidebar.temporaryLabor",
+      },
+      {
+       key: "outsourcedCleaning",
+       label: "sidebar.outsourcedCleaning",
+      },
+      {
+       key: "outsourcedCommunication",
+       label: "sidebar.outsourcedCommunication",
+      },
+      {
+       key: "outsouredMarketing",
+       label: "sidebar.outsouredMarketing",
+      },
+      {
+       key: "securityService",
+       label: "sidebar.securityService",
+      },
+      {
+       key: "outsourcedLegalTeam",
+       label: "sidebar.outsourcedLegalTeam",
+      },
+      {
+       key: "supportNotForProfits",
+       label: "sidebar.supportNotForProfits",
+      },
+      {
+       key: "outsourcedHumanResourced",
+       label: "sidebar.outsourcedHumanResourced",
+      },
+      {
+       key: "buyingLeasingRenting",
+       label: "sidebar.buyingLeasingRenting",
+      },
+      {
+       key: "buyingRealEstate",
+       label: "sidebar.buyingRealEstate",
+      }
+    ]
   },
-  {
-    key: "manageFilms",
-    label: "sidebar.manageFilms",
-    leftIcon: "fa fa-film"
-  },
-  {
-    key: "manageMusic",
-    label: "sidebar.manageMusic",
-    leftIcon: "fa fa-music"
-  },
-  {
-    key: "manageBooks",
-    label: "sidebar.manageBooks",
-    leftIcon: "fa fa-book"
-  },
-  {
-    key: "manageNonProfit",
-    label: "sidebar.manageNonProfit",
-    leftIcon: "fa fa-hand-holding-usd"
-  },
-  {
-    key: "manageNonProfit",
-    label: "sidebar.manageNonProfit",
-    leftIcon: "fa fa-hand-holding-usd"
-  },
+   {
+    key: "humanResource",
+    label: "sidebar.humanResource",
+    leftIcon: "fa fa-users",
+    children: [
+      {
+       key: "staff",
+       label: "sidebar.staff",
+      },
+      {
+       key: "jobs",
+       label: "sidebar.jobs",
+      },
+      {
+       key: "candidates",
+       label: "sidebar.candidates",
+      },
+      {
+       key: "talentPool",
+       label: "sidebar.talentPool",
+      },
+      {
+       key: "payroll",
+       label: "sidebar.payroll",
+      }
+
+    ]
+   },
+   {
+    key: "marketing",
+    label: "sidebar.marketing",
+    leftIcon: "fa fa-bullhorn",
+    children: [
+      {
+       key: "printMarketing",
+       label: "sidebar.printMarketing",
+      },
+      {
+       key: "phoneMarketing",
+       label: "sidebar.phoneMarketing",
+      },
+      {
+       key: "eMarketing",
+       label: "sidebar.eMarketing",
+      },
+      {
+       key: "causeMarketing",
+       label: "sidebar.causeMarketing",
+      },
+      {
+       key: "loyaltyPrograms",
+       label: "sidebar.loyaltyPrograms",
+      },
+      {
+       key: "affiliatePrograms",
+       label: "sidebar.affiliatePrograms",
+      }
+
+    ]
+   },
+   {
+    key: "financeAccounting",
+    label: "sidebar.financeAccounting",
+    leftIcon: "fa fa-money-bill-alt",
+    children: [
+     {
+       key: "incomeStatement",
+       label: "sidebar.incomeStatement",
+      },
+      {
+       key: "cashFlowStatement",
+       label: "sidebar.cashFlowStatement",
+      },
+      {
+       key: "changesInEquity",
+       label: "sidebar.changesInEquity",
+      },
+      {
+       key: "balanceSheet",
+       label: "sidebar.balanceSheet",
+      },
+      {
+       key: "incomeStatement",
+       label: "sidebar.incomeStatement",
+      },
+      {
+       key: "businessLoans",
+       label: "sidebar.businessLoans",
+      },
+      {
+       key: "sba",
+       label: "sidebar.sba",
+      },
+      {
+       key: "score",
+       label: "sidebar.score",
+      }
+
+    ]
+   }
 ];
 export default options;
