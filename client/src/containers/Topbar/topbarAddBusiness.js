@@ -34,13 +34,18 @@ class TopBarAddMerchants extends React.Component {
           onOk={this.handleOk}
           onCancel={this.handleCancel}
         >
-          <AddBusiness />
+          <AddBusiness isLoggedIn={this.props.isLoggedIn} />
         </Modal>
       </div>
     );
   }
 }
 
-export default connect(state => ({
-  ...state.App.toJS()
-}))(TopBarAddMerchants);
+function mapStateToProps(state) {
+  return {
+    isLoggedIn: state.Auth.get('idToken') !== null && state.Auth.get('idToken') !== 'LOGIN_ERROR',
+    ...state.Auth.toJS()
+  };
+}
+
+export default connect(mapStateToProps)(TopBarAddMerchants);
