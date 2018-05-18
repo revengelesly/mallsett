@@ -18,35 +18,84 @@ for (let i = 10; i < 36; i++) {
 }
 
 class MerchantTitle extends Component {
+  handleRemove = () => {
+    this.props.handleRemove();
+  }
+
   render() {
-     return (
-       <div>
-       Suplier One <Button type="danger" icon="delete" className="fullButton"> Remove </Button>
-       </div>
-       )
+    return (
+      <div>
+        Suplier One{' '}
+        {this.props.isDisplayButton &&
+          <Button
+            type="danger"
+            icon="delete"
+            className="fullButton"
+            onClick={this.handleRemove}
+          >
+            {' '}
+            Remove{' '}
+          </Button>
+        }
+      </div>
+    );
   }
 }
 
 class ServiceCard extends Component {
   render() {
+    let cardContent = this.props.name ? (
+      <div>
+        {this.props.address &&
+          <div>
+            <Icon type="environment-o" /> {this.props.address || 'Address'}
+          </div>
+        }
+        {this.props.phone &&
+          <div>
+            {' '}
+            <Icon type="phone" /> {this.props.phone || 'Phone number'}
+          </div>
+        }
+        {this.props.types &&
+          <div>
+            {' '}
+            <Icon type="idcard" /> {this.props.types}
+          </div>
+        }
+      </div>
+    ) : (
+      <div>
+          <div>
+            <Icon type="environment-o" /> Address
+          </div>
+          <div>
+            {' '}
+            <Icon type="phone" /> Phone number
+          </div>
+          <div>
+            {' '}
+            <Icon type="idcard" /> Businiss services
+          </div>
+      </div>
+    );
     return (
-        <Card title={<MerchantTitle />} bordered={true}>
+      <Card
+        title={<MerchantTitle isDisplayButton={this.props.name ? true : false} handleRemove={this.props.handleRemove} />}bordered={true}
+      >
         <Row gutter={8}>
           <Col span="6">
-            <img src="http://via.placeholder.com/350x250g"   style={{ width: '100%' }} />
+            <img
+              src="http://via.placeholder.com/350x250g"
+              style={{ width: '100%' }}
+            />
           </Col>
           <Col span="18">
-          <h4>Panther Coffee Shop </h4>
-
-            <div>
-          <Icon type="environment-o" /> 111 East Flagler,Miami, Fl 32453
-          </div>
-          <div> <Icon type="phone" /> 305-589-5965</div> 
-         <div>  <Icon type="idcard" /> Business Services, Food, Delivery</div> 
-         
+            <h4>{this.props.name || 'Company name'}</h4>
+            {cardContent}
           </Col>
         </Row>
-        </Card>
+      </Card>
     );
   }
 }
