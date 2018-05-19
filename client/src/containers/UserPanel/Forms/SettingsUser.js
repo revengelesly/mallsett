@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Alert, Form, Icon, Input, Button, DatePicker } from 'antd';
 import axios from 'axios';
 import moment from 'moment';
+import { BaseURL } from '../../../helpers/constants';
 
 function onChange(date, dateString) {
   console.log(date, dateString);
@@ -42,7 +43,7 @@ class SettingsUserForm extends Component {
         newUser.currentEmail = this.props.profile.email;
         console.log(newUser);
         let password = newUser.password ? newUser.password : newUser.currentPassword;
-        axios.post('/api/users/update', newUser)
+        axios.post(`${BaseURL}/api/users/update`, newUser)
             .then(res => {
               this.props.login({email: res.data.email, password: password});
               this.setState({
@@ -98,7 +99,7 @@ class SettingsUserForm extends Component {
             {getFieldDecorator('phone', {
             rules: [{ message: 'Please input your email address!' }],
             })(
-              <Input prefix={<Icon type="phone" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder={this.props.profile.name || 'Cell Phone'} />
+              <Input prefix={<Icon type="phone" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder={this.props.profile.phone || 'Cell Phone'} />
             )}
           </FormItem>
           <FormItem>

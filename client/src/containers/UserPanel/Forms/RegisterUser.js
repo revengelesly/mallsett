@@ -4,6 +4,7 @@ import  { InputGroup } from '../../../components/uielements/input';
 import SigninWrapper from '../signin.style';
 import IntlMessages from '../../../components/utility/intlMessages';
 import { getAgeStatement } from '../../../helpers/utility';
+import { BaseURL } from '../../../helpers/constants';
 import axios from 'axios';
 
 
@@ -48,7 +49,7 @@ class RegisterUser extends Component {
 
         axios({
           method: 'POST',
-          url: `/api/users/register`,
+          url: `${BaseURL}/api/users/register`,
           data: JSON.stringify(newUser),
           headers: {
             'Accept': 'application/json',

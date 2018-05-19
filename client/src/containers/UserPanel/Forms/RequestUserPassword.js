@@ -3,6 +3,7 @@ import { Alert, Form, Icon, Input, Button, Col, Row } from 'antd';
 import  { InputGroup } from '../../../components/uielements/input';
 import SigninWrapper from '../signin.style';
 import IntlMessages from '../../../components/utility/intlMessages';
+import { BaseURL } from '../../../helpers/constants';
 
 import axios from 'axios';
 
@@ -31,7 +32,7 @@ class RequestUserPassword extends Component {
     this.props.form.validateFields((err, newUser) => {
       if (!err) {
         console.log('Received values of form: ', newUser);
-        axios.post('/api/users/fogotpassword', newUser)
+        axios.post(`${BaseURL}/api/users/fogotpassword`, newUser)
         .then(res => {
           this.setState({
             showSuccessMessage: true

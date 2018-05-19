@@ -15,6 +15,7 @@ import PageHeader from '../../components/utility/pageHeader';
 import LayoutWrapper from '../../components/utility/layoutWrapper';
 import IntlMessages from '../../components/utility/intlMessages';
 import { Row, Col } from 'antd';
+import TopbarUser from '../Topbar/topbarUser';
 
 const Step = Steps.Step;
 
@@ -30,34 +31,46 @@ class PlugBusiness extends React.Component {
     super(props);
     this.state = {
       current: 0,
-      businesses: [],
+      businessesList: [],
+      changing: true,
     };
   }
 
-  handleAddBusiness = (business) => {
-    let businesses = this.state.businesses.map(x => ({...x}));
-    businesses[this.state.current] = business;
+  handleUpdateBusiness = (businesses) => {
+    let businessesList = this.state.businessesList.map(x => ([...x]));
+    businessesList[this.getCurrent()] = businesses;
     this.setState({
-      businesses: businesses
+      businessesList: businessesList,
+      changing: !this.state.changing
     });
   };
 
   next() {
-    const current = this.state.current + 1;
+    const current = this.getCurrent() + 1;
     this.setState({ current });
   }
 
   prev() {
-    const current = this.state.current - 1;
+    const current = this.getCurrent() - 1;
     this.setState({ current });
   }
 
+  getCurrent() {
+    if (this.props.isLoggedIn) {
+      return this.state.current;
+    }
+
+    return this.state.current > 1 ? 0 : this.state.current;
+  }
+
+  handleTabChange = (key) => {}
+  
   render() {
     let steps = [
       {
         title: 'Login or Register',
         icon: 'lock',
-        content: 'add login / register form here',
+        content: <TopbarUser />,
         description: 'Please login or register so you can add your business',
         help: 'soemthing here to help'
       },
@@ -72,42 +85,42 @@ class PlugBusiness extends React.Component {
       {
         title: 'Find my Business',
         icon: 'environment-o',
-        content: <BusinessCardHorizontal business={this.state.businesses[1]} handleAddBusiness={this.handleAddBusiness} />,
+        content: <BusinessCardHorizontal category='merchant' businesses={this.state.businessesList[1]} handleUpdateBusiness={this.handleUpdateBusiness} />,
         description: '',
         help: 'soemthing here to help'
       },
       {
         title: 'Parent Company',
         icon: 'team',
-        content: <BusinessCardHorizontal business={this.state.businesses[2]} handleAddBusiness={this.handleAddBusiness}/>,
+        content: <BusinessCardHorizontal category='parent' businesses={this.state.businessesList[2]} handleUpdateBusiness={this.handleUpdateBusiness}/>,
         description: '',
         help: 'soemthing here to help'
       },
       {
         title: 'Child Company',
         icon: 'usergroup-add',
-        content: <BusinessCardHorizontal business={this.state.businesses[3]} handleAddBusiness={this.handleAddBusiness}/>,
+        content: <BusinessCardHorizontal category='child' businesses={this.state.businessesList[3]} handleUpdateBusiness={this.handleUpdateBusiness}/>,
         description: '',
         help: 'soemthing here to help'
       },
       {
         title: 'Find my Suppliers',
         icon: 'shopping-cart',
-        content: <BusinessCardHorizontal business={this.state.businesses[4]} handleAddBusiness={this.handleAddBusiness}/>,
+        content: <BusinessCardHorizontal category='supplier' businesses={this.state.businessesList[4]} handleUpdateBusiness={this.handleUpdateBusiness}/>,
         description: '',
         help: 'soemthing here to help'
       },
       {
         title: 'Find My B2B Customers',
         icon: 'shop',
-        content: <BusinessCardHorizontal business={this.state.businesses[5]} handleAddBusiness={this.handleAddBusiness}/>,
+        content: <BusinessCardHorizontal category='b2b_customers' businesses={this.state.businessesList[5]} handleUpdateBusiness={this.handleUpdateBusiness}/>,
         description: '',
         help: 'soemthing here to help'
       },
       {
         title: 'Find my Professional Services',
         icon: 'user',
-        content: <BusinessCardHorizontal business={this.state.businesses[6]} handleAddBusiness={this.handleAddBusiness}/>,
+        content: <BusinessCardHorizontal category='services' businesses={this.state.businessesList[6]} handleUpdateBusiness={this.handleUpdateBusiness}/>,
         description: '',
         help: 'soemthing here to help'
       },
@@ -115,14 +128,14 @@ class PlugBusiness extends React.Component {
         title: 'Track my Competitors',
         content: 'Second-content',
         icon: 'meh-o',
-        content: <BusinessCardHorizontal business={this.state.businesses[7]} handleAddBusiness={this.handleAddBusiness}/>,
+        content: <BusinessCardHorizontal category='competitors' businesses={this.state.businessesList[7]} handleUpdateBusiness={this.handleUpdateBusiness}/>,
         description: '',
         help: 'soemthing here to help'
       },
       {
         title: 'Join Business Associations',
         icon: 'global',
-        content: <BusinessCardHorizontal business={this.state.businesses[8]} handleAddBusiness={this.handleAddBusiness}/>,
+        content: <BusinessCardHorizontal category='associations' businesses={this.state.businessesList[8]} handleUpdateBusiness={this.handleUpdateBusiness}/>,
         description: '',
         help: 'soemthing here to help'
       },
@@ -155,8 +168,9 @@ class PlugBusiness extends React.Component {
         help: 'soemthing here to help'
       }
     ];
-    const { current } = this.state;
-    let filteredSteps = filteredSteps = this.props.isLoggedIn ? steps.slice(1, steps.length) : steps.slice(0, 1);
+
+    let current = this.getCurrent();
+    let filteredSteps = this.props.isLoggedIn ? steps.slice(1, steps.length) : steps.slice(0, 2).reverse();
 
     return (
       <LayoutWrapper>
@@ -173,10 +187,10 @@ class PlugBusiness extends React.Component {
                 ))}
               </Steps>
               <h3 style={{ marginTop: 20, marginBottom: 0 }}>
-                {filteredSteps[this.state.current].title}{' '}
+                {filteredSteps[current].title}{' '}
                 <Popover
-                  content={<div>{filteredSteps[this.state.current].help}</div>}
-                  title={filteredSteps[this.state.current].title}
+                  content={<div>{filteredSteps[current].help}</div>}
+                  title={filteredSteps[current].title}
                   trigger="click"
                 >
                   <Button type="dashed" icon="question-circle-o">
@@ -187,18 +201,18 @@ class PlugBusiness extends React.Component {
               </h3>
               <p style={{ marginBottom: 20 }}>
                 {' '}
-                {filteredSteps[this.state.current].description}{' '}
+                {filteredSteps[current].description}{' '}
               </p>
               <div className="steps-content">
-                {filteredSteps[this.state.current].content}{' '}
+                {filteredSteps[current].content}{' '}
               </div>
               <div className="steps-action">
                 <InputGroup style={{ marginBottom: '15px' }}>
                   <Row gutter={24} style={{ marginTop: 8 }}>
                     <Col span="8" />
-                    {this.state.current <= 0 && <Col span="8" />}
+                    {current <= 0 && <Col span="8" />}
 
-                    {this.state.current > 0 && (
+                    {current > 0 && (
                       <Col span="8">
                         <Button
                           className="fullButton square"
@@ -209,7 +223,7 @@ class PlugBusiness extends React.Component {
                         </Button>
                       </Col>
                     )}
-                    {filteredSteps.length > 1 && this.state.current < filteredSteps.length - 1 && (
+                    {filteredSteps.length > 1 && current < filteredSteps.length - 1 && (
                       <Col span="8">
                         <Button
                           className="fullButton square"
@@ -222,7 +236,7 @@ class PlugBusiness extends React.Component {
                       </Col>
                     )}
 
-                    {this.state.current === filteredSteps.length - 1 && (
+                    {this.props.isLoggedIn && current === filteredSteps.length - 1 && (
                       <Col span="8">
                         <Button
                           className="fullButton square"
