@@ -20,5 +20,6 @@ module.exports = {
         first: process.env.COOKIE_FIRST,
         second: process.env.COOKIE_SECOND,
         third: process.env.COOKIE_THIRD
-    }
+    },
+    secreteOrKey: process.env.SECRETE_KEY
 };
