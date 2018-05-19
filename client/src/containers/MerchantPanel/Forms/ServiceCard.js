@@ -19,7 +19,7 @@ for (let i = 10; i < 36; i++) {
 
 class MerchantTitle extends Component {
   handleRemove = () => {
-    this.props.handleRemove();
+    this.props.handleRemove(this.props.googlePlaceId);
   }
 
   render() {
@@ -81,7 +81,15 @@ class ServiceCard extends Component {
     );
     return (
       <Card
-        title={<MerchantTitle isDisplayButton={this.props.name ? true : false} handleRemove={this.props.handleRemove} />}bordered={true}
+        style={{width:'100%', border:'3px solid #e8e8e8'}}
+        title={
+          <MerchantTitle
+            isDisplayButton={this.props.name ? true : false}
+            handleRemove={this.props.handleRemove}
+            googlePlaceId={this.props.googlePlaceId}
+          />
+        }
+        bordered={true}
       >
         <Row gutter={8}>
           <Col span="6">

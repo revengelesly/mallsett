@@ -18,10 +18,10 @@ class LocationSearchInput extends React.Component {
     this.setState({ address });
   };
 
-  handleSelect = (address, placeId) => {
+  handleSelect = (address, googlePlaceId) => {
     geocodeByAddress(address)
       .then(results => getLatLng(results[0]))
-      .then(latLng => this.props.handleSelect(latLng, placeId))
+      .then(latLng => this.props.handleSelect(latLng, googlePlaceId))
       .catch(error => console.error('Error', error));
   };
 
