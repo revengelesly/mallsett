@@ -27,14 +27,20 @@ class CreateAddress extends Component {
     });
   };
 
-  handleRemove = (googlePlaceId) => {
-    let businesses = this.state.businesses.map(x => ({...x}));
+  handleRemove = googlePlaceId => {
+    let businesses = this.state.businesses.map(x => ({ ...x }));
     businesses = businesses.filter(x => x.googlePlaceId !== googlePlaceId);
+
+    let business = this.state.businesses.find(
+      x => x.googlePlaceId === googlePlaceId
+    );
+
     this.setState({
       businesses: businesses,
       disabled: false
     });
     this.props.handleUpdateBusiness(businesses);
+    this.props.handleDeleteBusinessFromDatabase(business);
   };
 
   handleSelect = (position, googlePlaceId) => {
@@ -47,6 +53,10 @@ class CreateAddress extends Component {
         let name = place.name;
         let address = place['formatted_address'];
         let phone = place['formatted_phone_number'];
+        let photoSource =
+          place['photos'] && place['photos'][0]
+            ? place['photos'][0].getUrl({ maxWidth: 320, maxHeight: 250 })
+            : '';
         let types = place['types']
           ? place['types']
               .map(x =>
@@ -60,29 +70,30 @@ class CreateAddress extends Component {
               .join(', ')
           : [];
         if (name && (address || phone || types)) {
+          let business = {
+            longitude: position.lng,
+            lattitude: position.lat,
+            googlePlaceId: googlePlaceId,
+            businessName: name,
+            address: address || '',
+            phone: '' || phone,
+            googlePlaceCategories: types || '',
+            categories: [this.props.category],
+            photo: photoSource
+          };
+
           this.setState({
-            businesses: [
-              ...this.state.businesses,
-              {
-                position: position,
-                googlePlaceId: googlePlaceId,
-                name: name,
-                address: address || '',
-                phone: '' || phone,
-                types: types || '',
-                categories: [this.props.category]
-              }
-            ]
+            businesses: [...this.state.businesses, business]
           });
 
           this.props.handleUpdateBusiness(this.state.businesses);
+          this.props.handleAddBussinessToDatabase(business);
         }
       });
     }
   };
 
-  componentWillReceiveProps = (nextProps) => {
-    console.log(this.props.category, nextProps.businesses);
+  componentWillReceiveProps = nextProps => {
     if (nextProps.businesses && nextProps.businesses.length > 0) {
       this.setState({
         businesses: nextProps.businesses,
@@ -94,16 +105,18 @@ class CreateAddress extends Component {
   };
 
   render() {
-    console.log(this.state);
     let address =
       this.state.businesses.length > 0
         ? this.state.businesses[this.state.businesses.length - 1].address
         : '';
     let position =
       this.state.businesses.length > 0
-        ? this.state.businesses[this.state.businesses.length - 1].position
+        ? { lat: parseFloat(this.state.businesses[this.state.businesses.length - 1].lattitude), lng: parseFloat(this.state.businesses[this.state.businesses.length - 1].longitude)}
         : '';
-    let overflowY = this.state.businesses && this.state.businesses.length > 1 ? 'scroll' : 'initial';
+    let overflowY =
+      this.state.businesses && this.state.businesses.length > 1
+        ? 'scroll'
+        : 'initial';
     return (
       <div>
         <Row justify="start">
@@ -124,26 +137,32 @@ class CreateAddress extends Component {
                 </Col>
               </InputGroup>
               <InputGroup size="large" style={{ marginBottom: '15px' }}>
-                <List
-                  style={{ height: '250px', overflowY: overflowY}}
-                  className="demo-loadmore-list"
-                  itemLayout="horizontal"
-                  split={false}
-                  dataSource={this.state.businesses}
-                  renderItem={business => (
-                    <List.Item>
-                      <ServiceCard
-                        name={business.name}
-                        address={business.address}
-                        phone={business.phone}
-                        types={business.types}
-                        handleRemove={this.handleRemove}
-                        key={business.googlePlaceId}
-                        googlePlaceId={business.googlePlaceId}
-                      />
-                    </List.Item>
-                  )}
-                />
+                {this.state.businesses && this.state.businesses.length > 0 && (
+                  <List
+                    className="demo-loadmore-list"
+                    itemLayout="horizontal"
+                    split={false}
+                    dataSource={this.state.businesses}
+                    renderItem={business => (
+                      <List.Item>
+                        <ServiceCard
+                          name={business.businessName}
+                          address={business.address}
+                          phone={business.phone}
+                          types={business.googlePlaceCategories}
+                          handleRemove={this.handleRemove}
+                          key={business.googlePlaceId}
+                          googlePlaceId={business.googlePlaceId}
+                          photo={business.photo}
+                          isAdded={this.props.isAdded}
+                        />
+                      </List.Item>
+                    )}
+                  />
+                )}
+                {(!this.state.businesses || this.state.businesses.length === 0) && (
+                  <p style={{textAlign: 'center'}}>Please search for your business above</p>
+                )}
               </InputGroup>
             </ContentHolder>
           </Col>

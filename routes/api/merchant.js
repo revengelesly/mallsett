@@ -25,9 +25,9 @@ router.get('/test', (req, res) => res.json({ msg: 'Merchant Works' }));
 
 
 /*********************************************************
- * 
+ *
  *          CRUD merchant
- * 
+ *
  * ******************************************************/
 
 // @route    POST api/merchant
@@ -61,17 +61,21 @@ router.post(
     if (typeof req.body.googlePlaceCategories !== 'undefined') {
       let googlePlaceCategories = cleanString(req.body.googlePlaceCategories);
       merchantField.businessType = googlePlaceCategories.split(',');
+      merchantField.place.googlePlaceCategories = googlePlaceCategories.split(',');
     }
+    if (req.body.photo) merchantField.place.photo = req.body.photo;
     if (req.body.handle) merchantField.handle = req.body.handle;
     if (req.body.notes) merchantField.place.notes = req.body.notes;
     if (req.body.pitch) merchantField.detail.pitch = req.body.pitch;
     if (req.body.bio) merchantField.detail.bio = req.body.bio;
     if (req.body.terms) merchantField.detail.terms = req.body.terms;
     if (req.body.privacy) merchantField.detail.privacy = req.body.privacy;
+    if (req.body.category) merchantField.category = req.body.category;
+    if (req.body.createdBy) merchantField.createdBy = req.body.createdBy;
     // check to see if handle exists after merchant update the handle
-    
 
-    Merchant.findOne({ id: req.body.merchant_id }).then(merchant => {
+
+    Merchant.findOne({ _id: req.body.merchant_id }).then(merchant => {
       if (merchant) {
         // Update
         Merchant.findOneAndUpdate(
@@ -81,7 +85,7 @@ router.post(
         ).then(merchant => res.json(merchant));
       } else {
         // Create
- 
+
         // Check if handle exists
         Merchant.findOne({ handle: req.body.handle }).then(merchant => {
           if (merchant) {
@@ -96,5 +100,35 @@ router.post(
     });
   }
 );
+
+router.post(
+  '/delete/',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    Merchant.findOne({ _id: req.body.merchant_id }).then(merchant => {
+      if (merchant) {
+        Merchant.deleteOne({_id: req.body.merchant_id})
+        .then(merchant => res.json(merchant))
+        .catch(err => console.log(err));
+      } else {
+        return res.status(404).json({message: 'Merchant not found'});
+      }
+    });
+  }
+)
+
+router.get(
+  '/',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    Merchant.find().then(merchants => {
+      if (merchants) {
+        res.json(merchants)
+      } else {
+        return res.status(404).json({message: 'Merchant not found'});
+      }
+    });
+  }
+)
 
 module.exports = router;

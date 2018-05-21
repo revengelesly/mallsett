@@ -26,7 +26,7 @@ class MerchantTitle extends Component {
     return (
       <div>
         Suplier One{' '}
-        {this.props.isDisplayButton &&
+        {this.props.isDisplayButton && this.props.isAdded &&
           <Button
             type="danger"
             icon="delete"
@@ -87,6 +87,7 @@ class ServiceCard extends Component {
             isDisplayButton={this.props.name ? true : false}
             handleRemove={this.props.handleRemove}
             googlePlaceId={this.props.googlePlaceId}
+            isAdded={this.props.isAdded}
           />
         }
         bordered={true}
@@ -94,7 +95,7 @@ class ServiceCard extends Component {
         <Row gutter={8}>
           <Col span="6">
             <img
-              src="http://via.placeholder.com/350x250g"
+              src={this.props.photo || "http://via.placeholder.com/350x250g"}
               style={{ width: '100%' }}
             />
           </Col>
