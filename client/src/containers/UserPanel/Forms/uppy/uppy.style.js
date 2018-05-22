@@ -1826,7 +1826,7 @@ const UppyStyleWrapper = styled.div`
   @media only screen and (min-width: 768px) {
     .UppyDashboard-inner {
       width: 750px;
-      height: 550px;
+      height: 300px;
       border-radius: 5px;
     }
     .UppyDashboard--modal .UppyDashboard-inner {
