@@ -47,6 +47,5 @@
     "build": "react-app-rewired build",
     "test": "react-app-rewired test --env=jsdom",
     "eject": "react-scripts eject"
-  },
-  "proxy": "http://localhost:5000/"
+  }
 }
