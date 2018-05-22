@@ -26,7 +26,7 @@ class MerchantTitle extends Component {
     return (
       <div>
         Suplier One{' '}
-        {this.props.isDisplayButton && this.props.isAdded &&
+        {this.props.isDisplayButton &&
           <Button
             type="danger"
             icon="delete"

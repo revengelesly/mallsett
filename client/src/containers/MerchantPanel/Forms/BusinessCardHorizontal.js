@@ -7,6 +7,7 @@ import ServiceCard from './ServiceCard';
 import MapComponent from '../../../components/map/mapComponent';
 import LocationSearchInput from '../../../components/map/locationSearchInput';
 import { FusionTablesLayer } from 'react-google-maps';
+import { BaseURL } from '../../../helpers/constants';
 
 const key = 'AIzaSyDOY-nnP74UzLSbgqm7UlfuTLc2WJkSKzw';
 
@@ -16,7 +17,7 @@ class CreateAddress extends Component {
 
     this.state = {
       businesses: props.businesses || [],
-      disabled: false
+      disabled: props.businesses && props.businesses.length > 0 && props.category === 'merchant' ? true : false
     };
   }
 
@@ -97,7 +98,7 @@ class CreateAddress extends Component {
     if (nextProps.businesses && nextProps.businesses.length > 0) {
       this.setState({
         businesses: nextProps.businesses,
-        disabled: this.props.category === 'merchant' ? true : false
+        disabled: nextProps.category === 'merchant' ? true : false
       });
     } else {
       this.resetState();
@@ -154,7 +155,6 @@ class CreateAddress extends Component {
                           key={business.googlePlaceId}
                           googlePlaceId={business.googlePlaceId}
                           photo={business.photo}
-                          isAdded={this.props.isAdded}
                         />
                       </List.Item>
                     )}

@@ -17,6 +17,8 @@ import IntlMessages from '../../components/utility/intlMessages';
 import { Row, Col, Layout } from 'antd';
 import TopbarUser from '../Topbar/topbarUser';
 import LoginUser from '../UserPanel/Forms/LoginUser';
+import RegisterUser from '../UserPanel/Forms/RegisterUser';
+import RequestUserPassword from '../UserPanel/Forms/RequestUserPassword';
 import axios from 'axios';
 import { BaseURL } from '../../helpers/constants';
 
@@ -37,7 +39,9 @@ class PlugBusiness extends React.Component {
       businessesList: [],
       merchantsList: [],
       changing: true,
-      isAdded: false
+      isAdded: false,
+      formState: 1,
+      merchants: this.props.merchants
     };
   }
 
@@ -60,15 +64,14 @@ class PlugBusiness extends React.Component {
       }
 
       merchantsList[this.getCurrent()].push(merchant);
+
+      this.props.handleAddMerchant(merchant);
     }
 
     this.setState({
-      merchantsList: merchantsList,
-      isAdded: true
+      merchantsList: merchantsList
     });
   };
-
-
 
   handleAddBussinessToDatabase = (business) => {
     let merchant =  this.state.merchantsList[this.state.current] ?
@@ -81,10 +84,6 @@ class PlugBusiness extends React.Component {
         createdBy: this.props.profile.email,
         ...business
       };
-
-      this.setState({
-        isAdded: false
-      });
 
       axios({
         method: 'POST',
@@ -108,6 +107,8 @@ class PlugBusiness extends React.Component {
       this.setState({
         merchantsList
       });
+
+      this.props.handleRemoveMerchant(merchant);
     }
   }
 
@@ -148,46 +149,71 @@ class PlugBusiness extends React.Component {
     return this.state.current > 1 ? 0 : this.state.current;
   }
 
-  componentDidMount = () => {
-    axios({
-      method: 'GET',
-        url: `${BaseURL}/api/merchant/`,
-        params: {
-          email: encodeURI(this.props.profile.email)
-        },
-        headers: {
-          'Authorization': this.props.idToken,
-          'Accept': 'application/json',
-          'Content-Type': 'application/json'
-        }
-    }).then(res => {
-      let merchants = res.data.filter(x => x.createdBy === this.props.profile.email);
-      let businessesList = [];
-      businessesList[1] = merchants.filter(x => x.category === 'merchant').map(x => x.place);
-      businessesList[2] = merchants.filter(x => x.category === 'parent').map(x => x.place);
-      businessesList[3] = merchants.filter(x => x.category === 'child').map(x => x.place);
-      businessesList[4] = merchants.filter(x => x.category === 'supplier').map(x => x.place);
-      businessesList[5] = merchants.filter(x => x.category === 'b2b_customers').map(x => x.place);
-      businessesList[6] = merchants.filter(x => x.category === 'services').map(x => x.place);
-      businessesList[7] = merchants.filter(x => x.category === 'competitors').map(x => x.place);
-      businessesList[8] = merchants.filter(x => x.category === 'associations').map(x => x.place);
+  handleTabChange = (key) => {
+    this.setState({
+      formState: key
+    });
+  };
 
-      this.setState({
-        merchants,
-        businessesList
-      });
-    })
-    .catch(err => console.log(err))
+  bindDataToState = (merchants, email) => {
+    merchants = merchants.filter(x => x.createdBy === email);
+    let merchantsList = [];
+    merchantsList[1] = merchants.filter(x => x.category === 'merchant');
+    merchantsList[2] = merchants.filter(x => x.category === 'parent');
+    merchantsList[3] = merchants.filter(x => x.category === 'child');
+    merchantsList[4] = merchants.filter(x => x.category === 'supplier');
+    merchantsList[5] = merchants.filter(x => x.category === 'b2b_customers');
+    merchantsList[6] = merchants.filter(x => x.category === 'services');
+    merchantsList[7] = merchants.filter(x => x.category === 'competitors');
+    merchantsList[8] = merchants.filter(x => x.category === 'associations');
+
+    let businessesList = [];
+    businessesList[1] = merchantsList[1].map(x => x.place);
+    businessesList[2] = merchantsList[2].map(x => x.place);
+    businessesList[3] = merchantsList[3].map(x => x.place);
+    businessesList[4] = merchantsList[4].map(x => x.place);
+    businessesList[5] = merchantsList[5].map(x => x.place);
+    businessesList[6] = merchantsList[6].map(x => x.place);
+    businessesList[7] = merchantsList[7].map(x => x.place);
+    businessesList[8] = merchantsList[8].map(x => x.place);
+
+    this.setState({
+      merchantsList,
+      businessesList
+    });
   }
 
-  handleTabChange = key => {};
+  componentDidMount = () => {
+    if (this.props.isLoggedIn && this.props.profile) {
+      this.bindDataToState(this.props.merchants, this.props.profile.email);
+    }
+  }
+
+  componentWillReceiveProps = (nextProps) => {
+    if (nextProps.isLoggedIn && nextProps.profile) {
+      this.bindDataToState(nextProps.merchants, nextProps.profile.email);
+    }
+  }
 
   render() {
+    let step1Content = <LoginUser login={this.props.login} />;
+    switch(this.state.formState) {
+      case '3':
+        step1Content = <RegisterUser login={this.props.login} handleTabChange={this.handleTabChange} />
+        break;
+      case '5':
+        step1Content = <RequestUserPassword  handleTabChange={this.handleTabChange} />;
+        break;
+      default:
+        step1Content = <LoginUser login={this.props.login} handleTabChange={this.handleTabChange} idToken={this.props.idToken} />;
+        break;
+    }
+
     let steps = [
       {
         title: 'Login or Register',
         icon: 'lock',
-        content: <LoginUser login={this.props.login} />,
+        content: step1Content,
         description: 'Please login or register so you can add your business',
         help: 'soemthing here to help'
       },
@@ -210,7 +236,9 @@ class PlugBusiness extends React.Component {
             handleUpdateBusiness={this.handleUpdateBusiness}
             handleAddBussinessToDatabase={this.handleAddBussinessToDatabase}
             handleDeleteBusinessFromDatabase={this.handleDeleteBusinessFromDatabase}
+            handleUpdateMerchant={this.handleUpdateMerchant}
             isAdded={this.state.isAdded}
+            {...this.props}
           />
         ),
         description: '',
@@ -227,7 +255,9 @@ class PlugBusiness extends React.Component {
             handleUpdateBusiness={this.handleUpdateBusiness}
             handleAddBussinessToDatabase={this.handleAddBussinessToDatabase}
             handleDeleteBusinessFromDatabase={this.handleDeleteBusinessFromDatabase}
+            handleUpdateMerchant={this.handleUpdateMerchant}
             isAdded={this.state.isAdded}
+            {...this.props}
           />
         ),
         description: '',
@@ -244,7 +274,9 @@ class PlugBusiness extends React.Component {
             handleUpdateBusiness={this.handleUpdateBusiness}
             handleAddBussinessToDatabase={this.handleAddBussinessToDatabase}
             handleDeleteBusinessFromDatabase={this.handleDeleteBusinessFromDatabase}
+            handleUpdateMerchant={this.handleUpdateMerchant}
             isAdded={this.state.isAdded}
+            {...this.props}
           />
         ),
         description: '',
@@ -261,7 +293,9 @@ class PlugBusiness extends React.Component {
             handleUpdateBusiness={this.handleUpdateBusiness}
             handleAddBussinessToDatabase={this.handleAddBussinessToDatabase}
             handleDeleteBusinessFromDatabase={this.handleDeleteBusinessFromDatabase}
+            handleUpdateMerchant={this.handleUpdateMerchant}
             isAdded={this.state.isAdded}
+            {...this.props}
           />
         ),
         description: '',
@@ -278,7 +312,9 @@ class PlugBusiness extends React.Component {
             handleUpdateBusiness={this.handleUpdateBusiness}
             handleAddBussinessToDatabase={this.handleAddBussinessToDatabase}
             handleDeleteBusinessFromDatabase={this.handleDeleteBusinessFromDatabase}
+            handleUpdateMerchant={this.handleUpdateMerchant}
             isAdded={this.state.isAdded}
+            {...this.props}
           />
         ),
         description: '',
@@ -295,7 +331,9 @@ class PlugBusiness extends React.Component {
             handleUpdateBusiness={this.handleUpdateBusiness}
             handleAddBussinessToDatabase={this.handleAddBussinessToDatabase}
             handleDeleteBusinessFromDatabase={this.handleDeleteBusinessFromDatabase}
+            handleUpdateMerchant={this.handleUpdateMerchant}
             isAdded={this.state.isAdded}
+            {...this.props}
           />
         ),
         description: '',
@@ -313,7 +351,9 @@ class PlugBusiness extends React.Component {
             handleUpdateBusiness={this.handleUpdateBusiness}
             handleAddBussinessToDatabase={this.handleAddBussinessToDatabase}
             handleDeleteBusinessFromDatabase={this.handleDeleteBusinessFromDatabase}
+            handleUpdateMerchant={this.handleUpdateMerchant}
             isAdded={this.state.isAdded}
+            {...this.props}
           />
         ),
         description: '',
@@ -330,7 +370,9 @@ class PlugBusiness extends React.Component {
             handleUpdateBusiness={this.handleUpdateBusiness}
             handleAddBussinessToDatabase={this.handleAddBussinessToDatabase}
             handleDeleteBusinessFromDatabase={this.handleDeleteBusinessFromDatabase}
+            handleUpdateMerchant={this.handleUpdateMerchant}
             isAdded={this.state.isAdded}
+            {...this.props}
           />
         ),
         description: '',
@@ -415,21 +457,22 @@ class PlugBusiness extends React.Component {
                             </Button>
                           </Col>
                         )}
-                        {filteredSteps.length > 1 &&
-                          current < filteredSteps.length - 1 && (
+                        {((filteredSteps.length > 1 &&
+                          current < filteredSteps.length - 1)) && (
                             <Col span="8">
                               <Button
                                 className="fullButton square"
                                 type="primary"
                                 style={{ marginRight: 8 }}
                                 onClick={() => this.next()}
+                                {...(filteredSteps[current].title.indexOf('Login') > 0 ? {disabled: 'true'} : {})}
                               >
                                 Next
                               </Button>
                             </Col>
                           )}
 
-                        {current === filteredSteps.length - 1 && (
+                        {current === filteredSteps.length - 1  && (
                           <Col span="8">
                             <Button
                               className="fullButton square"

@@ -6,7 +6,7 @@ import { Modal, Button, Icon } from 'antd';
 import UserPanel from '../UserPanel/userPanel';
 
 
-const { login, logout } = authAction;
+const { login, logout, loginSuccess, updateProfile } = authAction;
 
 class TopbarUser extends Component {
   constructor(props) {
@@ -55,7 +55,7 @@ class TopbarUser extends Component {
           width="80%"
           footer={null}
         >
-          <UserPanel login={this.props.login} logout={this.props.logout} isLoggedIn={this.props.isLoggedIn} profile={this.props.profile} idToken={this.props.idToken} />
+          <UserPanel login={this.props.login} logout={this.props.logout} isLoggedIn={this.props.isLoggedIn} profile={this.props.profile} idToken={this.props.idToken} {...this.props} />
         </Modal>
       </div>
     );
@@ -73,7 +73,9 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return {
     logout: () => dispatch(logout()),
-    login: (email, password) => dispatch(login(email, password))
+    login: (email, password) => dispatch(login(email, password)),
+    loginSuccess: (user, profile) => dispatch(loginSuccess(user, profile)),
+    updateProfile: (profile) => dispatch(updateProfile(profile))
   };
 }
 
