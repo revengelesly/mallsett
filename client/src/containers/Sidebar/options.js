@@ -4,6 +4,7 @@ const options = [
     label: "sidebar.dashboard",
     leftIcon: "fa fa-tachometer-alt"
   },
+  
   {
     key: "orderTracking",
     label: "sidebar.orderTracking",
@@ -215,7 +216,13 @@ const options = [
        label: "sidebar.score",
       }
 
-    ]
-   }
+    ],
+    
+   },
+   {
+    key: "storePage",
+    label: "sidebar.storePage",
+    leftIcon: "fa fa-desktop"
+  },
 ];
 export default options;

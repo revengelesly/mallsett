@@ -4,5 +4,5 @@ export const ViewPort = {
   TabView: 'TabView'
 };
 
-//export const BaseURL = 'http://mallsett-revengelesly.c9users.io';
+// export const BaseURL = 'http://localhost:7000';
 export const BaseURL = '';
