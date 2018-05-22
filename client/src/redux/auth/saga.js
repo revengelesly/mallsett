@@ -2,7 +2,8 @@ import { all, takeEvery, put, call, fork } from 'redux-saga/effects';
 import { push } from 'react-router-redux';
 import { getToken, getProfile, clearToken } from '../../helpers/utility';
 import actions from './actions';
-import { login } from './api';
+import { login, getProfileServer } from './api';
+import axios from 'axios';
 
 const fakeApiCall = false; // auth0 or express JWT
 
@@ -17,10 +18,12 @@ export function* loginRequest() {
     } else {
       const user = yield call(login, action.user);
       if (user && user.success) {
+        const profile = yield call(getProfileServer, user);
+        console.log(profile);
         yield put({
           type: actions.LOGIN_SUCCESS,
           token: user.token,
-          profile: user.profile
+          profile: profile
         });
       } else {
         yield put({

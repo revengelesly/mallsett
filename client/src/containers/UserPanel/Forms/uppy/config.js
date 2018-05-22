@@ -1,17 +1,17 @@
 const config = {
   target: '#uppyHolder',
-  endpoint: 'fakeServer',
+  endpoint: 'https://master.tus.io/files/',
   DashboardInline: true,
-  Webcam: true,
-  GoogleDrive: true,
-  Dropbox: true,
-  Instagram: true,
+  Webcam: false,
+  GoogleDrive: false,
+  Dropbox: false,
+  Instagram: false,
   autoProceed: false,
   restrictions: {
     maxFileSize: 1000000,
-    maxNumberOfFiles: 3,
-    minNumberOfFiles: 2,
-    allowedFileTypes: ['image/*', 'video/*']
+    maxNumberOfFiles: 1,
+    minNumberOfFiles: 1,
+    allowedFileTypes: ['image/*']
   },
   metaFields: [
     {

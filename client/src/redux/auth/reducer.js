@@ -11,6 +11,8 @@ export default function authReducer(state = initState, action) {
       return initState;
     case actions.LOGIN_ERROR:
       return state.set('idToken', actions.LOGIN_ERROR);
+    case actions.UPDATE_PROFILE:
+      return state.set('profile', action.profile)
     default:
       return state;
   }

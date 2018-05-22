@@ -11,7 +11,8 @@ const MapComponent = compose(
   }),
   withGoogleMap
 )((props) => {
-  let position = props.position || { lat: -34.397, lng: 150.644 };
+  // 701 S Miami Ave, Miami, FL 33130
+  let position = props.position || { lat: -80.19308050000001, lng: 25.7671641 };
 
   return (
       <div>
