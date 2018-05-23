@@ -103,13 +103,7 @@ router.post('/login', (req, res) => {
             res.json({
               success: true,
               token: 'Bearer ' + token,
-              profile: {
-                avatar: user.avatar,
-                email: user.email,
-                name: user.name,
-                age: user.age,
-                dob: user.dob
-              }
+              profile: user
             });
           }
         );

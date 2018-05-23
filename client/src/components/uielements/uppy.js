@@ -25,7 +25,6 @@ export default function uppyInit(options, onSuccess) {
   });
 
   uppy.on('complete', fileList => {
-    console.log(fileList);
     onSuccess(fileList);
   });
 
