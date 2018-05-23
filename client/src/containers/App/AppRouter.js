@@ -10,6 +10,10 @@ const routes = [
   {
     path: "blankPage",
     component: asyncComponent(() => import("../blankPage"))
+  },
+  {
+    path: "storePage",
+    component: asyncComponent(() => import("../storePage"))
   }
 ];
 
