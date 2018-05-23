@@ -119,7 +119,6 @@ router.post(
 
 router.get(
   '/',
-  passport.authenticate('jwt', { session: false }),
   (req, res) => {
     Merchant.find().then(merchants => {
       if (merchants) {

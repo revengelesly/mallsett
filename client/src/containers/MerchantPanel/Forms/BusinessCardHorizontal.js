@@ -83,12 +83,16 @@ class CreateAddress extends Component {
             photo: photoSource
           };
 
-          this.setState({
-            businesses: [...this.state.businesses, business]
-          });
+          let tempBusiness = this.state.businesses.find(x => x.googlePlaceId === business.googlePlaceId);
 
-          this.props.handleUpdateBusiness(this.state.businesses);
-          this.props.handleAddBussinessToDatabase(business);
+          if (!tempBusiness) {
+            this.setState({
+              businesses: [...this.state.businesses, business]
+            });
+
+            this.props.handleUpdateBusiness(this.state.businesses);
+            this.props.handleAddBussinessToDatabase(business);
+          }
         }
       });
     }

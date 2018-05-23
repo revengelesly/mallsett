@@ -7,7 +7,13 @@ const ProfileSchema = new Schema({
         //personal
         user: {
             type: Schema.Types.ObjectId,
-            ref: 'users'    
+            ref: 'users'
+        },
+        email: {
+            type: String
+        },
+        avatar: {
+            type: String
         },
         // is it main profile, dependent profile
         profileType: {
@@ -43,7 +49,7 @@ const ProfileSchema = new Schema({
             required: false,
             max: 40
         },
-        
+
         status: {
             type: String,
             required: true,
@@ -68,14 +74,17 @@ const ProfileSchema = new Schema({
                     default: "This address is visible, is not behind another building, does not require special codes, and delivery services should have no problem finding it."
                 },
                 // this will go to address categories
-                
+
                 created_at: {
                     type: Date,
                     default: Date.now
                 },
                 updated_at: {
                     type: Date
-                }
+                },
+                owner: {
+                    type: Schema.Types.ObjectId,
+                },
             }
         ],
         files: [
@@ -100,12 +109,15 @@ const ProfileSchema = new Schema({
                     type: Date,
                     default: Date.now
                 },
+                owner: {
+                    type: [Schema.Types.ObjectId]
+                },
                 updated_at: {
                     type: Date
                 }
             }
         ],
-       
+
         attribute: [
             {
                 category: {
@@ -122,16 +134,16 @@ const ProfileSchema = new Schema({
                 category: {
                     type: String,
                     required: true
-                }, 
+                },
                 user: {
                     type: Schema.Types.ObjectId,
-                    ref: 'users' 
-                }, 
+                    ref: 'users'
+                },
                 access: {
                     type: [String],
                     required: true
                 }
-            }    
+            }
         ],
         created_at: {
             type: Date,
@@ -140,7 +152,7 @@ const ProfileSchema = new Schema({
         updated_at: {
             type: Date
         }
-   
+
 });
 
 module.exports = MerchantProfile = mongoose.model('profiles', ProfileSchema);

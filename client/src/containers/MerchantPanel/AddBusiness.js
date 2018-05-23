@@ -81,7 +81,7 @@ class PlugBusiness extends React.Component {
       let merchant = {
         category: business.categories[0],
         handle: Date.now().toString(),
-        createdBy: this.props.profile.email,
+        createdBy: this.props.profile._id,
         ...business
       };
 
@@ -155,8 +155,8 @@ class PlugBusiness extends React.Component {
     });
   };
 
-  bindDataToState = (merchants, email) => {
-    merchants = merchants.filter(x => x.createdBy === email);
+  bindDataToState = (merchants, profileId) => {
+    merchants = merchants.filter(x => x.createdBy === profileId);
     let merchantsList = [];
     merchantsList[1] = merchants.filter(x => x.category === 'merchant');
     merchantsList[2] = merchants.filter(x => x.category === 'parent');
@@ -184,14 +184,15 @@ class PlugBusiness extends React.Component {
   }
 
   componentDidMount = () => {
+    console.log(this.props.merchants)
     if (this.props.isLoggedIn && this.props.profile) {
-      this.bindDataToState(this.props.merchants, this.props.profile.email);
+      this.bindDataToState(this.props.merchants, this.props.profile._id);
     }
   }
 
   componentWillReceiveProps = (nextProps) => {
     if (nextProps.isLoggedIn && nextProps.profile) {
-      this.bindDataToState(nextProps.merchants, nextProps.profile.email);
+      this.bindDataToState(nextProps.merchants, nextProps.profile._id);
     }
   }
 
@@ -481,8 +482,12 @@ class PlugBusiness extends React.Component {
                               onClick={() =>
                                 message.success('Processing complete!')
                               }
+                              disabled={filteredSteps[current].title.indexOf('Login') >= 0}
                             >
-                              Done
+                              <span>
+                                {filteredSteps[current].title.indexOf('Login') >= 0 && <span>Next</span>}
+                                {filteredSteps[current].title.indexOf('Login') < 0 && <span>Done</span>}
+                              </span>
                             </Button>
                           </Col>
                         )}

@@ -7,8 +7,7 @@ module.exports = function validateProfileInput(data) {
   data.handle = !isEmpty(data.handle) ? data.handle : '';
   data.profileType = !isEmpty(data.profileType) ? data.profileType : '';
   data.displayName = !isEmpty(data.displayName) ? data.displayName : '';
-  data.category = !isEmpty(data.category) ? data.category : '';
-  
+
   data.status = !isEmpty(data.status) ? data.status : '';
 
   if (!Validator.isLength(data.handle, { min: 2, max: 40 })) {
@@ -25,13 +24,11 @@ module.exports = function validateProfileInput(data) {
    if (Validator.isEmpty(data.displayName)) {
     errors.displayName = 'Status field is required';
   }
-   if (Validator.isEmpty(data.category)) {
-    errors.category = 'Status field is required';
-  }
+
   if (Validator.isEmpty(data.status)) {
     errors.status = 'Status field is required';
   }
- 
+
 
   return {
     errors,
