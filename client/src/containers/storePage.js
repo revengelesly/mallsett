@@ -4,8 +4,8 @@ import LayoutContent from '../components/utility/layoutContent';
 import { Row, Col, Button, Input, Select} from 'antd';
 import ItemProduct from './Products/lists/ItemProducts';
 import ItemMerchant from './Products/lists/ItemMerchant';
-import SideCart from './ShoppingPanel/SideCart';
-import SideCartSummary from './ShoppingPanel/SideCartSummary';
+import SideCart from './ShoppingCartPanel/SideCart';
+import SideCartSummary from './ShoppingCartPanel/SideCartSummary';
 
 const Search = Input.Search;
 const Option = Select.Option;
@@ -36,7 +36,7 @@ export default class extends Component {
             <Row gutter={16}>
             <Col className="gutter-row" span={24}>
               <Row gutter={16}>
-                    <ItemMerchant />
+                    <ItemMerchant onClick={this.showModal}/>
                     <ItemMerchant />
                     <ItemMerchant />
                     <ItemMerchant />

@@ -1,7 +1,186 @@
 import React, { Component } from 'react';
-import { Row, Col, Icon, Card, Avatar } from 'antd';
+import { Row, Select, TimePicker, Button, DatePicker, Col, Icon, Card, Avatar, Modal, Collapse } from 'antd';
+import OptionWrapper from './viewProduct.style';
 
 const { Meta } = Card;
+const Panel = Collapse.Panel;
+const Option = Select.Option;
+const dependentSelected = [];
+
+for (let i = 10; i < 36; i++) {
+    dependentSelected.push(<Option key={i.toString(36) + i}>{i.toString(36) + i}</Option>);
+}
+
+function handlePurchasingForChange(value) {
+  console.log(`selected ${value}`);
+}
+
+function onDateChange(value, dateString) {
+    console.log('Selected Time: ', value);
+    console.log('Formatted Selected Time: ', dateString);
+  }
+
+  function onTimeChange(time, timeString) {
+    console.log(time, timeString);
+  }
+
+
+const text = (
+  <p style={{ paddingLeft: 24 }}>
+    A dog is a type of domesticated animal.
+    Known for its loyalty and faithfulness,
+    it can be found as a welcome guest in many households across the world.
+  </p>
+);
+
+const purchasingForOption = (
+    <OptionWrapper style={{ paddingLeft: 24, marginBottom: 12 }}>
+        <Row style={{ marginBottom: 15, marginTop: 15  }} className="optionDashed" gutter={8}>
+            <Col className="gutter-row"  xs={24} sm={24} md={12} lg={16} xl={16} >
+                Purchasing For:
+            </Col>
+            <Col className="gutter-row textRight"  xs={24} sm={24} md={12} lg={8} xl={8} >
+                $12.00
+            </Col>   
+        </Row>
+        <Row gutter={16}>
+            <Col className="gutter-row" span={24}>
+               <h5> Selected: Lesly Simpson (Self) <Icon type="minus-circle-o" />,  
+               James Simpson (Son) <Icon type="minus-circle-o" /> ,  
+               Jessica Simpson (Daughter) <Icon type="minus-circle-o" /> </h5> 
+            </Col>
+            <Row gutter={8}>
+                <Col className="gutter-row"  xs={24} sm={24} md={12} lg={16} xl={16} >
+                <Select
+                    mode="multiple"
+                    style={{ width: '100%' }}
+                    placeholder="Please select"
+                    defaultValue={['a10', 'c12']}
+                    onChange={handlePurchasingForChange}
+                >
+                    {dependentSelected}
+                </Select>
+                </Col>
+                <Col className="gutter-row "  xs={24} sm={24} md={12} lg={8} xl={8} >
+                    <Button className="fullWidth" >Add New Dependent</Button>
+                </Col>
+            </Row>
+        </Row>
+    </OptionWrapper>
+  );
+const bookingOptions = (
+    <OptionWrapper style={{ paddingLeft: 24, marginBottom: 12  }}>        
+        <Row style={{ marginBottom: 15, marginTop: 15  }} className="optionDashed" gutter={8}>
+            <Col className="gutter-row"  xs={24} sm={24} md={12} lg={16} xl={16} >
+                Booking Date and Time:
+            </Col>
+            <Col className="gutter-row textRight"  xs={24} sm={24} md={12} lg={8} xl={8} >
+                $12.00
+            </Col>   
+        </Row>
+        <Row gutter={16}>
+            <Row gutter={8}>
+                <Col className="gutter-row"  xs={24} sm={12} md={12} lg={5} xl={5} >
+                    <DatePicker  className="fullWidth"  placeholder="Date Start" onChange={onDateChange} />
+                </Col>
+                <Col className="gutter-row"  xs={24} sm={12} md={12} lg={5} xl={5} >
+                    <DatePicker className="fullWidth" placeholder="Date End" onChange={onDateChange} />
+                </Col>
+                <Col className="gutter-row"  xs={24} sm={12} md={12} lg={5} xl={5} >
+                    <TimePicker  className="fullWidth"  placeholder="Time Start" use12Hours format="h:mm a" onChange={onTimeChange} />
+                </Col>
+                <Col className="gutter-row"  xs={24} sm={12} md={12} lg={5} xl={5} >
+                    <TimePicker  className="fullWidth"  placeholder="Time End" use12Hours format="h:mm a" onChange={onTimeChange} />
+                </Col>
+                <Col className="gutter-row "  xs={24} sm={24} md={24} lg={4} xl={4} >
+                    <Button className="fullWidth" icon="minus-circle-o">Remove</Button>
+                </Col>
+            </Row>
+            <Row gutter={8}>
+                <Col className="gutter-row"  xs={24} sm={12} md={12} lg={5} xl={5} >
+                    <DatePicker  className="fullWidth"  placeholder="Date Start" onChange={onDateChange} />
+                </Col>
+                <Col className="gutter-row"  xs={24} sm={12} md={12} lg={5} xl={5} >
+                    <DatePicker className="fullWidth" placeholder="Date End" onChange={onDateChange} />
+                </Col>
+                <Col className="gutter-row"  xs={24} sm={12} md={12} lg={5} xl={5} >
+                    <TimePicker  className="fullWidth"  placeholder="Time Start" use12Hours format="h:mm a" onChange={onTimeChange} />
+                </Col>
+                <Col className="gutter-row"  xs={24} sm={12} md={12} lg={5} xl={5} >
+                    <TimePicker  className="fullWidth"  placeholder="Time End" use12Hours format="h:mm a" onChange={onTimeChange} />
+                </Col>
+                <Col className="gutter-row "  xs={24} sm={24} md={24} lg={4} xl={4} >
+                    <Button className="fullWidth" icon="plus-circle-o">Add New</Button>
+                </Col>
+            </Row>
+        </Row>
+    </OptionWrapper>
+  );
+
+  const deliveryOptions = (
+    <OptionWrapper style={{ paddingLeft: 24, marginBottom: 12 }}>
+        <Row style={{ marginBottom: 15, marginTop: 15  }} className="optionDashed" gutter={8}>
+                <Col className="gutter-row"  xs={24} sm={24} md={12} lg={16} xl={16} >
+                    Delivery:
+                </Col>
+                <Col className="gutter-row textRight"  xs={24} sm={24} md={12} lg={8} xl={8} >
+                    $12.00
+                </Col>   
+            </Row>
+        <Row gutter={16}>
+            <Col className="gutter-row" span={24}>
+               <h5> Speed: Fastest <Icon type="minus-circle-o" />,  
+               Company: Celie Delivery <Icon type="minus-circle-o" /> ,  
+               Address: 1256 NW 849 Street, Miami, FL </h5> 
+            </Col>
+            <Row gutter={8}>
+                <Col className="gutter-row"  xs={24} sm={24} md={12} lg={16} xl={16} >
+                <Select
+                    mode="multiple"
+                    style={{ width: '100%' }}
+                    placeholder="Select an Address"
+                    defaultValue={['a10', 'c12']}
+                    onChange={handlePurchasingForChange}
+                >
+                    {dependentSelected}
+                </Select>
+                </Col>
+                <Col className="gutter-row "  xs={24} sm={24} md={12} lg={8} xl={8} >
+                    <Button className="fullWidth" >Add New Address</Button>
+                </Col>
+            </Row>
+            <Row gutter={8}>
+                <Col className="gutter-row"  xs={24} sm={24} md={12} lg={16} xl={16} >
+                <Select
+                    mode="multiple"
+                    style={{ width: '100%' }}
+                    placeholder="Delivery Speed"
+                    defaultValue={['Fast']}
+                    onChange={handlePurchasingForChange}
+                >
+                    {dependentSelected}
+                </Select>
+                </Col>
+            </Row>
+            <Row gutter={8}>
+                <Col className="gutter-row"  xs={24} sm={24} md={12} lg={16} xl={16} >
+                <Select
+                    mode="multiple"
+                    style={{ width: '100%' }}
+                    placeholder="Delivery Service"
+                    defaultValue={['Fast']}
+                    onChange={handlePurchasingForChange}
+                >
+                    {dependentSelected}
+                </Select>
+                </Col>
+            </Row>
+
+            
+        </Row>
+    </OptionWrapper>
+  );
+  
 // sup - the about of resets.
 // sub - how many time the merchant reset the ratings.
 
@@ -38,17 +217,51 @@ const Pricing = () => {
         <div>
             <Icon type="calendar" /> $100+
         </div>
+
     ) 
 }
+
+const Title = () => {   
+    return (
+        <div>
+            Air Jordan #405 by Air Jordan <br />
+            <small>Walmart - 111 East Flagler, Miami, FL 33142</small>
+        </div>
+
+    ) 
+}
+
+
+
 class ProductCard extends Component {
+    state = { visible: false }
+    showModal = () => {
+      this.setState({
+        visible: true,
+      });
+    }
+    handleOk = (e) => {
+      console.log(e);
+      this.setState({
+        visible: false,
+      });
+    }
+    handleCancel = (e) => {
+      console.log(e);
+      this.setState({
+        visible: false,
+      });
+    }
   render() {
     return (
+        <div>
         <Card
             style={{ width: '100%', marginBottom: "10px"}}
             cover={<img alt="example" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSqPuPvGq0g4NzOJkSlMmRt6soecxGklZjsl1odxiekC6m1UsCV" />}
             actions={[<Rating />, <Pricing />]}
             extra={<Distance />}
             hoverable={true}
+            onClick={this.showModal}
         >
             <Meta
             //avatar is the icon of the product brand..
@@ -57,6 +270,41 @@ class ProductCard extends Component {
             />
            <small> Air Jordan XXII </small> 
         </Card>
+
+        <Modal
+          title= {<Title />}
+          visible={this.state.visible}
+          onOk={this.handleOk}
+          onCancel={this.handleCancel}
+          width={800}
+        >
+          <Collapse bordered={false} showArrow={false} defaultActiveKey={['2']}>
+          <Panel header="Full Description"  key="1">
+            {text}
+          </Panel>
+          <Panel header="Select Options" disabled  key="2">
+            {purchasingForOption}
+            {deliveryOptions}
+            {bookingOptions}
+            
+            
+          </Panel>
+          <Panel header="Associations " key="3">
+            {text}
+          </Panel>
+          <Panel header="Terms: Product Level " key="4">
+            {text}
+          </Panel>
+          <Panel header="Privacy: Merchant Level " key="5">
+            {text}
+          </Panel>
+          <Panel header="Ask the Merchant " key="6">
+            {text}
+          </Panel>
+        </Collapse>
+        </Modal>
+
+        </div>
     );
   }
 }

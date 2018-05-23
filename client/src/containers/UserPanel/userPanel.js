@@ -338,7 +338,8 @@ export default class UserPanel extends Component {
               ))}
 
               {this.props.isLoggedIn &&
-                <TabPane tab={<span style={{marginTop: '200px', backgroundColor: 'red', width: '100%'}}><Icon type="logout" />Logout</span>} key={this.LOG_OUT} />
+                <TabPane tab={<span style={{marginBottom: -200, color: 'red', width: '100%'}}>
+                <Icon type="logout" />Logout</span>} key={this.LOG_OUT} />
               }
             </Tabs>
           </div>
