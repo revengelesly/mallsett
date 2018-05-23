@@ -36,8 +36,9 @@ class TopBarAddMerchants extends React.Component {
     });
   };
 
-  bindDataWhenLogin = (merchants, email) => {
-    let filteredMerchants = merchants.filter(x => x.createdBy === email);
+  bindDataWhenLogin = (merchants, profileId) => {
+    let filteredMerchants = merchants.filter(x => x.createdBy === profileId);
+    console.log(filteredMerchants);
     if (filteredMerchants) {
       this.setState({
         isBusiness: true,
@@ -50,35 +51,30 @@ class TopBarAddMerchants extends React.Component {
   };
 
   componentDidMount = () => {
-    console.log('chay qua')
     axios({
       method: 'GET',
-      url: `${BaseURL}/api/merchant/`,
+      url: `${BaseURL}/api/merchant`,
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json'
       }
     })
       .then(res => {
-        console.log(res.data)
         this.setState({
           merchants: res.data
         });
 
 
         if (this.props.isLoggedIn && this.props.profile) {
-          console.log(this.props.profile)
-          this.bindDataWhenLogin(res.data, this.props.profile.email);
+          this.bindDataWhenLogin(res.data, this.props.profile._id);
         }
       })
       .catch(err => console.log(err));
   };
 
   componentWillReceiveProps = nextProps => {
-    console.log(nextProps)
-    console.log(this.state)
     if (nextProps.isLoggedIn && nextProps.profile) {
-      this.bindDataWhenLogin(this.state.merchants, nextProps.profile.email);
+      this.bindDataWhenLogin(this.state.merchants, nextProps.profile._id);
     } else {
       this.setState({
         isBusiness: false

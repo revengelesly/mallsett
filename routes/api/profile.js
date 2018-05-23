@@ -3,10 +3,11 @@ const router = express.Router();
 const mongoose = require('mongoose');
 const passport = require('passport');
 const moment = require('moment');
+const ObjectId = require('mongodb').ObjectId;
 
 // Load Validation
 const validateProfileInput = require('../../validation/profile');
-const validateLocationInput  = require('../../validation/location');
+const validateLocationInput = require('../../validation/location');
 const validateFileInput = require('../../validation/file');
 
 // Load Profile Model
@@ -22,13 +23,10 @@ const MomentNow = moment();
 // @access  Public
 router.get('/test', (req, res) => res.json({ msg: 'Profile Works' }));
 
-
-
-
 /*********************************************************
- * 
+ *
  *          CRUD profile
- * 
+ *
  * ******************************************************/
 
 // @route    POST api/profile
@@ -44,8 +42,11 @@ router.post(
     // Check Validation
     if (!isValid) {
       // Return any errors with 400 status
+      console.log(errors)
       return res.status(400).json(errors);
     }
+
+    console.log(req.body)
 
     // Get fields
     const profileFields = {};
@@ -54,35 +55,41 @@ router.post(
     if (req.body.displayName) profileFields.displayName = req.body.displayName;
     if (req.body.dob) profileFields.dob = req.body.dob;
     if (req.body.category) profileFields.category = req.body.category;
+    if (req.body.email) profileFields.email = req.body.email;
+    if (req.body.avatar) profileFields.avatar = req.body.avatar;
+
     // considerations - Spilt into array
     if (typeof req.body.considerations !== 'undefined') {
-      profileFields.considerations = req.body.considerations.split(',');
+      profileFields.considerations = req.body.considerations;
     }
     if (req.body.bio) profileFields.bio = req.body.bio;
     if (req.body.phone) profileFields.phone = req.body.phone;
     //automaticly generate a unique handle. We will let customers choose their own unique handles later.
     if (req.body.handle) profileFields.handle = req.body.handle;
     if (req.body.status) profileFields.status = req.body.status;
-    
+
     // locations - Spilt into array
     if (typeof req.body.locations !== 'undefined') {
-      profileFields.locations = req.body.locations.split(',');
+      profileFields.locations = req.body.locations;
     }
     // files - Spilt into array
     if (typeof req.body.files !== 'undefined') {
-      profileFields.files = req.body.files.split(',');
+      profileFields.files = req.body.files;
     }
     // Created at have a default
     // Automaticly add updated time
     profileFields.updated_at = MomentNow;
-    
+
     //TO DO: later do the followign apis, attributes, profiles, order tracking, faq, terms, conditions, privacy, ratings, cotting
 
-    Profile.findOne({ user: req.user.id, profileType: req.body.profileType }).then(profile => {
+    Profile.findOne({
+      user: req.user.id,
+      _id: req.body.profileId
+    }).then(profile => {
       if (profile) {
         // Update
         Profile.findOneAndUpdate(
-          { user: req.user.id, profileType: req.body.profileType},
+          { user: req.user.id, profileType: req.body.profileType },
           { $set: profileFields },
           { new: true }
         ).then(profile => res.json(profile));
@@ -103,22 +110,21 @@ router.post(
   }
 );
 
-
 // @route   GET api/profile/all
 // @desc    Get all profiles
 // @access  Admin
-
 
 router.get('/all', (req, res) => {
   const errors = {};
 
   Profile.find()
-    .populate('user', ['name', 'avatar'])
     .then(profiles => {
+
       if (!profiles) {
         errors.noprofile = 'There are no profiles';
         return res.status(404).json(errors);
       }
+      console.log(profiles.length)
 
       res.json(profiles);
     })
@@ -133,20 +139,17 @@ router.get(
   passport.authenticate('jwt', { session: false }),
   (req, res) => {
     const errors = {};
-
-    Profile.findOne({ user: req.user.id })
-      .populate('user', ['name', 'avatar'])
+    Profile.findOne({ user: req.user.id, category: ['self'] })
       .then(profile => {
         if (!profile) {
           errors.noprofile = 'There is no profile for this user';
-          return res.status(404).json(errors);
+          return res.status(204).json(errors);
         }
         res.json(profile);
       })
-      .catch(err => res.status(404).json(err));
+      .catch(err => res.status(204).json(err));
   }
 );
-
 
 // @route   GET api/profile/handle/:handle
 // @desc    Get profile by handle
@@ -193,14 +196,12 @@ router.get('/user/:user_id', (req, res) => {
 // @route   DELETE api/profile
 // @desc    Delete user and profile
 // @access  Private
-router.delete(
-  '/',
+router.post(
+  '/delete',
   passport.authenticate('jwt', { session: false }),
   (req, res) => {
-    Profile.findOneAndRemove({ user: req.user.id }).then(() => {
-      User.findOneAndRemove({ _id: req.user.id }).then(() =>
-        res.json({ success: true })
-      );
+    Profile.findOneAndRemove({ _id: req.body.profileId }).then(() => {
+      res.json({ success: true })
     });
   }
 );
@@ -208,18 +209,20 @@ router.delete(
 module.exports = router;
 
 /*********************************************************
- * 
+ *
  *          CRUD Location
- * 
+ *
  * ******************************************************/
- 
+
 // @route   GET api/profile/file/test
 // @desc    Tests profile route
 // @access  Public
-router.get('/location/test', (req, res) => res.json({ msg: 'location  Works' }));
- 
+router.get('/location/test', (req, res) =>
+  res.json({ msg: 'location  Works' })
+);
+
 /**** Create and Update **/
- 
+
 // @route   POST api/profile/location
 // @desc    Add location to profile
 // @access  Private
@@ -235,31 +238,28 @@ router.post(
       return res.status(400).json(errors);
     }
 
-    Profile.findOne({ user: req.user.id, _id: req.body.profile }).then(profile => {
-      
-      const newFile = {
-        address: req.body.address,
-        apartment: req.body.apartment,
-        categories: function(){
-          if (typeof req.body.categories !== 'undefined') {
-           return req.body.categories.split(',');
-          }
-          return req.body.categories;
-        }(),
-        notes: req.body.notes,
-        updated_at: MomentNow
-      };
 
-      // Add to exp array
-      profile.locations.unshift(newFile);
+    Profile.findOne({ _id: req.body.profile }).then(
+      profile => {
+        console.log(req.body)
+        const newFile = {
+          address: req.body.address,
+          apartment: req.body.apartment,
+          categories: req.body.categories !== 'undefined' && req.body.categories,
+          notes: req.body.notes,
+          owner: req.body.owner,
+          ownerName: req.body.ownerName,
+          updated_at: MomentNow
+        };
 
-      profile.save().then(profile => res.json(profile));
-   
-    });
+        // Add to exp array
+        profile.locations.unshift(newFile);
+
+        profile.save().then(profile => res.json(profile));
+      }
+    );
   }
 );
-
-
 
 /**** Read **/
 
@@ -268,40 +268,40 @@ router.post(
 // @route   DELETE api/profile/location/:location_id
 // @desc    Delete a location from profile
 // @access  Private
-router.delete(
-  '/location/:location_id',
+router.post(
+  '/location/delete',
   passport.authenticate('jwt', { session: false }),
   (req, res) => {
-    Profile.findOne({ user: req.user.id })
-      .then(profile => {
+
+    Profile.findOne({ user: req.user.id, _id: req.body.profile }).then(
+      profile => {
         // Get remove index
-        const removeIndex = profile.location
+        const removeIndex = profile.locations
           .map(item => item.id)
-          .indexOf(req.params.location_id);
+          .indexOf(req.body.location_id);
 
         // Splice out of array
-        profile.location.splice(removeIndex, 1);
+        profile.locations.splice(removeIndex, 1);
 
         // Save
         profile.save().then(profile => res.json(profile));
       })
-      .catch(err => res.status(404).json(err));
   }
 );
 
 /*********************************************************
- * 
+ *
  *          CRUD File
- * 
+ *
  * ******************************************************/
- 
- // @route   GET api/profile/file/test
+
+// @route   GET api/profile/file/test
 // @desc    Tests profile route
 // @access  Public
 router.get('/file/test', (req, res) => res.json({ msg: 'file  Works' }));
 
 /**** Create and Update **/
- 
+
 // @route   POST api/profile/file
 // @desc    Add file to profile
 // @access  Private
@@ -314,30 +314,34 @@ router.post(
     // Check Validation
     if (!isValid) {
       // Return any errors with 400 status
+      console.log(errors)
       return res.status(400).json(errors);
     }
 
-    Profile.findOne({ user: req.user.id, _id: req.body.profile }).then(profile => {
-      
-      const newFile = {
-        displayName: req.body.displayName,
-        notes: req.body.notes,
-        categories: function(){
-          if (typeof req.body.categories !== 'undefined') {
-           return req.body.categories.split(',');
-          }
-          return req.body.categories;
-        }(),
-        directory: req.body.directory,
-        updated_at: MomentNow
-      };
+    Profile.findOne({ user: req.user.id, _id: req.body.profile }).then(
+      profile => {
+        const newFile = {
+          displayName: req.body.displayName,
+          notes: req.body.notes,
+          categories: (function() {
+            if (typeof req.body.categories !== 'undefined') {
+              return req.body.categories.split(',');
+            }
+            return req.body.categories;
+          })(),
+          directory: req.body.directory,
+          owner: req.body.owner,
+          updated_at: MomentNow
+        };
 
-      // Add to exp array
-      profile.files.unshift(newFile);
+        console.log(req.body.owner)
+        // Add to exp array
+        profile.files.unshift(newFile);
+        console.log(profile)
 
-      profile.save().then(profile => res.json(profile));
-   
-    });
+        profile.save().then(profile => res.json(profile));
+      }
+    );
   }
 );
 
@@ -348,19 +352,19 @@ router.post(
 // @route   DELETE api/profile/file/:file_id
 // @desc    Delete a file from profile
 // @access  Private
-router.delete(
-  '/file/:file_id',
+router.post(
+  '/file/delete',
   passport.authenticate('jwt', { session: false }),
   (req, res) => {
-    Profile.findOne({ user: req.user.id })
+    Profile.findOne({ user: req.user.id, _id: req.body.profile })
       .then(profile => {
         // Get remove index
-        const removeIndex = profile.file
+        const removeIndex = profile.files
           .map(item => item.id)
-          .indexOf(req.params.file_id);
+          .indexOf(req.body.file_id);
 
         // Splice out of array
-        profile.file.splice(removeIndex, 1);
+        profile.files.splice(removeIndex, 1);
 
         // Save
         profile.save().then(profile => res.json(profile));

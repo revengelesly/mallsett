@@ -6,61 +6,87 @@ import Dependents from '../Forms/Dependents';
 const { TabPane } = Tabs;
 
 export default class FileItem extends Component {
-    constructor(props) {
-      super(props);
-      this.state = {
-        activeKey: '1',
-       list:  {
-          header: "List of My Locations",
-          icon: "edit",
-          nav: "My Locations",
-          item: <ItemLocation />,
-          formWidth: "12",
-          itemWidth: '12',
-          key: 1
-        }      ,
+  constructor(props) {
+    super(props);
+    this.state = {
+      activeKey: '1',
+      locations: props.locations || []
+    };
+  }
 
-       addDependent:  {
-          header: "Add a new dependent",
-          icon: "link",
-          nav: "Add New Dependent",
-          item: <Dependents />,
-          formWidth: "12",
-          itemWidth: '12',
-          key: 2
-        }
-      };
-    }
-
-  handTabChange = (key) => {
+  handTabChange = key => {
     this.setState({
       activeKey: key
     });
-  }
+  };
 
-  componentWillReceiveProps = (nextProps) => {
-    if (this.state.activeKey !== nextProps.activeKey && nextProps.activeKey < 3) {
+  componentWillReceiveProps = nextProps => {
+    if (
+      this.state.activeKey !== nextProps.activeKey &&
+      nextProps.activeKey < 3
+    ) {
       this.setState({
         activeKey: nextProps.activeKey
       });
     }
-  }
 
-  render(props){
+    this.setState({
+      locations: nextProps.locations
+    });
+  };
+
+  render(props) {
+    let items = this.state.locations.map(x => {
+      let owner = this.props.dependents
+        ? this.props.dependents.find(dependent => dependent._id === x.owner)
+        : null;
+      return (
+        <ItemLocation
+          key={x._id}
+          handleEditButton={this.props.handleEditButton}
+          handleRemoveButton={this.props.handleRemoveButton}
+          ownerPhone={owner && owner.phone}
+          ownerName={owner && owner.displayName}
+          {...x}
+        />
+      );
+    });
+
+    let list = {
+      header: 'List of My Locations',
+      icon: 'edit',
+      nav: 'My Locations',
+      formWidth: '12',
+      itemWidth: '12',
+      key: 1
+    };
+
+    let addDependent = {
+      header: 'Add a new dependent',
+      icon: 'link',
+      nav: 'Add New Dependent',
+      item: <Dependents />,
+      formWidth: '12',
+      itemWidth: '12',
+      key: 2
+    };
+
     return (
+      <Tabs
+        defaultActiveKey="1"
+        tabPosition="top"
+        size="small"
+        activeKey={this.state.activeKey}
+        onChange={this.handTabChange}
+      >
+        <TabPane tab={list.nav} key={list.key}>
+          {items && items.length > 0 && items.map(x => x)}
+        </TabPane>
 
-
-            <Tabs
-              defaultActiveKey="1"
-              tabPosition="top"
-              size="small"
-              activeKey={this.state.activeKey}
-              onChange={this.handTabChange}
-            >
-                <TabPane tab={this.state.list.nav} key={this.state.list.key}>{this.state.list.item}{this.state.list.item}</TabPane>
-                <TabPane tab={this.state.addDependent.nav} key={this.state.addDependent.key}>{this.state.addDependent.item}</TabPane>
-            </Tabs>
-
+        <TabPane tab={addDependent.nav} key={addDependent.key}>
+          {addDependent.item}
+        </TabPane>
+      </Tabs>
     );
   }
-  }
+}

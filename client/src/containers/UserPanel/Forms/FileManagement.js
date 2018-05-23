@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Form, Icon, Input, Button, Select, Upload, message } from 'antd';
+import { Alert, Form, Icon, Input, Button, Select, Upload, message } from 'antd';
 import { addFile } from '../../../redux/documents/middlewares';
 import { getView } from '../../../helpers/utility';
 import { ViewPort } from '../../../helpers/constants';
@@ -13,28 +13,8 @@ const { TextArea } = Input;
 
 const FormItem = Form.Item;
 
-function handleProfileChange(value) {
-  console.log(`selected ${value}`);
-}
-
 const info = info => {
   message.info(info);
-};
-
-const uploadProps = {
-  name: 'file',
-  action: '//jsonplaceholder.typicode.com/posts/',
-  onChange(info) {
-    const status = info.file.status;
-    if (status !== 'uploading') {
-      console.log(info.file, info.fileList);
-    }
-    if (status === 'done') {
-      message.success(`${info.file.name} file uploaded successfully.`);
-    } else if (status === 'error') {
-      message.error(`${info.file.name} file upload failed.`);
-    }
-  }
 };
 
 class FileManagementForm extends Component {
@@ -42,7 +22,10 @@ class FileManagementForm extends Component {
     checkDob: false,
     ageInfo: '',
     formItemLayout: {},
-    uploadURL: ''
+    uploadURL: '',
+    editingFile: null,
+    showErrorMessage: false,
+    owner: null
   };
 
   handleAgeChange = e => {
@@ -62,6 +45,16 @@ class FileManagementForm extends Component {
     });
   };
 
+  handleCategoryChange = (value) => {
+
+  }
+
+  handleProfileChange = (value) => {
+    this.setState({
+      owner: value
+    });
+  }
+
   handleSubmit = e => {
     e.preventDefault();
     this.props.form.validateFields((err, newFile) => {
@@ -71,16 +64,26 @@ class FileManagementForm extends Component {
           notes: newFile.Notes,
           categories: newFile.category ? newFile.category.join(',') : '',
           directory: this.state.uploadURL ? this.state.uploadURL : (this.state.editingFile ? this.state.editingFile.directory : ''),
-          profile: this.props.profile._id
+          profile: this.props.profile._id,
+          owner: this.state.owner
         };
 
         console.log('Received values of form: ', file);
-        if (file.directory) {
+        if (file.directory && file.owner) {
+          this.props.form.resetFields();
           if (this.state.editingFile) {
             this.props.handleRemoveFile(this.state.editingFile._id, file);
           } else {
             this.props.handleAddFile(file);
           }
+
+          this.setState({
+            showErrorMessage: false
+          })
+        } else {
+          this.setState({
+            showErrorMessage: true
+          })
         }
       }
     });
@@ -126,7 +129,7 @@ class FileManagementForm extends Component {
   render() {
     const { getFieldDecorator } = this.props.form;
     const formItemLayout = this.state.formItemLayout;
-
+    let defaultValue = this.state.editingFile && this.state.editingFile.owner;
     return (
       <div>
         <Form onSubmit={this.handleSubmit} className="login-form">
@@ -173,14 +176,13 @@ class FileManagementForm extends Component {
           </FormItem>
           <FormItem label="Category" {...formItemLayout}>
             {getFieldDecorator('category', {
-              rules: [{ required: true, message: 'File Category' }],
-              //initialValue: (this.state.editingFile ? this.state.editingFile.categories : '')
+              rules: [{ required: true, message: 'File Category' }]
             })(
               <Select
                 defaultValue=""
                 mode="multiple"
                 style={{ width: '100%' }}
-                onChange={handleProfileChange}
+                onChange={this.handleCategoryChange}
               >
                 <OptGroup label="Personal">
                   <Option value="self">Birth Certificate</Option>
@@ -197,29 +199,17 @@ class FileManagementForm extends Component {
             {getFieldDecorator('profile', {
               rules: [
                 { required: true, message: 'Who does this address belongs to?' }
-              ]
+              ],
+              initialValue: this.state.editingFile ? this.props.editingFile.owner : []
             })(
               <Select
-                defaultValue=""
                 mode="multiple"
                 style={{ width: '100%' }}
-                onChange={handleProfileChange}
+                onChange={this.handleProfileChange}
               >
-                <OptGroup label="Family">
-                  <Option value="5af604cffc22683d49f3a993">Self</Option>
-                  <Option value="jessica">Jessica (Daughter)</Option>
-                </OptGroup>
-                <OptGroup label="Friends">
-                  <Option value="lisa">Lisa (Co Worker)</Option>
-                  <Option value="keven">Keven (Friends)</Option>
-                </OptGroup>
-                <OptGroup label="Animal">
-                  <Option value="lance">Lance (Dog)</Option>
-                </OptGroup>
-                <OptGroup label="Others" />
-                <Option value="self">
-                  <b>ADD NEW DEPENDENT</b>
-                </Option>
+                {this.props.dependents && this.props.dependents.map(x =>
+                    <Option key={x._id} value={x._id}>{x.displayName}</Option>
+                )}
               </Select>
             )}
             Click here to add new dependent or spouse{' '}
@@ -228,6 +218,15 @@ class FileManagementForm extends Component {
             </a>
           </FormItem>
           <FormItem label="." {...formItemLayout}>
+              {this.state.showErrorMessage &&
+                <Alert
+                  message="You must upload file"
+                  type="error"
+                  showIcon
+                  banner
+                  closable
+                />
+              }
             <Button
               type="primary"
               style={{ width: '100%' }}

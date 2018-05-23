@@ -11,10 +11,6 @@ const { TextArea } = Input;
 
 const FormItem = Form.Item;
 
-function handleProfileChange(value) {
-  console.log(`selected ${value}`);
-}
-
 function handleLocationTypeChange(value) {
   console.log(`selected ${value}`);
 }
@@ -23,7 +19,8 @@ class SettingsUserForm extends Component {
     checkDob: false,
     ageInfo: '',
     formItemLayout: {},
-    editingLocation: this.props.editingLocation
+    editingLocation: this.props.editingLocation,
+    owner: null
   };
 
   check = () => {
@@ -45,6 +42,15 @@ class SettingsUserForm extends Component {
     );
   };
 
+  handleProfileChange = (value) => {
+    console.log(value);
+    let owner = this.props.dependents.find(x => x._id === value);
+    this.setState({
+      owner: value,
+      ownerName: owner.displayName
+    });
+  }
+
   addLocation = (newLocation) => {
     this.props.handleAddLocation(newLocation);
   }
@@ -58,7 +64,11 @@ class SettingsUserForm extends Component {
 
     this.props.form.validateFields((err, newLocation) => {
       if (!err) {
+        console.log(newLocation);
         newLocation.profile = this.props.profile._id;
+        newLocation.owner = this.state.owner;
+        newLocation.categories = newLocation['Add Delivery Location'];
+        this.props.form.resetFields();
         if (this.state.editingLocation) {
           this.deleteLocation(newLocation);
         } else {
@@ -136,26 +146,22 @@ class SettingsUserForm extends Component {
             {getFieldDecorator('profile', {
               rules: [
                 { required: true, message: 'Who does this address belongs to?' }
-              ]
+              ],
+              initialValue: this.props.editingLocation ? this.props.editingLocation.owner : ''
             })(
               <Select
-                defaultValue=""
-                mode="multiple"
                 style={{ width: '100%' }}
-                onChange={handleProfileChange}
+                onChange={this.handleProfileChange}
               >
-                <OptGroup label="Family">
-                  <Option value="5af71fed734d1d04f610d87c">Self</Option>
-                  <Option value="jessica">Jessica (Daughter)</Option>
-                </OptGroup>
-                <OptGroup label="Friends">
-                  <Option value="lisa">Lisa (Co Worker)</Option>
-                  <Option value="keven">Keven (Friends)</Option>
-                </OptGroup>
-                <OptGroup label="Animal">
-                  <Option value="lance">Lance (Dog)</Option>
-                </OptGroup>
-                <OptGroup label="Others" />
+                {this.props.dependents && this.props.dependents.map(x => {
+                  if (this.state.editingLocation && this.state.editingLocation._id === x._id) {
+                    return (
+                      <Select.Option value={x._id} key={x._id}>{x.displayName}</Select.Option>
+                    )
+                  } else {
+                    return <Option key={x._id} value={x._id}>{x.displayName}</Option>
+                  }
+                })}
               </Select>
             )}
             Click here to add new dependent or spouse{' '}
@@ -207,9 +213,9 @@ class SettingsUserForm extends Component {
                   message: 'Add delivery Address for dependent'
                 }
               ],
+              initialValue: this.props.editingLocation && this.props.editingLocation.categories ? this.props.editingLocation.categories : []
             })(
               <Select
-                defaultValue=""
                 mode="multiple"
                 style={{ width: '100%' }}
                 onChange={handleLocationTypeChange}

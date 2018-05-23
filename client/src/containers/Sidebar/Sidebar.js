@@ -119,11 +119,11 @@ class Sidebar extends Component {
     );
   };
 
-  componentWillReceiveProps = (nextProps) => {
+  componentWillReceiveProps = nextProps => {
     this.setState({
       merchants: nextProps.merchants && nextProps.merchants.merchants
     });
-  }
+  };
 
   render() {
     const { app, toggleOpenDrawer, height } = this.props;
@@ -168,26 +168,23 @@ class Sidebar extends Component {
         >
           <Logo collapsed={collapsed} />
           <Scrollbars style={{ height: height - 70 }}>
-            {this.state.merchants &&
-              this.state.merchants.length > 0 && this.props.isLoggedIn && (
-                <Menu
-                  onClick={this.handleClick}
-                  theme="dark"
-                  className="isoDashboardMenu"
-                  mode={mode}
-                  openKeys={collapsed ? [] : app.openKeys}
-                  selectedKeys={app.current}
-                  onOpenChange={this.onOpenChange}
-                >
-                  {options.map(singleOption =>
-                    this.getMenuItem({
-                      submenuStyle,
-                      submenuColor,
-                      singleOption
-                    })
-                  )}
-                </Menu>
+            <Menu
+              onClick={this.handleClick}
+              theme="dark"
+              className="isoDashboardMenu"
+              mode={mode}
+              openKeys={collapsed ? [] : app.openKeys}
+              selectedKeys={app.current}
+              onOpenChange={this.onOpenChange}
+            >
+              {options.map(singleOption =>
+                this.getMenuItem({
+                  submenuStyle,
+                  submenuColor,
+                  singleOption
+                })
               )}
+            </Menu>
           </Scrollbars>
         </Sider>
       </SidebarWrapper>
