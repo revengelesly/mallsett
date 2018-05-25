@@ -1,4 +1,4 @@
-const config = {
+let config = {
   target: '#uppyHolder',
   endpoint: 'https://master.tus.io/files/',
   DashboardInline: true,
@@ -6,7 +6,7 @@ const config = {
   GoogleDrive: false,
   Dropbox: false,
   Instagram: false,
-  autoProceed: false,
+  autoProceed: true,
   restrictions: {
     maxFileSize: 1000000,
     maxNumberOfFiles: 1,

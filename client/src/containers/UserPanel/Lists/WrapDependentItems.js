@@ -116,7 +116,7 @@ export default class FileItem extends Component {
             items.length > 0 && (
               <Row gutter={6} xs={2} sm={4} md={6} lg={8} xl={10}>
                 {items.map(item => (
-                  <Col className="gutter-row" span={12}>
+                  <Col key={item._id} className="gutter-row" span={12}>
                     {item}
                   </Col>
                 ))}

@@ -4,7 +4,6 @@ const actions = {
   LOGOUT: 'LOGOUT',
   LOGIN_SUCCESS: 'LOGIN_SUCCESS',
   LOGIN_ERROR: 'LOGIN_ERROR',
-  UPDATE_PROFILE: 'UPDATE_PROFILE',
 
   checkAuthorization: () => ({ type: actions.CHECK_AUTHORIZATION }),
   login: (user) => ({
@@ -18,12 +17,6 @@ const actions = {
     return {
       type: actions.LOGIN_SUCCESS,
       token,
-      profile
-    }
-  },
-  updateProfile: (profile) => {
-    return {
-      type: actions.UPDATE_PROFILE,
       profile
     }
   }
