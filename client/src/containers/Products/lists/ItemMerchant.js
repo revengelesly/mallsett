@@ -10,20 +10,20 @@ const Rating = () => {
         </span>
     ) 
 }
-class MerchantCard extends Component {
-  render() {
+function MerchantCard(props) {
     return (
-        <Col className="" xs={8} sm={12} md={8} lg={6} xl={4}>
+        
         <Card
             style={{ width: '100%', marginBottom: "10px"}}
-            cover={<img alt="example" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTlDKPL77c_Awl6xQav5-xqsYWX9jQOdZ9gor8Fz3c6kQUPBWRSAA" />}
+            cover={<img alt={props.alt} src={props.cover} />}
             hoverable={true}
+            extra={props.extra}
         >
-            <small><Rating /> Walmart</small>
+            <small><Rating /> {props.title}</small>
         </Card>
-        </Col>
+      
     );
   }
-}
+
 
 export default MerchantCard;

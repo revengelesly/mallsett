@@ -4,5 +4,5 @@ export const ViewPort = {
   TabView: 'TabView'
 };
 
-// export const BaseURL = 'http://localhost:7000';
-export const BaseURL = '';
+ export const BaseURL = '';
+// export const BaseURL = '';

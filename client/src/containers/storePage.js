@@ -25,7 +25,7 @@ export default class extends Component {
     return (
       <LayoutContentWrapper>
         <LayoutContent>
-          <Row gutter={16} style={{ marginBottom: 15}}>
+          <Row gutter={6} style={{ marginBottom: 15}}>
             <Col className="gutter-row" xs={0} sm={0} md={24} lg={24} xl={24}>
             <p style={{ color: '#b2b2b2', marginRight: '15px'}} >
             a. build your mall <i class="far fa-building"></i>
@@ -33,15 +33,33 @@ export default class extends Component {
             enterButton="Search" size="large" 
             style={{ width: "100%", marginTop: "10px", marginBottom: "10px"}} />
             </p> 
-            <Row gutter={16}>
+            <Row gutter={6}>
             <Col className="gutter-row" span={24}>
-              <Row gutter={16}>
-                    <ItemMerchant onClick={this.showModal}/>
-                    <ItemMerchant />
-                    <ItemMerchant />
-                    <ItemMerchant />
-                    <ItemMerchant />
-                    <ItemMerchant />
+              <Row gutter={6}>
+              <Col className="" xs={24} sm={12} md={8} lg={6} xl={4}>
+              <ItemMerchant title="Tacology" extra="claimed"
+              cover="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSwNhlljB0Ysb0YMe39BIjt-Q16QSpHGiwiweKUpPLofniAJLnq"
+              />
+          </Col>
+          
+            <Col className="" xs={24} sm={12} md={8} lg={6} xl={4}>
+                        <ItemMerchant title="Target" extra="claimed" cover="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRm_Y0w2GaZHsC5_Q99E2fUT3LHwLqcFT0TqLhj3piYfxIOgk65" />
+                    </Col>
+                    <Col className="" xs={24} sm={12} md={8} lg={6} xl={4}>
+                        <ItemMerchant title="Starbucks" extra="unclaimed" 
+                        cover="https://www.downtownkingston.ca/sites/downtownkingston.ca/files/img/business/starbucks.jpg"  />
+                    </Col>
+                    <Col className="" xs={24} sm={12} md={8} lg={6} xl={4}>
+                        <ItemMerchant title="Best Buy" extra="unclaimed" 
+                        cover="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ0UHpmNNWIiDphx7_1cmRM5Ei7wCsweiI-Qgq5L98yS1KJH6d6hQ"  />
+                    </Col>
+                    <Col className="" xs={24} sm={12} md={8} lg={6} xl={4}>
+                        <ItemMerchant title="McDonald" extra="unclaimed" 
+                        cover="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRqEIPdgWJnnYQ7-l-JJQfOG_pEKGQVFYuyaead1ugoXdEY-AA-bA"  />
+                    </Col>
+                    <Col className="" xs={24} sm={12} md={8} lg={6} xl={4}>
+                      <ItemMerchant title="Walmart" extra="populated" cover="https://vignette.wikia.nocookie.net/walmart/images/5/52/Walmart_logo.gif/revision/latest?cb=20120825214337"  />
+                    </Col>
                   </Row>  
                 </Col>
               </Row>
