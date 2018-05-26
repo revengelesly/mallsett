@@ -150,7 +150,7 @@ class FileManagementForm extends Component {
               initialValue: (this.state.editingFile ? this.state.editingFile.displayName : '')
             })(
               <Input
-                autocomplete="name"
+                autoComplete="name"
                 prefix={
                   <Icon type="image" style={{ color: 'rgba(0,0,0,.25)' }} />
                 }
@@ -184,7 +184,6 @@ class FileManagementForm extends Component {
               rules: [{ required: true, message: 'File Category' }]
             })(
               <Select
-                defaultValue=""
                 mode="multiple"
                 style={{ width: '100%' }}
                 onChange={this.handleCategoryChange}

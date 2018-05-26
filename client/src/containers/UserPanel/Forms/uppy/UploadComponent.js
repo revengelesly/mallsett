@@ -23,6 +23,7 @@ export default class extends Component {
 
   onReset() {
     this.uppy.reset();
+    console.log('onReset uppy');
   }
 
   componentWillReceiveProps = (nextProps) => {
@@ -32,6 +33,7 @@ export default class extends Component {
   }
 
   render() {
+    console.log('render uppy');
     return (
       <div id={this.props.id} />
     );

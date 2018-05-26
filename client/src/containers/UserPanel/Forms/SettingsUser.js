@@ -85,7 +85,7 @@ class SettingsUserForm extends Component {
             {getFieldDecorator('name', {
             rules: [{ message: 'Please input your username!' }],
             })(
-              <Input autocomplete='username' prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder={this.props.profile.displayName} />
+              <Input autoComplete='username' prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder={this.props.profile.displayName} />
             )}
           </FormItem>
           <FormItem>

@@ -478,8 +478,7 @@ export default class UserPanel extends Component {
     ];
     let logOutStyle = {
       color: 'red',
-      width: '100%',
-      marginTop: this.state.tabMenuPositon === 'top' ? '' : '200px'
+      width: '100%'
     }
     return (
       <LayoutWrapper>

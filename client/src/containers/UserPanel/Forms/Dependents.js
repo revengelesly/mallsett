@@ -182,6 +182,10 @@ class SettingsUserForm extends Component {
   ageInfoHandler = e => {
     console.log('was click');
   };
+
+  getRandomId = prefix => {
+    return prefix + (new Date()).getTime();
+  }
   render() {
     const { getFieldDecorator } = this.props.form;
     const categoryOptions = primaryType.map(category => (
@@ -209,11 +213,12 @@ class SettingsUserForm extends Component {
               initialValue: (this.props.editingDependent ? this.props.editingDependent.displayName: '')
             })(
               <Input
-                autocomplete="name"
+                autoComplete="name"
                 prefix={
                   <Icon type="user-add" style={{ color: 'rgba(0,0,0,.25)' }} />
                 }
                 placeholder="Enter dependent name here"
+                id={`dn-${this.getRandomId()}`}
               />
             )}
           </FormItem>
@@ -223,7 +228,7 @@ class SettingsUserForm extends Component {
               initialValue: (this.props.editingDependent ? this.props.editingDependent.phone: '')
             })(
               <Input
-                autocomplete="phone number"
+                autoComplete="phone number"
                 prefix={
                   <Icon type="phone" style={{ color: 'rgba(0,0,0,.25)' }} />
                 }
