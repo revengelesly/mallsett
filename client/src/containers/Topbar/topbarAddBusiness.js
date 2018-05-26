@@ -38,7 +38,7 @@ class TopBarAddMerchants extends React.Component {
 
   bindDataWhenLogin = (merchants, profileId) => {
     let filteredMerchants = merchants.filter(x => x.createdBy === profileId);
-    console.log(filteredMerchants);
+
     if (filteredMerchants) {
       this.setState({
         isBusiness: true,
@@ -139,7 +139,7 @@ function mapStateToProps(state) {
       state.Auth.get('idToken') !== 'LOGIN_ERROR',
     profile: state.Auth.get('profile'),
     idToken: state.Auth.get('idToken'),
-    ...state.Auth.toJS()
+    ...state.App.toJS()
   };
 }
 

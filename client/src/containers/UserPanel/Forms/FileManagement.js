@@ -4,7 +4,7 @@ import { Alert, Form, Icon, Input, Button, Select, Upload, message } from 'antd'
 import { addFile } from '../../../redux/documents/middlewares';
 import { getView } from '../../../helpers/utility';
 import { ViewPort } from '../../../helpers/constants';
-import UpdateComponent from './uppy/UpdateComponent';
+import UploadComponent from './uppy/UploadComponent';
 const Dragger = Upload.Dragger;
 
 const { Option, OptGroup } = Select;
@@ -25,7 +25,8 @@ class FileManagementForm extends Component {
     uploadURL: '',
     editingFile: null,
     showErrorMessage: false,
-    owner: null
+    owner: null,
+    isUploadComponentReset: false
   };
 
   handleAgeChange = e => {
@@ -71,6 +72,9 @@ class FileManagementForm extends Component {
         console.log('Received values of form: ', file);
         if (file.directory && file.owner) {
           this.props.form.resetFields();
+          this.setState({
+            isUploadComponentReset: !this.state.isUploadComponentReset
+          });
           if (this.state.editingFile) {
             this.props.handleRemoveFile(this.state.editingFile._id, file);
           } else {
@@ -134,9 +138,10 @@ class FileManagementForm extends Component {
       <div>
         <Form onSubmit={this.handleSubmit} className="login-form">
           <FormItem label="." {...formItemLayout}>
-            <UpdateComponent
-              style={{ height: '300px' }}
+            <UploadComponent
+              id='uploadFile'
               handleUploadFileSuccess={this.handleUploadFileSuccess}
+              isReset={this.state.isUploadComponentReset}
             />
           </FormItem>
           <FormItem label="File Name" {...formItemLayout}>
@@ -145,7 +150,7 @@ class FileManagementForm extends Component {
               initialValue: (this.state.editingFile ? this.state.editingFile.displayName : '')
             })(
               <Input
-                autocomplete="name"
+                autoComplete="name"
                 prefix={
                   <Icon type="image" style={{ color: 'rgba(0,0,0,.25)' }} />
                 }
@@ -179,7 +184,6 @@ class FileManagementForm extends Component {
               rules: [{ required: true, message: 'File Category' }]
             })(
               <Select
-                defaultValue=""
                 mode="multiple"
                 style={{ width: '100%' }}
                 onChange={this.handleCategoryChange}

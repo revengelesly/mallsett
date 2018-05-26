@@ -211,7 +211,7 @@ export default class UserPanel extends Component {
   handleAddDependent = dependent => {
     axios({
       method: 'POST',
-      url: 'api/profile',
+      url: `${BaseURL}/api/profile`,
       headers: {
         Authorization: dependent.token,
         Accept: 'application/json',
@@ -478,8 +478,7 @@ export default class UserPanel extends Component {
     ];
     let logOutStyle = {
       color: 'red',
-      width: '100%',
-      marginTop: this.state.tabMenuPositon === 'top' ? '' : '200px'
+      width: '100%'
     }
     return (
       <LayoutWrapper>
@@ -491,17 +490,38 @@ export default class UserPanel extends Component {
               activeKey={this.state.activeTab}
               onChange={this.handleTabChange}
             >
-              {data.map((compData, i) => (
-                compData.isDisplay &&
-              <TabPane   tab={<span><Icon type={compData.icon} />{compData.nav}</span>} key={i}>
-                <TabsComponents key={i} data={compData} itemActiveTab={this.state.itemActiveTab} />
-              </TabPane>
-              ))}
+              {data.map(
+                (compData, i) =>
+                  compData.isDisplay && (
+                    <TabPane
+                      tab={
+                        <span>
+                          <Icon type={compData.icon} />
+                          {compData.nav}
+                        </span>
+                      }
+                      key={i}
+                    >
+                      <TabsComponents
+                        key={i}
+                        data={compData}
+                        itemActiveTab={this.state.itemActiveTab}
+                      />
+                    </TabPane>
+                  )
+              )}
 
-              {this.props.isLoggedIn &&
-                <TabPane tab={<span style={{marginBottom: -200, color: 'red', width: '100%'}}>
-                <Icon type="logout" />Logout</span>} key={this.LOG_OUT} />
-              }
+              {this.props.isLoggedIn && (
+                <TabPane
+                  tab={
+                    <span>
+                      <div style={logOutStyle}><Icon type="logout" /> Logout
+                      </div>
+                    </span>
+                  }
+                  key={this.LOG_OUT}
+                />
+              )}
             </Tabs>
           </div>
         </Box>

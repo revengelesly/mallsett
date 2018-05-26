@@ -131,7 +131,7 @@ class SettingsUserForm extends Component {
               initialValue: (this.state.editingLocation ? this.state.editingLocation.address: '')
             })(
               <Input
-                autocomplete="address"
+                autoComplete="address"
                 prefix={
                   <Icon
                     type="environment-o"

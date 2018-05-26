@@ -6,7 +6,7 @@ import { Modal, Button, Icon } from 'antd';
 import UserPanel from '../UserPanel/userPanel';
 
 
-const { login, logout, loginSuccess, updateProfile } = authAction;
+const { login, logout, loginSuccess } = authAction;
 
 class TopbarUser extends Component {
   constructor(props) {
@@ -75,7 +75,6 @@ function mapDispatchToProps(dispatch) {
     logout: () => dispatch(logout()),
     login: (email, password) => dispatch(login(email, password)),
     loginSuccess: (user, profile) => dispatch(loginSuccess(user, profile)),
-    updateProfile: (profile) => dispatch(updateProfile(profile))
   };
 }
 

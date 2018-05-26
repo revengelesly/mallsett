@@ -1,7 +1,7 @@
-import { Map } from 'immutable';
+import { Map, fromJS } from 'immutable';
 import actions from './actions';
 
-const initState = new Map({ idToken: null });
+const initState = new Map({ idToken: null, profile: null });
 
 export default function authReducer(state = initState, action) {
   switch (action.type) {
@@ -11,8 +11,6 @@ export default function authReducer(state = initState, action) {
       return initState;
     case actions.LOGIN_ERROR:
       return state.set('idToken', actions.LOGIN_ERROR);
-    case actions.UPDATE_PROFILE:
-      return state.set('profile', action.profile)
     default:
       return state;
   }

@@ -4,7 +4,7 @@ import axios from 'axios';
 import { getAgeStatement, getView } from '../../../helpers/utility';
 import { ViewPort } from '../../../helpers/constants';
 import { createProfile } from '../../../redux/auth/api';
-import UpdateComponent from './uppy/UpdateComponent';
+import UploadComponent from './uppy/UploadComponent';
 
 const Dragger = Upload.Dragger;
 
@@ -57,7 +57,8 @@ class SettingsUserForm extends Component {
     cities: secondaryType[primaryType[0]],
     secondSubCategory: secondaryType[primaryType[0]][0],
     ageStatement: '',
-    formItemLayout: {}
+    formItemLayout: {},
+    isUploadComponentReset: false
   };
   handleCategoryChange = value => {
     this.setState({
@@ -119,6 +120,10 @@ class SettingsUserForm extends Component {
 
       if (!err) {
         this.props.form.resetFields();
+        this.setState({
+          isUploadComponentReset: !this.state.isUploadComponentReset
+        });
+
         if (this.props.editingDependent) {
           this.props.handleRemoveDependent(this.props.editingDependent._id, dependent);
         } else {
@@ -173,9 +178,14 @@ class SettingsUserForm extends Component {
     window.addEventListener('resize', this.handleWindowResize);
   };
 
+
   ageInfoHandler = e => {
     console.log('was click');
   };
+
+  getRandomId = prefix => {
+    return prefix + (new Date()).getTime();
+  }
   render() {
     const { getFieldDecorator } = this.props.form;
     const categoryOptions = primaryType.map(category => (
@@ -203,11 +213,12 @@ class SettingsUserForm extends Component {
               initialValue: (this.props.editingDependent ? this.props.editingDependent.displayName: '')
             })(
               <Input
-                autocomplete="name"
+                autoComplete="name"
                 prefix={
                   <Icon type="user-add" style={{ color: 'rgba(0,0,0,.25)' }} />
                 }
                 placeholder="Enter dependent name here"
+                id={`dn-${this.getRandomId()}`}
               />
             )}
           </FormItem>
@@ -217,7 +228,7 @@ class SettingsUserForm extends Component {
               initialValue: (this.props.editingDependent ? this.props.editingDependent.phone: '')
             })(
               <Input
-                autocomplete="phone number"
+                autoComplete="phone number"
                 prefix={
                   <Icon type="phone" style={{ color: 'rgba(0,0,0,.25)' }} />
                 }
@@ -309,7 +320,8 @@ class SettingsUserForm extends Component {
             )}
           </FormItem>
           <FormItem {...formItemLayout} label="Photo for Receiving">
-            <UpdateComponent handleUploadFileSuccess={this.handleUploadFileSuccess} />
+            <UploadComponent isReset={this.state.isUploadComponentReset} id="uploadDependent" handleUploadFileSuccess={this.handleUploadFileSuccess} />
+            <br />
             Not Required.
           </FormItem>
 
@@ -327,6 +339,7 @@ class SettingsUserForm extends Component {
                 mode="multiple"
                 style={{ width: '100%' }}
                 onChange={handleSpecialConsiderationChange}
+                notFoundContent='You have not added a location'
               >
                 {this.props.locations && this.props.locations.map(x =>
                   <Option key={x._id}>{x.address}</Option>
@@ -350,7 +363,9 @@ class SettingsUserForm extends Component {
                 mode="multiple"
                 style={{ width: '100%' }}
                 onChange={handleSpecialConsiderationChange}
+                notFoundContent='You have not add a document'
               >
+
                 {this.props.files && this.props.files.map(x =>
                   <Option key={x._id}>{x.displayName}</Option>
                 )}
