@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { Layout } from "antd";
+import { Layout, Icon, Menu, Dropdown } from "antd";
 import appActions from "../../redux/app/actions";
 import TopbarUser from "./topbarUser";
 import TopbarAddBusiness from './topbarAddBusiness'; 
@@ -11,6 +11,16 @@ import { themeConfig } from "../../settings";
 const { Header } = Layout;
 const { toggleCollapsed } = appActions;
 const customizedTheme = themes[themeConfig.theme];
+
+const myBusinessMenu = (
+  <Menu>
+    <Menu.Item key="0">
+      Business Service Card Here
+    </Menu.Item>
+    <Menu.Divider />
+    <Menu.Item key="addNew">Add New Business</Menu.Item>
+  </Menu>
+);
 
 class Topbar extends Component {
   render() {
@@ -31,18 +41,23 @@ class Topbar extends Component {
           }
         >
           <div className="isoLeft">
-            <button
+           <h3> MALLSETT</h3>
+          </div>
+
+          <ul className="isoRight">
+            <li
               className={
                 collapsed ? "triggerBtn menuCollapsed" : "triggerBtn menuOpen"
               }
               style={{ color: customizedTheme.textColor }}
               onClick={toggleCollapsed}
-            />
-          </div>
-
-          <ul className="isoRight">
+            > 
+            <Icon type="dashboard" /> <Dropdown overlay={myBusinessMenu} trigger={['click']} placement="bottomRight">
+              <span className=""> Manage My Business </span>
+            </Dropdown>
+            </li>
             <li>
-              <TopbarAddBusiness />
+            <TopbarAddBusiness />
             </li>
             <li
               onClick={() => this.setState({ selectedItem: "user" })}

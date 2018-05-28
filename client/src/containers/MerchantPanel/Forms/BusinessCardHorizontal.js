@@ -127,20 +127,7 @@ class CreateAddress extends Component {
         <Row justify="start">
           <Col md={24} sm={24} xs={24}>
             <ContentHolder>
-              <InputGroup size="large" style={{ marginBottom: '15px' }}>
-                <Col span="24">
-                  <LocationSearchInput
-                    handleSelect={this.handleSelect}
-                    address={address}
-                    disabled={this.state.disabled}
-                  />
-                </Col>
-              </InputGroup>
-              <InputGroup size="large" style={{ marginBottom: '15px' }}>
-                <Col span="24">
-                  <MapComponent isMarkerShown={true} position={position} />
-                </Col>
-              </InputGroup>
+              
               <InputGroup size="large" style={{ marginBottom: '15px' }}>
                 {this.state.businesses && this.state.businesses.length > 0 && (
                   <List
@@ -165,9 +152,24 @@ class CreateAddress extends Component {
                   />
                 )}
                 {(!this.state.businesses || this.state.businesses.length === 0) && (
-                  <p style={{textAlign: 'center'}}>Please search for your business above</p>
+                  <p style={{textAlign: 'center'}}>Please search and select a business</p>
                 )}
+                <InputGroup size="large" style={{ marginBottom: '15px' }}>
+                <Col span="24">
+                  <LocationSearchInput
+                    handleSelect={this.handleSelect}
+                    address={address}
+                    disabled={this.state.disabled}
+                  />
+                </Col>
               </InputGroup>
+              </InputGroup>
+              <InputGroup size="large" style={{ marginBottom: '15px' }}>
+                <Col span="24">
+                  <MapComponent isMarkerShown={true} position={position} />
+                </Col>
+              </InputGroup>
+              
             </ContentHolder>
           </Col>
         </Row>

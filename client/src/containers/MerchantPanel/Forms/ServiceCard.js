@@ -24,20 +24,12 @@ class MerchantTitle extends Component {
 
   render() {
     return (
-      <div>
-        Suplier One{' '}
-        {this.props.isDisplayButton &&
-          <Button
-            type="danger"
-            icon="delete"
-            className="fullButton"
-            onClick={this.handleRemove}
-          >
-            {' '}
-            Remove{' '}
-          </Button>
-        }
-      </div>
+      <span onClick={this.handleRemove} style={{color: "red", cursor: "pointer"}}>
+       
+       {' '} <Icon type="delete" />
+         
+        
+      </span>
     );
   }
 }
@@ -75,21 +67,13 @@ class ServiceCard extends Component {
           </div>
           <div>
             {' '}
-            <Icon type="idcard" /> Businiss services
+            <Icon type="idcard" /> Business services
           </div>
       </div>
     );
     return (
       <Card
-        style={{width:'100%', border:'3px solid #e8e8e8'}}
-        title={
-          <MerchantTitle
-            isDisplayButton={this.props.name ? true : false}
-            handleRemove={this.props.handleRemove}
-            googlePlaceId={this.props.googlePlaceId}
-            isAdded={this.props.isAdded}
-          />
-        }
+        style={{width:'100%', border:'1px solid #e8e8e8'}}
         bordered={true}
       >
         <Row gutter={8}>
@@ -100,7 +84,14 @@ class ServiceCard extends Component {
             />
           </Col>
           <Col span="18">
-            <h4>{this.props.name || 'Company name'}</h4>
+            <h4>{this.props.name || 'Company name'}
+            <MerchantTitle
+              isDisplayButton={this.props.name ? true : false}
+              handleRemove={this.props.handleRemove}
+              googlePlaceId={this.props.googlePlaceId}
+              isAdded={this.props.isAdded}
+            />
+            </h4>
             {cardContent}
           </Col>
         </Row>
