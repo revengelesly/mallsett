@@ -139,7 +139,7 @@ class FileManagementForm extends Component {
         <Form onSubmit={this.handleSubmit} className="login-form">
           <FormItem label="." {...formItemLayout}>
             <UploadComponent
-              id='uploadFile'
+              id={this.props.uploadId || 'uploadFile'}
               handleUploadFileSuccess={this.handleUploadFileSuccess}
               isReset={this.state.isUploadComponentReset}
             />

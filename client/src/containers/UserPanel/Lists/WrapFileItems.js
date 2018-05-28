@@ -61,7 +61,9 @@ export default class FileItem extends Component {
       header: 'Add a new dependent',
       icon: 'link',
       nav: 'Add New Dependent',
-      item: <Dependents />,
+      item: <Dependents
+              uploadId='wrapFileItemUpload'
+            />,
       formWidth: '12',
       itemWidth: '12',
       key: 2

@@ -8,9 +8,14 @@ import Suppliers from './Forms/Suppliers';
 import BusinessCardHorizontal from './Forms/BusinessCardHorizontal';
 import Services from './Forms/Services';
 import AddMerchant from './Forms/AddMerchant';
+import AddBusinessTabComponent from './Forms/AddBusinessTabComponent';
 
 import { InputGroup } from '../../components/uielements/input';
 
+import { getView } from '../../helpers/utility';
+import { ViewPort } from '../../helpers/constants';
+
+import Tabs, { TabPane } from '../../components/uielements/tabs';
 import PageHeader from '../../components/utility/pageHeader';
 import LayoutWrapper from '../../components/utility/layoutWrapper';
 import IntlMessages from '../../components/utility/intlMessages';
@@ -21,6 +26,7 @@ import RegisterUser from '../UserPanel/Forms/RegisterUser';
 import RequestUserPassword from '../UserPanel/Forms/RequestUserPassword';
 import axios from 'axios';
 import { BaseURL } from '../../helpers/constants';
+import { POINT_CONVERSION_COMPRESSED } from 'constants';
 
 const { Header, Footer, Sider, Content } = Layout;
 const Step = Steps.Step;
@@ -41,12 +47,14 @@ class PlugBusiness extends React.Component {
       changing: true,
       isAdded: false,
       formState: 1,
-      merchants: this.props.merchants
+      merchants: this.props.merchants,
+      disabledTabs: new Array(13).fill(true, 1, 13),
+      tabMenuPositon: 'top'
     };
   }
 
-  handleUpdateBusiness = (businesses) => {
-    let businessesList = this.state.businessesList.map(x => ([...x]));
+  handleUpdateBusiness = businesses => {
+    let businessesList = this.state.businessesList.map(x => [...x]);
     businessesList[this.getCurrent()] = businesses;
     this.setState({
       businessesList: businessesList,
@@ -57,8 +65,12 @@ class PlugBusiness extends React.Component {
   handleUpdateMerchant = merchant => {
     let merchantsList = this.state.merchantsList.map(x => [...x]);
 
-    if (!merchantsList[this.getCurrent()] ||
-        merchantsList[this.getCurrent()].indexOf(x => x.merchant.id === merchant.id) < 0) {
+    if (
+      !merchantsList[this.getCurrent()] ||
+      merchantsList[this.getCurrent()].indexOf(
+        x => x.merchant.id === merchant.id
+      ) < 0
+    ) {
       if (!merchantsList[this.getCurrent()]) {
         merchantsList[this.getCurrent()] = [];
       }
@@ -73,10 +85,12 @@ class PlugBusiness extends React.Component {
     });
   };
 
-  handleAddBussinessToDatabase = (business) => {
-    let merchant =  this.state.merchantsList[this.state.current] ?
-      (this.state.merchantsList[this.state.current].find(x => x.place.googlePlaceId === business.googlePlaceId)) :
-      null;
+  handleAddBussinessToDatabase = business => {
+    let merchant = this.state.merchantsList[this.state.current]
+      ? this.state.merchantsList[this.state.current].find(
+          x => x.place.googlePlaceId === business.googlePlaceId
+        )
+      : null;
     if (!merchant) {
       let merchant = {
         category: business.categories[0],
@@ -87,22 +101,26 @@ class PlugBusiness extends React.Component {
 
       axios({
         method: 'POST',
-          url: `${BaseURL}/api/merchant`,
-          data: merchant,
-          headers: {
-            'Authorization': this.props.idToken,
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-          }
+        url: `${BaseURL}/api/merchant`,
+        data: merchant,
+        headers: {
+          Authorization: this.props.idToken,
+          Accept: 'application/json',
+          'Content-Type': 'application/json'
+        }
       }).then(res => this.handleUpdateMerchant(res.data));
     }
-  }
+  };
 
-  handleDeleteMerchant = (business) => {
-    let merchant = this.state.merchantsList[this.state.current].find(x => x.place.googlePlaceId === business.googlePlaceId);
+  handleDeleteMerchant = business => {
+    let merchant = this.state.merchantsList[this.state.current].find(
+      x => x.place.googlePlaceId === business.googlePlaceId
+    );
     if (merchant) {
       let merchantsList = this.state.merchantsList.map(x => [...x]);
-      let merchants = merchantsList[this.state.current].filter(x => x.place.googlePlaceId != business.googlePlaceId);
+      let merchants = merchantsList[this.state.current].filter(
+        x => x.place.googlePlaceId != business.googlePlaceId
+      );
       merchantsList[this.state.current] = merchants;
       this.setState({
         merchantsList
@@ -110,50 +128,73 @@ class PlugBusiness extends React.Component {
 
       this.props.handleRemoveMerchant(merchant);
     }
-  }
+  };
 
-  handleDeleteBusinessFromDatabase = (business) => {
-    let merchant = this.state.merchantsList[this.state.current].find(x => x.place.googlePlaceId === business.googlePlaceId);
+  handleDeleteBusinessFromDatabase = business => {
+    let merchant = this.state.merchantsList[this.state.current].find(
+      x => x.place.googlePlaceId === business.googlePlaceId
+    );
     if (merchant) {
       axios({
         method: 'POST',
-          url: `${BaseURL}/api/merchant/delete`,
-          data: {
-            'merchant_id': merchant._id
-          },
-          headers: {
-            'Authorization': this.props.idToken,
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-          }
-      }).then(res => this.handleDeleteMerchant(business))
-      .catch(err => console.log(err))
+        url: `${BaseURL}/api/merchant/delete`,
+        data: {
+          merchant_id: merchant._id
+        },
+        headers: {
+          Authorization: this.props.idToken,
+          Accept: 'application/json',
+          'Content-Type': 'application/json'
+        }
+      })
+        .then(res => this.handleDeleteMerchant(business))
+        .catch(err => console.log(err));
     }
-  }
+  };
 
-  next() {
+  next = () => {
     const current = this.getCurrent() + 1;
     this.setState({ current });
-  }
+    let disabledTabs = this.state.disabledTabs;
+    disabledTabs[current] = false;
+    this.setState({
+      current,
+      disabledTabs
+    });
+  };
 
-  prev() {
+  prev = () => {
     const current = this.getCurrent() - 1;
     this.setState({ current });
-  }
+  };
 
-  getCurrent() {
+  getCurrent = () => {
     if (this.props.isLoggedIn) {
       return this.state.current;
     }
 
     return this.state.current > 1 ? 0 : this.state.current;
-  }
+  };
 
-  handleTabChange = (key) => {
+  handleTabChange = key => {
     this.setState({
       formState: key
     });
   };
+
+  handleMainTabChange = key => {
+    if (!this.state.disabledTabs[parseInt(key)]) {
+      this.setState({
+        current: parseInt(key)
+      });
+    }
+  };
+
+  // handleWindowResize = () => {
+  //   this.setState({
+  //     tabMenuPositon: getView() === ViewPort.DesktopView ? 'right' : 'top'
+  //   });
+  // };
 
   bindDataToState = (merchants, profileId) => {
     merchants = merchants.filter(x => x.createdBy === profileId);
@@ -181,32 +222,78 @@ class PlugBusiness extends React.Component {
       merchantsList,
       businessesList
     });
-  }
+
+    return businessesList;
+  };
 
   componentDidMount = () => {
-    console.log(this.props.merchants)
-    if (this.props.isLoggedIn && this.props.profile) {
-      this.bindDataToState(this.props.merchants, this.props.profile._id);
-    }
-  }
+    // this.handleWindowResize();
+    // window.addEventListener('resize', this.handleWindowResize);
 
-  componentWillReceiveProps = (nextProps) => {
-    if (nextProps.isLoggedIn && nextProps.profile) {
-      this.bindDataToState(nextProps.merchants, nextProps.profile._id);
+    if (this.props.isLoggedIn && this.props.profile) {
+      let businessesList = this.bindDataToState(
+        this.props.merchants,
+        this.props.profile._id
+      );
+      console.log(businessesList);
+      if (businessesList.length > 0) {
+        for (let i = businessesList.length - 1; i > 1; i--) {
+          if (businessesList[i] && businessesList[i].length > 0) {
+            let disabledTabs = this.state.disabledTabs.fill(false, 0, i + 1);
+            this.setState({
+              disabledTabs: disabledTabs
+            });
+            break;
+          }
+        }
+      }
     }
-  }
+  };
+
+  componentWillReceiveProps = nextProps => {
+    if (nextProps.isLoggedIn && nextProps.profile) {
+      let businessesList = this.bindDataToState(
+        nextProps.merchants,
+        nextProps.profile._id
+      );
+      if (businessesList.length > 0) {
+        for (let i = businessesList.length - 1; i > 1; i--) {
+          if (businessesList[i] && businessesList[i].length > 0) {
+            let disabledTabs = this.state.disabledTabs.fill(false, 0, i + 1);
+            this.setState({
+              disabledTabs: disabledTabs
+            });
+            break;
+          }
+        }
+      }
+    }
+  };
 
   render() {
     let step1Content = <LoginUser login={this.props.login} />;
-    switch(this.state.formState) {
+    switch (this.state.formState) {
       case '3':
-        step1Content = <RegisterUser login={this.props.login} handleTabChange={this.handleTabChange} />
+        step1Content = (
+          <RegisterUser
+            login={this.props.login}
+            handleTabChange={this.handleTabChange}
+          />
+        );
         break;
       case '5':
-        step1Content = <RequestUserPassword  handleTabChange={this.handleTabChange} />;
+        step1Content = (
+          <RequestUserPassword handleTabChange={this.handleTabChange} />
+        );
         break;
       default:
-        step1Content = <LoginUser login={this.props.login} handleTabChange={this.handleTabChange} idToken={this.props.idToken} />;
+        step1Content = (
+          <LoginUser
+            login={this.props.login}
+            handleTabChange={this.handleTabChange}
+            idToken={this.props.idToken}
+          />
+        );
         break;
     }
 
@@ -236,7 +323,9 @@ class PlugBusiness extends React.Component {
             merchants={this.state.merchantsList[1]}
             handleUpdateBusiness={this.handleUpdateBusiness}
             handleAddBussinessToDatabase={this.handleAddBussinessToDatabase}
-            handleDeleteBusinessFromDatabase={this.handleDeleteBusinessFromDatabase}
+            handleDeleteBusinessFromDatabase={
+              this.handleDeleteBusinessFromDatabase
+            }
             handleUpdateMerchant={this.handleUpdateMerchant}
             isAdded={this.state.isAdded}
             {...this.props}
@@ -255,7 +344,9 @@ class PlugBusiness extends React.Component {
             merchants={this.state.merchantsList[2]}
             handleUpdateBusiness={this.handleUpdateBusiness}
             handleAddBussinessToDatabase={this.handleAddBussinessToDatabase}
-            handleDeleteBusinessFromDatabase={this.handleDeleteBusinessFromDatabase}
+            handleDeleteBusinessFromDatabase={
+              this.handleDeleteBusinessFromDatabase
+            }
             handleUpdateMerchant={this.handleUpdateMerchant}
             isAdded={this.state.isAdded}
             {...this.props}
@@ -274,7 +365,9 @@ class PlugBusiness extends React.Component {
             merchants={this.state.merchantsList[3]}
             handleUpdateBusiness={this.handleUpdateBusiness}
             handleAddBussinessToDatabase={this.handleAddBussinessToDatabase}
-            handleDeleteBusinessFromDatabase={this.handleDeleteBusinessFromDatabase}
+            handleDeleteBusinessFromDatabase={
+              this.handleDeleteBusinessFromDatabase
+            }
             handleUpdateMerchant={this.handleUpdateMerchant}
             isAdded={this.state.isAdded}
             {...this.props}
@@ -293,7 +386,9 @@ class PlugBusiness extends React.Component {
             merchants={this.state.merchantsList[4]}
             handleUpdateBusiness={this.handleUpdateBusiness}
             handleAddBussinessToDatabase={this.handleAddBussinessToDatabase}
-            handleDeleteBusinessFromDatabase={this.handleDeleteBusinessFromDatabase}
+            handleDeleteBusinessFromDatabase={
+              this.handleDeleteBusinessFromDatabase
+            }
             handleUpdateMerchant={this.handleUpdateMerchant}
             isAdded={this.state.isAdded}
             {...this.props}
@@ -312,7 +407,9 @@ class PlugBusiness extends React.Component {
             merchants={this.state.merchantsList[5]}
             handleUpdateBusiness={this.handleUpdateBusiness}
             handleAddBussinessToDatabase={this.handleAddBussinessToDatabase}
-            handleDeleteBusinessFromDatabase={this.handleDeleteBusinessFromDatabase}
+            handleDeleteBusinessFromDatabase={
+              this.handleDeleteBusinessFromDatabase
+            }
             handleUpdateMerchant={this.handleUpdateMerchant}
             isAdded={this.state.isAdded}
             {...this.props}
@@ -331,7 +428,9 @@ class PlugBusiness extends React.Component {
             merchants={this.state.merchantsList[6]}
             handleUpdateBusiness={this.handleUpdateBusiness}
             handleAddBussinessToDatabase={this.handleAddBussinessToDatabase}
-            handleDeleteBusinessFromDatabase={this.handleDeleteBusinessFromDatabase}
+            handleDeleteBusinessFromDatabase={
+              this.handleDeleteBusinessFromDatabase
+            }
             handleUpdateMerchant={this.handleUpdateMerchant}
             isAdded={this.state.isAdded}
             {...this.props}
@@ -351,7 +450,9 @@ class PlugBusiness extends React.Component {
             merchants={this.state.merchantsList[7]}
             handleUpdateBusiness={this.handleUpdateBusiness}
             handleAddBussinessToDatabase={this.handleAddBussinessToDatabase}
-            handleDeleteBusinessFromDatabase={this.handleDeleteBusinessFromDatabase}
+            handleDeleteBusinessFromDatabase={
+              this.handleDeleteBusinessFromDatabase
+            }
             handleUpdateMerchant={this.handleUpdateMerchant}
             isAdded={this.state.isAdded}
             {...this.props}
@@ -370,7 +471,9 @@ class PlugBusiness extends React.Component {
             merchants={this.state.merchantsList[8]}
             handleUpdateBusiness={this.handleUpdateBusiness}
             handleAddBussinessToDatabase={this.handleAddBussinessToDatabase}
-            handleDeleteBusinessFromDatabase={this.handleDeleteBusinessFromDatabase}
+            handleDeleteBusinessFromDatabase={
+              this.handleDeleteBusinessFromDatabase
+            }
             handleUpdateMerchant={this.handleUpdateMerchant}
             isAdded={this.state.isAdded}
             {...this.props}
@@ -417,100 +520,47 @@ class PlugBusiness extends React.Component {
     return (
       <LayoutWrapper>
         <Box>
-          <Row gutter={24}>
-            <Col span="24">
-              <Layout>
-                <Content style={{ padding: '0 20px' }}>
-                  <h3 style={{ marginTop: 20, marginBottom: 0 }}>
-                    {filteredSteps[current].title}{' '}
-                    <Popover
-                      content={<div>{filteredSteps[current].help}</div>}
-                      title={filteredSteps[current].title}
-                      trigger="click"
-                    >
-                      <Button type="dashed" icon="question-circle-o">
-                        {' '}
-                        Help
-                      </Button>
-                    </Popover>
-                  </h3>
-                  <p style={{ marginBottom: 20 }}>
-                    {' '}
-                    {filteredSteps[current].description}{' '}
-                  </p>
-                  <div className="steps-content">
-                    {filteredSteps[current].content}{' '}
-                  </div>
-                  <div className="steps-action">
-                    <InputGroup style={{ marginBottom: '15px' }}>
-                      <Row gutter={24} style={{ marginTop: 8 }}>
-                        <Col span="8" />
-                        {current <= 0 && <Col span="8" />}
-
-                        {current > 0 && (
-                          <Col span="8">
-                            <Button
-                              className="fullButton square"
-                              style={{ marginRight: 8 }}
-                              onClick={() => this.prev()}
-                            >
-                              Previous
-                            </Button>
-                          </Col>
-                        )}
-                        {((filteredSteps.length > 1 &&
-                          current < filteredSteps.length - 1)) && (
-                            <Col span="8">
-                              <Button
-                                className="fullButton square"
-                                type="primary"
-                                style={{ marginRight: 8 }}
-                                onClick={() => this.next()}
-                                {...(filteredSteps[current].title.indexOf('Login') > 0 ? {disabled: 'true'} : {})}
-                              >
-                                Next
-                              </Button>
-                            </Col>
-                          )}
-
-                        {current === filteredSteps.length - 1  && (
-                          <Col span="8">
-                            <Button
-                              className="fullButton square"
-                              type="primary"
-                              style={{ marginRight: 8 }}
-                              onClick={() =>
-                                message.success('Processing complete!')
-                              }
-                              disabled={filteredSteps[current].title.indexOf('Login') >= 0}
-                            >
-                              <span>
-                                {filteredSteps[current].title.indexOf('Login') >= 0 && <span>Next</span>}
-                                {filteredSteps[current].title.indexOf('Login') < 0 && <span>Done</span>}
-                              </span>
-                            </Button>
-                          </Col>
-                        )}
-                      </Row>
-                    </InputGroup>
-                  </div>
-                </Content>
-                <Sider
-                  style={{ background: 'white', padding: '0 10px'}}
-                  breakpoint='lg'>
-                  <Steps direction="vertical" size="small" current={current}>
-                    {filteredSteps.map(item => (
-                      <Step
-                        key={item.title}
-                        icon={<Icon type={item.icon} />}
-                        title={item.title}
-                      />
-                    ))}
-                  </Steps>
-                </Sider>
-              </Layout>
-            </Col>
-          </Row>
+          <Tabs
+            activeKey={`${this.state.current}`}
+            onChange={this.handleMainTabChange}
+            size="small"
+            tabPosition="top"
+            // tabPosition={this.state.tabMenuPositon}
+          >
+            {filteredSteps.map((step, i) => (
+              <TabPane
+                tab={
+                  <span>
+                    <Icon type={step.icon} />
+                    {step.title}
+                  </span>
+                }
+                disabled={this.state.disabledTabs[i]}
+                key={i}
+              >
+                <AddBusinessTabComponent
+                  title={step.title}
+                  help={step.help}
+                  description={step.description}
+                  content={step.content}
+                  isDisplayPrevious={this.state.current > 0}
+                  isDisplayNext={
+                    filteredSteps.length > 0 &&
+                    (this.state.current < filteredSteps.length - 1 ||
+                      step.title.indexOf('Login') >= 0)
+                  }
+                  isDisabledNext={step.title.indexOf('Login') >= 0}
+                  isDisplayDone={
+                    this.state.current === filteredSteps.length - 1 &&
+                    step.title.indexOf('Login') < 0
+                  }
+                  isDisabledDone={false}
+                  handleNext={this.next}
+                  handlePrevious={this.prev}
+                />
+              </TabPane>
+            ))}
+          </Tabs>
         </Box>
       </LayoutWrapper>
     );
