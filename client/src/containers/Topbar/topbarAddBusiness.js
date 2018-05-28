@@ -115,7 +115,7 @@ class TopBarAddMerchants extends React.Component {
           width={800}
           onOk={this.handleOk}
           onCancel={this.handleCancel}
-          width="60%"
+          width="80%"
         >
           <AddBusiness
             isLoggedIn={this.props.isLoggedIn}

@@ -333,6 +333,7 @@ export default class UserPanel extends Component {
             editingDependent={this.state.editingDependent}
             files={this.state.files}
             locations={this.state.locations}
+            uploadId='userUploadItem'
             {...this.props}
           />
         ),
@@ -400,6 +401,7 @@ export default class UserPanel extends Component {
             editingFile={this.state.editingFile}
             handleRemoveFile={this.handleRemoveFile}
             dependents={this.state.dependents}
+            uploadId='userFileManagementUploadId'
             {...this.props}
           />
         ),

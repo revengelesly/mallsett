@@ -320,7 +320,7 @@ class SettingsUserForm extends Component {
             )}
           </FormItem>
           <FormItem {...formItemLayout} label="Photo for Receiving">
-            <UploadComponent isReset={this.state.isUploadComponentReset} id="uploadDependent" handleUploadFileSuccess={this.handleUploadFileSuccess} />
+            <UploadComponent isReset={this.state.isUploadComponentReset} id={this.props.uploadId || "uploadDependent"} handleUploadFileSuccess={this.handleUploadFileSuccess} />
             <br />
             Not Required.
           </FormItem>
