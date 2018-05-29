@@ -166,7 +166,7 @@ class CreateAddress extends Component {
               </InputGroup>
               <InputGroup size="large" style={{ marginBottom: '15px' }}>
                 <Col span="24">
-                  <MapComponent isMarkerShown={true} position={position} />
+                  
                 </Col>
               </InputGroup>
               

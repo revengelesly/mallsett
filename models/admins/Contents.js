@@ -49,7 +49,46 @@ const AdminContentsSchema = new Schema({
         updated_at: {
             type: Date
         }
-    }]
+    }],
+    merchantsSuggestionsCategories: [{
+        // is it child, parent, pos system, etc.
+        typeCategory: {
+            type: String,
+            required: true
+        },
+        // the main business google category
+        googleCategory: {
+            type: String,
+            required: true
+        },
+        // how far to look for the suggested category
+        radiusDistance: {
+            type: String,
+            required: true,
+            default: 10
+        },
+        // categories that we are suggesting. 
+        suggestedCategories: [{
+            type: String
+        }]
+    }],
+    merchantsSuggestionsDirect: [{
+        // is it child, parent, pos system, etc.
+        typeCategory: {
+            type: String,
+            required: true
+        },
+        // the main business google category
+        googleCategory: {
+            type: String,
+            required: true
+        },
+        // categories that we are suggesting. 
+        googlePlaceId: [{
+            type: String
+        }]
+    }],
+
 });
 
 module.exports = AdminContentsOption = mongoose.model('contents', AdminContentsSchema);
