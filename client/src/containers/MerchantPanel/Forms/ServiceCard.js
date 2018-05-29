@@ -26,7 +26,7 @@ class MerchantTitle extends Component {
     return (
       <span onClick={this.handleRemove} style={{color: "red", cursor: "pointer"}}>
        
-       {' '} <Icon type="delete" />
+       {' '} <Button style={{color: "red", cursor: "pointer"}}  shape="circle" icon="delete"></Button>
          
         
       </span>
@@ -90,7 +90,12 @@ class ServiceCard extends Component {
               handleRemove={this.props.handleRemove}
               googlePlaceId={this.props.googlePlaceId}
               isAdded={this.props.isAdded}
-            />
+            /> <Button icon="check-circle-o"   shape="circle"
+            style={{color: "green", cursor: "pointer"}}>
+            </Button> <Button icon="check-circle"  shape="circle"
+            style={{color: "green", cursor: "pointer"}}>
+           
+            </Button>
             </h4>
             {cardContent}
           </Col>
