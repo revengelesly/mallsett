@@ -50,7 +50,7 @@ const AdminContentsSchema = new Schema({
             type: Date
         }
     }],
-    merchantsSuggestionsCategories: [{
+    merchantsSuggestionsRadius: [{
         // is it child, parent, pos system, etc.
         typeCategory: {
             type: String,
@@ -69,7 +69,13 @@ const AdminContentsSchema = new Schema({
         },
         // categories that we are suggesting. 
         suggestedCategories: [{
-            type: String
+           name: String,
+           // do we automaticly add the nearest on the category. 
+           // For Example: we can automatilcy add the nearest Police Station or Fire Department.
+           autoFirst: {
+               type: Boolean,
+               default: false
+           }
         }]
     }],
     merchantsSuggestionsDirect: [{
