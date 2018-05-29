@@ -49,7 +49,52 @@ const AdminContentsSchema = new Schema({
         updated_at: {
             type: Date
         }
-    }]
+    }],
+    merchantsSuggestionsRadius: [{
+        // is it child, parent, pos system, etc.
+        typeCategory: {
+            type: String,
+            required: true
+        },
+        // the main business google category
+        googleCategory: {
+            type: String,
+            required: true
+        },
+        // how far to look for the suggested category
+        radiusDistance: {
+            type: String,
+            required: true,
+            default: 10
+        },
+        // categories that we are suggesting. 
+        suggestedCategories: [{
+           name: String,
+           // do we automaticly add the nearest on the category. 
+           // For Example: we can automatilcy add the nearest Police Station or Fire Department.
+           autoFirst: {
+               type: Boolean,
+               default: false
+           }
+        }]
+    }],
+    merchantsSuggestionsDirect: [{
+        // is it child, parent, pos system, etc.
+        typeCategory: {
+            type: String,
+            required: true
+        },
+        // the main business google category
+        googleCategory: {
+            type: String,
+            required: true
+        },
+        // categories that we are suggesting. 
+        googlePlaceId: [{
+            type: String
+        }]
+    }],
+
 });
 
 module.exports = AdminContentsOption = mongoose.model('contents', AdminContentsSchema);

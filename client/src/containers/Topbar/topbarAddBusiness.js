@@ -105,8 +105,8 @@ class TopBarAddMerchants extends React.Component {
       <div>
         <div type="" onClick={this.showModal}>
           <Icon type="shop" />
-          {!this.state.isBusiness && <span>Add My Business</span>}
-          {this.state.isBusiness && <span>Manage my Business</span>}
+          {!this.state.isBusiness && <span>Plug My Business</span>}
+          {this.state.isBusiness && <span>Plug my Business</span>}
         </div>
         <Modal
           visible={this.state.visible}

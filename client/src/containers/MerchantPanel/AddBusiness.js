@@ -306,7 +306,7 @@ class PlugBusiness extends React.Component {
         help: 'soemthing here to help'
       },
       {
-        title: '2 Minute Introduction',
+        title: '2 Minute Intro',
         icon: 'bell',
         content: <AddBusinessIntro />,
         description:
@@ -377,7 +377,7 @@ class PlugBusiness extends React.Component {
         help: 'soemthing here to help'
       },
       {
-        title: 'Find my Suppliers',
+        title: 'Suppliers',
         icon: 'shopping-cart',
         content: (
           <BusinessCardHorizontal
@@ -398,7 +398,7 @@ class PlugBusiness extends React.Component {
         help: 'soemthing here to help'
       },
       {
-        title: 'Find My B2B Customers',
+        title: 'B2B Customers',
         icon: 'shop',
         content: (
           <BusinessCardHorizontal
@@ -419,7 +419,7 @@ class PlugBusiness extends React.Component {
         help: 'soemthing here to help'
       },
       {
-        title: 'Find my Professional Services',
+        title: 'Professional Services',
         icon: 'user',
         content: (
           <BusinessCardHorizontal
@@ -440,7 +440,7 @@ class PlugBusiness extends React.Component {
         help: 'soemthing here to help'
       },
       {
-        title: 'Track my Competitors',
+        title: 'Competitor Tracker',
         content: 'Second-content',
         icon: 'meh-o',
         content: (
@@ -462,7 +462,7 @@ class PlugBusiness extends React.Component {
         help: 'soemthing here to help'
       },
       {
-        title: 'Join Business Associations',
+        title: 'Business Associations',
         icon: 'global',
         content: (
           <BusinessCardHorizontal
@@ -483,6 +483,27 @@ class PlugBusiness extends React.Component {
         help: 'soemthing here to help'
       },
       {
+        title: 'Marketing Services',
+        icon: 'desktop',
+        content: <Services />,
+        description: '',
+        help: 'soemthing here to help'
+      },
+      {
+        title: 'Government',
+        icon: 'desktop',
+        content: <Services />,
+        description: '',
+        help: 'soemthing here to help'
+      },
+      {
+        title: 'POS Systems',
+        icon: 'desktop',
+        content: <Services />,
+        description: '',
+        help: 'soemthing here to help'
+      },
+      {
         title: 'POS Systems',
         icon: 'desktop',
         content: <Services />,
@@ -497,7 +518,7 @@ class PlugBusiness extends React.Component {
         help: 'soemthing here to help'
       },
       {
-        title: 'Lastly',
+        title: 'Closing Details',
         icon: 'profile',
         content: <AddMerchant />,
         description: '',
@@ -524,7 +545,7 @@ class PlugBusiness extends React.Component {
             activeKey={`${this.state.current}`}
             onChange={this.handleMainTabChange}
             size="small"
-            tabPosition="top"
+            tabPosition="right"
             // tabPosition={this.state.tabMenuPositon}
           >
             {filteredSteps.map((step, i) => (

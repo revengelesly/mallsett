@@ -149,9 +149,44 @@ class AddMerchantForm extends Component {
       <Option value="manageMusic">Music</Option>
       <Option value="manageBooks">Books</Option>
       <Option value="manageNonProfit">Non-Profit</Option>
+      <Option value="manageBooks">Parent Company</Option>
+      <Option value="manageBooks">Child Company</Option>
+      <Option value="manageBooks">Supplier</Option>
+      <Option value="manageBooks">B2B Customer</Option>
+      <Option value="manageBooks">Professional Services</Option>
+      <Option value="manageBooks">Associations</Option>
+      <Option value="manageBooks">Marketing Services</Option>
+      <Option value="manageBooks">Government</Option>
+      <Option value="manageBooks">POS System</Option>
+      <Option value="manageBooks">Credit Card Processor</Option>
   </Select>
     )}
   </FormItem>
+  <FormItem label="Target Type"  >
+    {getFieldDecorator('Target Type', {
+    rules: [{ required: true, message: 'What type of business is this?' }],
+    })(
+    <Select
+    defaultValue=""
+    mode="multiple"
+    maxTagCount=""
+    style={{ width: "100%" }}
+    onChange={handleBusinessTypeChange}
+  >
+      <Option value="manageBooks">Parent Company</Option>
+      <Option value="manageBooks">Child Company</Option>
+      <Option value="manageBooks">Supplier</Option>
+      <Option value="manageBooks">B2B Customer</Option>
+      <Option value="manageBooks">Professional Services</Option>
+      <Option value="manageBooks">Associations</Option>
+      <Option value="manageBooks">Marketing Services</Option>
+      <Option value="manageBooks">Government</Option>
+      <Option value="manageBooks">POS System</Option>
+      <Option value="manageBooks">Credit Card Processor</Option>
+  </Select>
+    )}
+  </FormItem>
+  
   <FormItem label="Personal Phone" >
     {getFieldDecorator('Personal Phone', {
     rules: [{ required: true, message: 'please enter you personal phone number.' }],
