@@ -4,10 +4,6 @@ import Card from '../card.style';
 import Button from '../../../components/uielements/button';
 
 class CreateAddress extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   handleEditButton = () => {
     this.props.handleEditButton(this.props._id);
   }

@@ -3,10 +3,6 @@ import { Card, Icon, Popover } from 'antd';
 const { Meta } = Card;
 
 export default class ItemFile extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   state = {
     visible: false
   };
@@ -26,12 +22,13 @@ export default class ItemFile extends Component {
   }
 
   handleRemoveDependent = () => {
-    this.props.handleRemoveDependent(this.props._id);
+    this.props.handleRemoveDependent({ profileId: this.props._id, profileType: this.props.profileType });
   }
 
   render() {
     let now = new Date();
     let dob = new Date(this.props.dob);
+
     const infoContent = (
       <div>
         <p>

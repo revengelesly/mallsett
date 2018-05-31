@@ -49,7 +49,7 @@ class RequestUserPassword extends Component {
         case 'register':
           this.props.handleTabChange('3');
           break;
-        case 'login':
+        default:
           this.props.handleTabChange('4');
           break;
       }

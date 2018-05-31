@@ -1,6 +1,4 @@
 import styled from "styled-components";
-import { palette } from "styled-theme";
-import { transition, borderRadius } from "../../../settings/style-util";
 import WithDirection from "../../../settings/withDirection";
 
 const SideCartWrapper = styled.div`
@@ -28,7 +26,7 @@ const SideCartWrapper = styled.div`
 	background: #364d79;
 	overflow: hidden;
   }
-  
+
   .ant-carousel .slick-slide h3 {
 	color: #fff;
   }

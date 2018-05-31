@@ -18,6 +18,8 @@ export default class FileItem extends Component {
     this.setState({
       activeKey: key
     });
+
+    this.props.handleItemActiveTab(key);
   };
 
   componentWillReceiveProps = nextProps => {
@@ -65,30 +67,37 @@ export default class FileItem extends Component {
       header: 'Add a new dependent',
       icon: 'link',
       nav: 'Add New Dependent',
-      item: <Dependents
-              uploadId='wrapLocationItemUpload'
-            />,
+      item: (
+        <Dependents
+          uploadId="wrapLocationItemUpload"
+          handleAddDependent={this.props.handleAddDependent}
+          files={this.props.files}
+          {...this.props}
+        />
+      ),
       formWidth: '12',
       itemWidth: '12',
       key: 2
     };
 
     return (
-      <Tabs
-        defaultActiveKey="1"
-        tabPosition="top"
-        size="small"
-        activeKey={this.state.activeKey}
-        onChange={this.handTabChange}
-      >
-        <TabPane tab={list.nav} key={list.key}>
-          {items && items.length > 0 && items.map(x => x)}
-        </TabPane>
+      <div id={this.props.id || "locationId"}>
+        <Tabs
+          defaultActiveKey="1"
+          tabPosition="top"
+          size="small"
+          activeKey={this.state.activeKey}
+          onChange={this.handTabChange}
+        >
+          <TabPane tab={list.nav} key={list.key}>
+            {items && items.length > 0 && items.map(x => x)}
+          </TabPane>
 
-        <TabPane tab={addDependent.nav} key={addDependent.key}>
-          {addDependent.item}
-        </TabPane>
-      </Tabs>
+          <TabPane tab={addDependent.nav} key={addDependent.key}>
+            {addDependent.item}
+          </TabPane>
+        </Tabs>
+      </div>
     );
   }
 }

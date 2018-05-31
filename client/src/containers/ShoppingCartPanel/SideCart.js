@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
-import { Row, Col, Icon, Card, Avatar } from 'antd';
+import { Row, Col } from 'antd';
 import SideCartWrapper from "./sidecart.style";
 import Box from '../../components/utility/box';
-const { Meta } = Card;
 
 class ProductCard extends Component {
   render() {
@@ -10,7 +9,7 @@ class ProductCard extends Component {
 		<SideCartWrapper  style={{ marginBottom: "10px"}}>
 			<Box>
 				<Row gutter={16}>
-            		<Col className="gutter-row  merchant-group" span={24}>	
+            		<Col className="gutter-row  merchant-group" span={24}>
 				<p className="merchant-group-header">
 				McDonald - 1280 NW 60th STreet, Miami, FL 33142 <span className="cart-span"><i class="far fa-trash-alt"></i></span>
 				</p>
@@ -27,7 +26,7 @@ class ProductCard extends Component {
 					</Col>
 				</Row>
 				</div>
-			
+
 				</Col>
 			</Row>
 		</Box>

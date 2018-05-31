@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import Uppy from "../../../../components/uielements/uppy";
 import config from "./config";
-import UppyStyleWrapper from "./uppy.style";
 
 export default class extends Component {
   constructor(props) {
@@ -23,7 +22,6 @@ export default class extends Component {
 
   onReset() {
     this.uppy.reset();
-    console.log('onReset uppy');
   }
 
   componentWillReceiveProps = (nextProps) => {
@@ -33,7 +31,6 @@ export default class extends Component {
   }
 
   render() {
-    console.log('render uppy');
     return (
       <div id={this.props.id} />
     );

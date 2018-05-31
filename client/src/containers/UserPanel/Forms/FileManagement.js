@@ -1,21 +1,18 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Alert, Form, Icon, Input, Button, Select, Upload, message } from 'antd';
+import { Alert, Form, Icon, Input, Button, Select } from 'antd';
 import { addFile } from '../../../redux/documents/middlewares';
 import { getView } from '../../../helpers/utility';
 import { ViewPort } from '../../../helpers/constants';
 import UploadComponent from './uppy/UploadComponent';
-const Dragger = Upload.Dragger;
+import createHistory from 'history/createBrowserHistory';
 
 const { Option, OptGroup } = Select;
 
 const { TextArea } = Input;
 
 const FormItem = Form.Item;
-
-const info = info => {
-  message.info(info);
-};
+const history = createHistory({forceRefresh: true});
 
 class FileManagementForm extends Component {
   state = {
@@ -63,27 +60,28 @@ class FileManagementForm extends Component {
         let file = {
           displayName: newFile.name,
           notes: newFile.Notes,
-          categories: newFile.category ? newFile.category.join(',') : '',
+          categories: newFile.category,
           directory: this.state.uploadURL ? this.state.uploadURL : (this.state.editingFile ? this.state.editingFile.directory : ''),
           profile: this.props.profile._id,
-          owner: this.state.owner
+          owner: this.state.owner ? this.state.owner : (this.state.editingFile ? this.state.editingFile.owner : [])
         };
+
+        if (this.state.editingFile) {
+          console.log(this.state.editingFile);
+          file.file_id = this.state.editingFile._id;
+          console.log(file);
+        }
 
         console.log('Received values of form: ', file);
         if (file.directory && file.owner) {
           this.props.form.resetFields();
           this.setState({
-            isUploadComponentReset: !this.state.isUploadComponentReset
-          });
-          if (this.state.editingFile) {
-            this.props.handleRemoveFile(this.state.editingFile._id, file);
-          } else {
-            this.props.handleAddFile(file);
-          }
-
-          this.setState({
+            isUploadComponentReset: !this.state.isUploadComponentReset,
             showErrorMessage: false
-          })
+          });
+          this.props.handleItemActiveTab('1');
+
+          this.props.handleAddFile(file);
         } else {
           this.setState({
             showErrorMessage: true
@@ -116,6 +114,7 @@ class FileManagementForm extends Component {
   };
 
   handleItemTabChange = () => {
+    history.push('#fileAnchor');
     this.props.handleItemActiveTab('2');
   };
 
@@ -133,7 +132,7 @@ class FileManagementForm extends Component {
   render() {
     const { getFieldDecorator } = this.props.form;
     const formItemLayout = this.state.formItemLayout;
-    let defaultValue = this.state.editingFile && this.state.editingFile.owner;
+
     return (
       <div>
         <Form onSubmit={this.handleSubmit} className="login-form">
@@ -181,7 +180,8 @@ class FileManagementForm extends Component {
           </FormItem>
           <FormItem label="Category" {...formItemLayout}>
             {getFieldDecorator('category', {
-              rules: [{ required: true, message: 'File Category' }]
+              rules: [{ required: true, message: 'File Category' }],
+              initialValue: this.state.editingFile ? this.state.editingFile.categories : []
             })(
               <Select
                 mode="multiple"
@@ -217,7 +217,7 @@ class FileManagementForm extends Component {
               </Select>
             )}
             Click here to add new dependent or spouse{' '}
-            <a href="#" onClick={this.handleItemTabChange}>
+            <a onClick={this.handleItemTabChange}>
               Add New{' '}
             </a>
           </FormItem>
@@ -238,7 +238,8 @@ class FileManagementForm extends Component {
               htmlType="submit"
               className="login-form-button"
             >
-              Add File
+              {!this.state.editingFile && <span>Add File</span>}
+              {this.state.editingFile && <span>Update File</span>}
             </Button>
           </FormItem>
         </Form>

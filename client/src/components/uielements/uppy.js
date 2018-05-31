@@ -2,8 +2,6 @@ import Uppy from 'uppy/lib/core';
 import Dashboard from 'uppy/lib/plugins/Dashboard';
 import Tus from 'uppy/lib/plugins/Tus';
 
-const SERVER = null;
-
 export default function uppyInit(options, onSuccess) {
   const uppy = Uppy({
     debug: false,

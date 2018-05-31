@@ -94,8 +94,6 @@ export function getAgeStatement(age) {
   } else {
     return 'You are well matured';
   }
-
-  return '';
 }
 
 export function getView(width) {

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import { Icon, Modal } from 'antd';
 import AddBusiness from '../MerchantPanel/AddBusiness';
@@ -15,7 +15,7 @@ class TopBarAddMerchants extends React.Component {
     visible: false,
     merchants: [],
     isBusiness: false,
-    filteredMerchants: []
+    merchant: null
   };
 
   showModal = () => {
@@ -23,12 +23,14 @@ class TopBarAddMerchants extends React.Component {
       visible: true
     });
   };
+
   handleOk = e => {
     console.log(e);
     this.setState({
       visible: false
     });
   };
+
   handleCancel = e => {
     console.log(e);
     this.setState({
@@ -36,17 +38,97 @@ class TopBarAddMerchants extends React.Component {
     });
   };
 
-  bindDataWhenLogin = (merchants, profileId) => {
-    let filteredMerchants = merchants.filter(x => x.createdBy === profileId);
+  setMerchant = (merchant) => {
+    this.setState({
+      merchant
+    });
+  }
 
-    if (filteredMerchants) {
+  handleUpdateMerchant = (business) => {
+    let merchant = this.state.merchant;
+
+    if (!merchant) {
+      merchant = {
+        category: 'merchant',
+        handle: Date.now().toString(),
+        createdBy: this.props.profile._id,
+        place: {
+          ...business
+        }
+      };
+    } else {
+      merchant = {
+        ...merchant,
+        merchant_id: merchant._id,
+        place: merchant.place && merchant.place.googlePlaceId ? null : { ...business } // remove or update
+      }
+    }
+
+    axios({
+      method: 'POST',
+      url: `${BaseURL}/api/merchant`,
+      data: merchant,
+      headers: {
+        Authorization: this.props.idToken,
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
+      }
+    }).then(res => {
+        console.log(res.data);
+        this.setState({
+          merchant: res.data
+        })
+      }
+    );
+  }
+
+  handleUpdateAssociate = (business) => {
+    let merchant = this.state.merchant;
+    let associate = merchant.associates.find(
+      x => x && x.googlePlaceId === business.googlePlaceId
+    );
+
+    if (!associate) {
+      merchant.associates.push(business);
+    } else {
+      merchant.associates = merchant.associates.filter(
+        x => x && x.googlePlaceId !== business.googlePlaceId
+      );
+    }
+
+    axios({
+      method: 'POST',
+      url: `${BaseURL}/api/merchant`,
+      headers: {
+        Authorization: this.props.idToken,
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
+      },
+      data: {
+        ...merchant,
+        merchant_id: merchant._id
+      }
+    })
+      .then(res => {
+        console.log('associate', res.data);
+        this.setState({
+          merchant
+        })}
+      )
+      .catch(err => console.log(err));
+  };
+
+  bindDataWhenLogin = (merchants, profileId) => {
+    let merchant = merchants.find(x => x.createdBy === profileId);
+
+    if (merchant) {
       this.setState({
         isBusiness: true,
-        filteredMerchants
+        merchant
       });
 
       // dispacht merchants
-      this.props.getMerchant(filteredMerchants);
+      this.props.getMerchant(merchant);
     }
   };
 
@@ -63,7 +145,6 @@ class TopBarAddMerchants extends React.Component {
         this.setState({
           merchants: res.data
         });
-
 
         if (this.props.isLoggedIn && this.props.profile) {
           this.bindDataWhenLogin(res.data, this.props.profile._id);
@@ -82,24 +163,6 @@ class TopBarAddMerchants extends React.Component {
     }
   };
 
-  handleAddMerchant = (merchant) => {
-    let merchants = this.state.filteredMerchants.map(x => ({...x}));
-    merchants.push(merchant);
-
-    this.setState({
-      filteredMerchants: merchants
-    });
-  }
-
-  handleRemoveMerchant = (merchant) => {
-    let merchants = this.state.filteredMerchants.map(x => ({...x}));
-    merchants = merchants.filter(x => x._id != merchant._id);
-
-    this.setState({
-      filteredMerchants: merchants
-    });
-  }
-
   render() {
     return (
       <div>
@@ -112,7 +175,6 @@ class TopBarAddMerchants extends React.Component {
           visible={this.state.visible}
           footer={null}
           style={{ top: 70 }}
-          width={800}
           onOk={this.handleOk}
           onCancel={this.handleCancel}
           width="80%"
@@ -122,9 +184,10 @@ class TopBarAddMerchants extends React.Component {
             login={this.props.login}
             profile={this.props.profile}
             idToken={this.props.idToken}
-            merchants={this.state.filteredMerchants}
-            handleAddMerchant={this.handleAddMerchant}
-            handleRemoveMerchant={this.handleRemoveMerchant}
+            merchant={this.state.merchant}
+            handleUpdateAssociate={this.handleUpdateAssociate}
+            handleUpdateMerchant={this.handleUpdateMerchant}
+            setMerchant={this.setMerchant}
           />
         </Modal>
       </div>
