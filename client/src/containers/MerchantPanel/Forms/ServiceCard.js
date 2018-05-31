@@ -94,7 +94,10 @@ class ServiceCard extends Component {
             style={{color: "green", cursor: "pointer"}}>
             </Button> <Button icon="check-circle"  shape="circle"
             style={{color: "green", cursor: "pointer"}}>
-           
+            </Button> <Button icon="plus-circle"  shape="circle"
+            style={{color: "blue", cursor: "pointer"}}>
+            </Button> <Button icon="minus-circle-o"  shape="circle"
+            style={{color: "blue", cursor: "pointer"}}>
             </Button>
             </h4>
             {cardContent}

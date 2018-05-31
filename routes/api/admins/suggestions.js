@@ -11,7 +11,7 @@ moment().format();
 //get time now
 const MomentNow = moment();
 
-// @route   GET api/products/test
+// @route   GET /admin/contents/suggestions/test
 // @desc    Tests products route
 // @access  Public
 router.get('/test', (req, res) => res.json({ msg: 'Suggestions Works' }));
@@ -21,15 +21,15 @@ router.get('/test', (req, res) => res.json({ msg: 'Suggestions Works' }));
 
 /*********************************************************
  * 
- *          CRUD products
+ *          CRUD Suggestions
  * 
  * ******************************************************/
 
-// @route    POST api/admin/contents
+// @route    POST api/admin/contents/suggestions
 // @desc     Create or Update contents
 // @access   Private
 
-router.post('/admin/contents/selectOptions', passport.authenticate('jwt', { session: false }),
+router.post('/admin/contents/suggestions', passport.authenticate('jwt', { session: false }),
   (req, res) => {
 
     // Get fields
