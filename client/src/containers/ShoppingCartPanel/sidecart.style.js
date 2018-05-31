@@ -1,6 +1,4 @@
 import styled from "styled-components";
-import { palette } from "styled-theme";
-import { transition, borderRadius } from "../../settings/style-util";
 import WithDirection from "../../settings/withDirection";
 
 const SideCartWrapper = styled.div`
@@ -9,13 +7,13 @@ const SideCartWrapper = styled.div`
 	background: #fff;
 	margin-bottom: 5px;
 	padding-top: 20px;
-	
+
 }
 .shopping-cart-header{
 	border-width: 80%;
-	padding-bottom: 10px; 
+	padding-bottom: 10px;
 	padding-top: 10px;
-	margin-bottom: 10px; 
+	margin-bottom: 10px;
 }
 .merchant-group{
 	margin-bottom: 2px;

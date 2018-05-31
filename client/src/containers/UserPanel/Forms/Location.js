@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
 import { Form, Icon, Input, Button, Select } from 'antd';
-import axios from 'axios';
 import { getView } from '../../../helpers/utility';
 import { ViewPort } from '../../../helpers/constants';
-import { BaseURL } from '../../../helpers/constants';
+import LocationSearchInput from '../../../components/map/locationSearchInput';
+import createHistory from 'history/createBrowserHistory';
 
-const { Option, OptGroup } = Select;
+const history = createHistory({ forceRefresh: true });
+
+const { Option } = Select;
 
 const { TextArea } = Input;
 
@@ -20,7 +22,8 @@ class SettingsUserForm extends Component {
     ageInfo: '',
     formItemLayout: {},
     editingLocation: this.props.editingLocation,
-    owner: null
+    owner: null,
+    address: ''
   };
 
   check = () => {
@@ -31,49 +34,50 @@ class SettingsUserForm extends Component {
     });
   };
 
-  handleAgeChange = e => {
-    this.setState(
-      {
-        checkDob: e.target.checked
-      },
-      () => {
-        this.props.form.validateFields(['nickname'], { force: true });
-      }
-    );
+  resetFields = () => {
+    this.props.form.resetFields();
+    this.setState({
+      address: ''
+    });
   };
 
-  handleProfileChange = (value) => {
+  handleProfileChange = value => {
     console.log(value);
     let owner = this.props.dependents.find(x => x._id === value);
     this.setState({
       owner: value,
       ownerName: owner.displayName
     });
-  }
+  };
 
-  addLocation = (newLocation) => {
+  addLocation = newLocation => {
     this.props.handleAddLocation(newLocation);
-  }
+  };
 
-  deleteLocation = (newLocation) => {
+  deleteLocation = newLocation => {
     this.props.handleRemoveLocation(this.state.editingLocation_id, newLocation);
-  }
+  };
 
   handleSubmit = e => {
     e.preventDefault();
 
     this.props.form.validateFields((err, newLocation) => {
       if (!err) {
-        console.log(newLocation);
         newLocation.profile = this.props.profile._id;
-        newLocation.owner = this.state.owner;
+        newLocation.owner = this.state.owner
+          ? this.state.owner
+          : this.state.editingLocation
+            ? this.state.editingLocation.owner
+            : [];
         newLocation.categories = newLocation['Add Delivery Location'];
-        this.props.form.resetFields();
+        newLocation.address = this.state.address;
         if (this.state.editingLocation) {
-          this.deleteLocation(newLocation);
-        } else {
-          this.addLocation(newLocation)
+          newLocation.location_id = this.state.editingLocation._id;
         }
+
+        this.resetFields();
+        this.addLocation(newLocation);
+        this.props.handleItemActiveTab('1');
       }
     });
   };
@@ -98,16 +102,29 @@ class SettingsUserForm extends Component {
 
   handleItemActiveTab = e => {
     e.preventDefault();
+    history.push('#locationAnchor');
     if (e && e.target && e.target.name) {
       this.props.handleItemActiveTab('2');
     }
   };
 
-  componentWillReceiveProps = (nextProps) => {
+  handleSelect = (latLng, googlePlaceId, address) => {
+    this.setState({
+      address
+    });
+  };
+
+  componentWillReceiveProps = nextProps => {
     this.setState({
       editingLocation: nextProps.editingLocation
     });
-  }
+
+    if (nextProps.editingLocation && !this.props.editingLocation) {
+      this.setState({
+        address: nextProps.editingLocation.address
+      });
+    }
+  };
 
   componentDidMount = () => {
     this.handleWindowResize();
@@ -121,6 +138,7 @@ class SettingsUserForm extends Component {
   render() {
     const { getFieldDecorator } = this.props.form;
     const formItemLayout = this.state.formItemLayout;
+    let address = this.state.address;
 
     return (
       <div>
@@ -128,17 +146,13 @@ class SettingsUserForm extends Component {
           <FormItem label="Enter Full Address" {...formItemLayout}>
             {getFieldDecorator('address', {
               rules: [{ required: true, message: 'address' }],
-              initialValue: (this.state.editingLocation ? this.state.editingLocation.address: '')
+              initialValue: address,
+              style: { position: 'relative' }
             })(
-              <Input
-                autoComplete="address"
-                prefix={
-                  <Icon
-                    type="environment-o"
-                    style={{ color: 'rgba(0,0,0,.25)' }}
-                  />
-                }
-                placeholder="Enter Location Here"
+              <LocationSearchInput
+                handleSelect={this.handleSelect}
+                address={address}
+                disabled={false}
               />
             )}
           </FormItem>
@@ -147,35 +161,48 @@ class SettingsUserForm extends Component {
               rules: [
                 { required: true, message: 'Who does this address belongs to?' }
               ],
-              initialValue: this.props.editingLocation ? this.props.editingLocation.owner : ''
+              initialValue: this.props.editingLocation
+                ? this.props.editingLocation.owner
+                : ''
             })(
               <Select
                 style={{ width: '100%' }}
                 onChange={this.handleProfileChange}
               >
-                {this.props.dependents && this.props.dependents.map(x => {
-                  if (this.state.editingLocation && this.state.editingLocation._id === x._id) {
-                    return (
-                      <Select.Option value={x._id} key={x._id}>{x.displayName}</Select.Option>
-                    )
-                  } else {
-                    return <Option key={x._id} value={x._id}>{x.displayName}</Option>
-                  }
-                })}
+                {this.props.dependents &&
+                  this.props.dependents.map(x => {
+                    if (
+                      this.state.editingLocation &&
+                      this.state.editingLocation._id === x._id
+                    ) {
+                      return (
+                        <Select.Option value={x._id} key={x._id}>
+                          {x.displayName}
+                        </Select.Option>
+                      );
+                    } else {
+                      return (
+                        <Option key={x._id} value={x._id}>
+                          {x.displayName}
+                        </Option>
+                      );
+                    }
+                  })}
               </Select>
             )}
             Click here to add new dependent or spouse{' '}
-            <a href="#" name="newDependent" onClick={this.handleItemActiveTab}>
+            <a name="newDependent" onClick={this.handleItemActiveTab}>
               Add New{' '}
             </a>
           </FormItem>
           <FormItem label="Apt or Suite" {...formItemLayout}>
             {getFieldDecorator('apartment', {
               rules: [{ required: false, message: 'Add apt. here!' }],
-              initialValue: this.state.editingLocation && this.state.editingLocation.apartment
+              initialValue:
+                this.state.editingLocation &&
+                this.state.editingLocation.apartment
             })(
               <Input
-
                 prefix={
                   <Icon type="pushpin-o" style={{ color: 'rgba(0,0,0,.25)' }} />
                 }
@@ -192,7 +219,8 @@ class SettingsUserForm extends Component {
                   message: 'Special notes for delivery drivers'
                 }
               ],
-              initialValue: this.state.editingLocation && this.state.editingLocation.notes
+              initialValue:
+                this.state.editingLocation && this.state.editingLocation.notes
             })(
               <TextArea
                 row={2}
@@ -213,7 +241,11 @@ class SettingsUserForm extends Component {
                   message: 'Add delivery Address for dependent'
                 }
               ],
-              initialValue: this.props.editingLocation && this.props.editingLocation.categories ? this.props.editingLocation.categories : []
+              initialValue:
+                this.props.editingLocation &&
+                this.props.editingLocation.categories
+                  ? this.props.editingLocation.categories
+                  : []
             })(
               <Select
                 mode="multiple"
@@ -234,7 +266,8 @@ class SettingsUserForm extends Component {
               htmlType="submit"
               className="login-form-button"
             >
-              Add Location
+              {this.state.editingLocation && <span>Update Location</span>}
+              {!this.state.editingLocation && <span>Add Location</span>}
             </Button>
           </FormItem>
         </Form>

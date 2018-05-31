@@ -12,14 +12,6 @@ module.exports = function validateFileInput(data) {
     errors.displayName = 'Location name is required';
   }
 
-
-  if (Validator.isEmpty(data.categories)) {
-    errors.categories = 'Must select at least one category';
-  }
-  
- 
-
-
   return {
     errors,
     isValid: isEmpty(errors)

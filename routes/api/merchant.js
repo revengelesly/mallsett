@@ -46,23 +46,18 @@ router.post(
     };
     merchantField.creator = req.body.profile;
     merchantField.updated_at = MomentNow;
+    merchantField.place = req.body.place;
+
     if (typeof req.body.businessType !== 'undefined') {
-      let businessType = cleanString(req.body.businessType);
-      merchantField.businessType = businessType.split(',');
+      merchantField.businessType = req.body.businessType;
     }
+
     if (req.body.assignedPhoneNumber) merchantField.assignedPhoneNumber = req.body.assignedPhoneNumber;
-    if (req.body.googlePlaceId) merchantField.place.googlePlaceId = req.body.googlePlaceId;
-    if (req.body.businessName) merchantField.place.businessName = req.body.businessName;
-    if (req.body.address) merchantField.place.address = req.body.address;
-    if (req.body.suite) merchantField.place.suite = req.body.suite;
-    if (req.body.longitude) merchantField.place.longitude = req.body.longitude;
-    if (req.body.lattitude) merchantField.place.lattitude = req.body.lattitude;
-    if (req.body.phone) merchantField.place.phone = req.body.phone;
-    if (typeof req.body.googlePlaceCategories !== 'undefined') {
-      let googlePlaceCategories = cleanString(req.body.googlePlaceCategories);
-      merchantField.businessType = googlePlaceCategories.split(',');
-      merchantField.place.googlePlaceCategories = googlePlaceCategories.split(',');
+
+    if (req.body.associates) {
+      merchantField.associates = req.body.associates;
     }
+
     if (req.body.photo) merchantField.place.photo = req.body.photo;
     if (req.body.handle) merchantField.handle = req.body.handle;
     if (req.body.notes) merchantField.place.notes = req.body.notes;
@@ -72,6 +67,17 @@ router.post(
     if (req.body.privacy) merchantField.detail.privacy = req.body.privacy;
     if (req.body.category) merchantField.category = req.body.category;
     if (req.body.createdBy) merchantField.createdBy = req.body.createdBy;
+
+    if (req.body.logo) merchantField.logo = req.body.logo;
+
+    if (req.body.gallery) merchantField.gallery = req.body.gallery;
+
+    if (req.body.socialMedia) merchantField.socialMedia = req.body.socialMedia;
+
+    if (req.body.personalEmail) merchantField.personalEmail = req.body.personalEmail;
+
+    if (req.body.businessEmail) merchantField.businessEmail = req.body.businessEmail;
+
     // check to see if handle exists after merchant update the handle
 
 
@@ -79,9 +85,9 @@ router.post(
       if (merchant) {
         // Update
         Merchant.findOneAndUpdate(
-          { id: req.body.merchant_id},
+          { _id: req.body.merchant_id},
           { $set: merchantField },
-          { new: true }
+          { upsert: true, 'new': true }
         ).then(merchant => res.json(merchant));
       } else {
         // Create

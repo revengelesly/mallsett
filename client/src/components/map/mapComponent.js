@@ -1,8 +1,6 @@
 import React from 'react';
 import { compose, withProps } from "recompose";
-import { Row, Col, Button } from 'antd';
-import { withScriptjs, withGoogleMap, GoogleMap, Marker } from "react-google-maps";
-import LocationSearchInput from './locationSearchInput';
+import { withGoogleMap, GoogleMap, Marker } from "react-google-maps";
 
 const MapComponent = compose(
   withProps({

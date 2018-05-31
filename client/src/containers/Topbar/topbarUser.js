@@ -2,9 +2,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import userpic from '../../image/user1.png';
 import authAction from '../../redux/auth/actions';
-import { Modal, Button, Icon } from 'antd';
+import { Modal, Button } from 'antd';
 import UserPanel from '../UserPanel/userPanel';
-
 
 const { login, logout, loginSuccess } = authAction;
 
@@ -15,18 +14,20 @@ class TopbarUser extends Component {
       visible: false
     };
   }
-  state = { visible: false }
+
   showModal = () => {
     this.setState({
       visible: true,
     });
   }
+
   handleOk = (e) => {
     console.log(e);
     this.setState({
       visible: false,
     });
   }
+
   handleCancel = (e) => {
     console.log(e);
     this.setState({
@@ -39,7 +40,10 @@ class TopbarUser extends Component {
       <div>
         {this.props.isLoggedIn &&
           <div className="isoImgWrapper" onClick={this.showModal}>
-            <img alt="user default" src={this.props.profile && this.props.profile.avatar ? this.props.profile.avatar : userpic} />
+            <img
+              alt="user default"
+              style={{ borderRadius: "50%" }}
+              src={this.props.profile && this.props.profile.avatar ? this.props.profile.avatar : userpic} />
             <span className="userActivity online" />
           </div>
         }

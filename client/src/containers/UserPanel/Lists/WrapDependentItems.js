@@ -3,7 +3,7 @@ import { Tabs, Col, Row } from 'antd';
 import ItemDependent from './ItemDependent';
 import Locations from '../Forms/Location';
 import Files from '../Forms/FileManagement';
-import axios from 'axios';
+
 const { TabPane } = Tabs;
 
 export default class FileItem extends Component {
@@ -15,28 +15,21 @@ export default class FileItem extends Component {
     };
   }
 
+  handleTabChange = key => {
+    this.setState({
+      activeKey: key
+    });
+
+    this.props.handleItemActiveTab(key);
+  };
+
   componentWillReceiveProps = nextProps => {
-    if (
-      this.state.activeKey !== nextProps.activeKey &&
-      nextProps.activeKey < 5
-    ) {
+    if (this.state.activeKey !== nextProps.activeKey && nextProps.activeKey < 5) {
       this.setState({
         activeKey: nextProps.activeKey
       });
     }
 
-    this.setState({
-      dependents: nextProps.dependents
-    });
-  };
-
-  handleTabChange = key => {
-    this.setState({
-      activeKey: key
-    });
-  };
-
-  componentWillReceiveProps = nextProps => {
     this.setState({
       dependents: nextProps.dependents
     });
@@ -61,16 +54,6 @@ export default class FileItem extends Component {
       key: 1
     };
 
-    let myParents = {
-      header: 'Request a Parent',
-      icon: 'link',
-      nav: 'My Parents',
-      item: <ItemDependent />,
-      formWidth: '12',
-      itemWidth: '12',
-      key: 2
-    };
-
     let addLocations = {
       header: 'Add a new location',
       icon: 'link',
@@ -78,8 +61,8 @@ export default class FileItem extends Component {
       item: (
         <Locations
           handleAddLocation={this.props.handleAddLocation}
-          editingLocation={this.props.editingLocation}
-          handleRemoveLocation={this.props.handleRemoveLocation}
+          dependents={this.props.dependents}
+          {...this.props}
         />
       ),
       formWidth: '12',
@@ -94,8 +77,8 @@ export default class FileItem extends Component {
       item: (
         <Files
           handleAddFile={this.props.handleAddFile}
-          editingFile={this.props.editingFile}
-          handleRemoveFile={this.props.handleRemoveFile}
+          dependents={this.props.dependents}
+          {...this.props}
         />
       ),
       formWidth: '12',
@@ -104,6 +87,7 @@ export default class FileItem extends Component {
     };
 
     return (
+      <div id={this.props.id || 'dependentId'}>
       <Tabs
         defaultActiveKey="1"
         tabPosition="top"
@@ -116,7 +100,7 @@ export default class FileItem extends Component {
             items.length > 0 && (
               <Row gutter={6} xs={2} sm={4} md={6} lg={8} xl={10}>
                 {items.map((item, index) => (
-                  <Col key={item._id} className="gutter-row" span={12} key={index}>
+                  <Col className="gutter-row" span={12} key={index}>
                     {item}
                   </Col>
                 ))}
@@ -131,6 +115,7 @@ export default class FileItem extends Component {
           {addFiles.item}
         </TabPane>
       </Tabs>
+      </div>
     );
   }
 }

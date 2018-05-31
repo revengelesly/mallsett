@@ -4,8 +4,6 @@ import { InputGroup } from '../../../components/uielements/input';
 import SigninWrapper from '../signin.style';
 import IntlMessages from '../../../components/utility/intlMessages';
 
-import axios from 'axios';
-
 const FormItem = Form.Item;
 
 class LoginUser extends Component {
@@ -38,7 +36,7 @@ class LoginUser extends Component {
         case 'register':
           this.props.handleTabChange('3');
           break;
-        case 'forgotpassword':
+        default:
           this.props.handleTabChange('5');
           break;
       }

@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
-import { Upload, message, Form, Icon, Input, Button, Select } from 'antd';
-import axios from 'axios';
+import { Form, Icon, Input, Button, Select, BackTop } from 'antd';
 import { getAgeStatement, getView } from '../../../helpers/utility';
 import { ViewPort } from '../../../helpers/constants';
-import { createProfile } from '../../../redux/auth/api';
 import UploadComponent from './uppy/UploadComponent';
+import createHistory from 'history/createBrowserHistory';
 
-const Dragger = Upload.Dragger;
+const history = createHistory({forceRefresh: true});
 
 const { Option, OptGroup } = Select;
 const primaryType = ['Family', 'Friends', 'Pet Animal', 'Others'];
@@ -31,23 +30,8 @@ const secondaryType = {
   Others: ['Others']
 };
 const { TextArea } = Input;
-const uploadProps = {
-  name: 'file',
-  action: '//jsonplaceholder.typicode.com/posts/',
-  onChange(info) {
-    const status = info.file.status;
-    if (status !== 'uploading') {
-      console.log(info.file, info.fileList);
-    }
-    if (status === 'done') {
-      message.success(`${info.file.name} file uploaded successfully.`);
-    } else if (status === 'error') {
-      message.error(`${info.file.name} file upload failed.`);
-    }
-  }
-};
-
 const FormItem = Form.Item;
+
 function handleSpecialConsiderationChange(value) {
   console.log(`selected ${value}`);
 }
@@ -110,7 +94,7 @@ class SettingsUserForm extends Component {
           displayName: newUser['Dependent Name'],
           phone: newUser['Dependent Phone'],
           dob: now.getFullYear() - newUser.age,
-          profileType: 'dependent',
+          profileType: this.props.editingDependent ? this.props.editingDependent.profileType : 'dependent',
           bio: newUser['bio'],
           avatar: this.state.uploadURL,
           considerations: newUser['considerations']
@@ -125,10 +109,11 @@ class SettingsUserForm extends Component {
         });
 
         if (this.props.editingDependent) {
-          this.props.handleRemoveDependent(this.props.editingDependent._id, dependent);
-        } else {
-          this.props.handleAddDependent(dependent);
+          dependent.profile = Object.assign({}, this.props.editingDependent, dependent.profile);
         }
+
+        this.props.handleItemActiveTab('1');
+        this.props.handleAddDependent(dependent);
       }
     });
   };
@@ -161,6 +146,7 @@ class SettingsUserForm extends Component {
 
   handleItemActiveTab = e => {
     e.preventDefault();
+    history.push('#dependentAnchor');
     if (e && e.target && e.target.name) {
       switch (e.target.name.toLowerCase()) {
         case 'newlocation':
@@ -169,6 +155,8 @@ class SettingsUserForm extends Component {
         case 'newfile':
           this.props.handleItemActiveTab('4');
           break;
+        default:
+          break;
       }
     }
   };
@@ -176,8 +164,8 @@ class SettingsUserForm extends Component {
   componentDidMount = () => {
     this.handleWindowResize();
     window.addEventListener('resize', this.handleWindowResize);
-  };
 
+  };
 
   ageInfoHandler = e => {
     console.log('was click');
@@ -225,7 +213,7 @@ class SettingsUserForm extends Component {
           <FormItem label="Dependent Phone" {...formItemLayout}>
             {getFieldDecorator('Dependent Phone', {
               rules: [{ required: true, message: 'please enter you user code' }],
-              initialValue: (this.props.editingDependent ? this.props.editingDependent.phone: '')
+              initialValue: (this.props.editingDependent ? this.props.editingDependent.phone: ''),
             })(
               <Input
                 autoComplete="phone number"
@@ -253,7 +241,6 @@ class SettingsUserForm extends Component {
           </FormItem>
           <FormItem label="Dependent type" {...formItemLayout}>
             <Select
-              defaultValue={primaryType[0]}
               style={{ width: '100%' }}
               onChange={this.handleCategoryChange}
             >
@@ -266,7 +253,6 @@ class SettingsUserForm extends Component {
               initialValue: this.props.editingDependent && this.props.editingDependent.category ? this.props.editingDependent.category : []
             })(
               <Select
-                value={this.state.secondSubCategory}
                 style={{ width: '100%' }}
                 onChange={this.onSecondSubCategoryChange}
               >
@@ -284,7 +270,7 @@ class SettingsUserForm extends Component {
                     'Does you dependent have any health issue or situations'
                 }
               ],
-              initialValue: this.props.editingDependent && this.props.editingDependent.considerations && this.props.editingDependent.considerations > 0 ? this.props.editingDependent.considerations : []
+              initialValue: this.props.editingDependent && this.props.editingDependent.considerations ? this.props.editingDependent.considerations : []
             })(
               <Select
                 mode="multiple"
@@ -348,7 +334,7 @@ class SettingsUserForm extends Component {
             )}
             <p>
               add new location?{' '}
-              <a href="#" name="newLocation" onClick={this.handleItemActiveTab}>
+              <a name="newLocation" onClick={this.handleItemActiveTab}>
                 {' '}
                 Add New{' '}
               </a>
@@ -373,7 +359,7 @@ class SettingsUserForm extends Component {
             )}
             <p>
               add new file?{' '}
-              <a href="#" name="newFile" onClick={this.handleItemActiveTab}>
+              <a name="newFile" onClick={this.handleItemActiveTab}>
                 {' '}
                 Add New{' '}
               </a>
@@ -387,10 +373,12 @@ class SettingsUserForm extends Component {
               htmlType="submit"
               className="login-form-button"
             >
-              Add Dependent
+              {this.props.editingDependent && <span>Update dependent</span>}
+              {!this.props.editingDependent && <span>Add Dependent</span>}
             </Button>
           </FormItem>
         </Form>
+        <BackTop visibilityHeight={50}/>
       </div>
     );
   }

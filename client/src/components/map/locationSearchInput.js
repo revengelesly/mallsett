@@ -3,7 +3,6 @@ import PlacesAutocomplete, {
   geocodeByAddress,
   getLatLng
 } from 'react-places-autocomplete';
-import { Menu } from 'antd';
 import Input from '../../components/uielements/input';
 
 class LocationSearchInput extends React.Component {
@@ -21,7 +20,7 @@ class LocationSearchInput extends React.Component {
   handleSelect = (address, googlePlaceId) => {
     geocodeByAddress(address)
       .then(results => getLatLng(results[0]))
-      .then(latLng => this.props.handleSelect(latLng, googlePlaceId))
+      .then(latLng => this.props.handleSelect(latLng, googlePlaceId, address))
       .catch(error => console.error('Error', error));
   };
 
@@ -46,7 +45,7 @@ class LocationSearchInput extends React.Component {
         onSelect={this.handleSelect}
       >
         {({ getInputProps, suggestions, getSuggestionItemProps }) => (
-          <div>
+          <div style={{position: 'relative'}}>
             <Input
               {...getInputProps({
                 placeholder: 'Type business name',

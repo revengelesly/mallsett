@@ -21,7 +21,6 @@ import { getView } from '../../helpers/utility';
 import { ViewPort } from '../../helpers/constants';
 import axios from 'axios';
 import { BaseURL } from '../../helpers/constants';
-import styled from 'styled-components';
 
 export default class UserPanel extends Component {
   constructor(props) {
@@ -164,11 +163,7 @@ export default class UserPanel extends Component {
       }
     })
       .then(res => {
-        if (newFile) {
-          this.handleAddFile(newFile);
-        } else {
-          this.props.loginSuccess(this.props.idToken, res.data);
-        }
+        this.props.loginSuccess(this.props.idToken, res.data);
       })
       .catch(err => console.log(err));
   };
@@ -197,7 +192,7 @@ export default class UserPanel extends Component {
         let dependents = res.data;
         if (this.props.profile) {
           dependents = res.data.filter(
-            x => x.user === this.props.profile.user && x.profileType === 'dependent'
+            x => x.user === this.props.profile.user
           );
         }
 
@@ -218,7 +213,6 @@ export default class UserPanel extends Component {
         'Content-Type': 'application/json'
       },
       data: {
-        profileType: 'dependent',
         status: 'active',
         handle: Date.now().toString(),
         ...dependent.profile
@@ -227,12 +221,22 @@ export default class UserPanel extends Component {
       .then(res => {
         let dependents = this.state.dependents.map(x => ({...x}));
         if (res.data) {
-          dependents.push(res.data);
+          let index = dependents.map(x => x._id).indexOf(res.data._id);
+          if (index < 0) {
+            dependents.push(res.data);
+          } else {
+            dependents[index] = res.data;
+          }
+
           this.setState({
             dependents: dependents
           });
+
+          if (res.data.profileType === 'main') {
+            this.props.loginSuccess(this.props.idToken, res.data);
+          }
         }
-        console.log(res.data)
+
         this.setState({
           editingDependent: null
         });
@@ -240,12 +244,12 @@ export default class UserPanel extends Component {
       .catch(err => console.log(err));
   };
 
-  handleRemoveDependent = (id, newDependent) => {
+  handleRemoveDependent = (deleteDependent, newDependent) => {
     axios({
       url: `${BaseURL}/api/profile/delete`,
       method: 'POST',
       data: {
-        profileId: id
+        ...deleteDependent
       },
       headers: {
         Authorization: this.props.idToken,
@@ -258,7 +262,7 @@ export default class UserPanel extends Component {
       }
 
       let dependents = this.state.dependents.map(x => ({...x}));
-      dependents = dependents.filter(x => x._id != id);
+      dependents = dependents.filter(x => x._id !== deleteDependent.profileId);
       this.setState({
         dependents: dependents
       });
@@ -326,6 +330,7 @@ export default class UserPanel extends Component {
         nav: 'Dependents',
         form: (
           <Dependents
+            key="dependent"
             handleItemActiveTab={this.handleItemActiveTab}
             handleAddDependent={this.handleAddDependent}
             handleRemoveDependent={this.handleRemoveDependent}
@@ -339,18 +344,18 @@ export default class UserPanel extends Component {
         ),
         item: (
           <WrapDependentItems
+            key="dependentItem"
+            id="dependentAnchor"
             activeKey={this.state.itemActiveTab}
             dependents={this.state.dependents}
             handleRemoveDependent={this.handleRemoveDependent}
             handleEditDependent={this.handleEditDependent}
+            handleItemActiveTab={this.handleItemActiveTab}
 
             handleAddLocation={this.handleAddLocation}
-            editingLocation={this.state.editingLocation}
-            handleRemoveLocation={this.handleRemoveLocation}
-
             handleAddFile={this.handleAddFile}
-            editingFile={this.state.editingFile}
-            handleRemoveFile={this.handleRemoveFile}
+            files={this.state.files}
+            locations={this.state.locations}
             {...this.props}
           />
         ),
@@ -364,26 +369,29 @@ export default class UserPanel extends Component {
         nav: 'Locations',
         form: (
           <Location
+            key="location"
             handleItemActiveTab={this.handleItemActiveTab}
             handleAddLocation={this.handleAddLocation}
             editingLocation={this.state.editingLocation}
             handleRemoveLocation={this.handleRemoveLocation}
             dependents={this.state.dependents}
-            key="location"
             {...this.props}
           />
         ),
         item: (
           <WrapLocationItems
+            id="locationAnchor"
+            key="locationItem"
             activeKey={this.state.itemActiveTab}
             locations={this.state.locations}
             handleEditButton={this.handleEditLocation}
             handleRemoveButton={this.handleRemoveLocation}
             dependents={this.state.dependents}
 
+            handleItemActiveTab={this.handleItemActiveTab}
             handleAddDependent={this.handleAddDependent}
-            handleRemoveDependent={this.handleRemoveDependent}
-            key="locationItem"
+            files={this.state.files}
+            {...this.props}
           />
         ),
         formWidth: '12',
@@ -396,6 +404,7 @@ export default class UserPanel extends Component {
         nav: 'Documents',
         form: (
           <FileManagement
+            key="fileManagement"
             handleItemActiveTab={this.handleItemActiveTab}
             handleAddFile={this.handleAddFile}
             editingFile={this.state.editingFile}
@@ -407,10 +416,18 @@ export default class UserPanel extends Component {
         ),
         item: (
           <WrapFileItems
+            key="fileItem"
+            id='fileAnchor'
             activeKey={this.state.itemActiveTab}
             files={this.state.files}
             handleEditButton={this.handleEditFile}
             handleRemoveButton={this.handleRemoveFile}
+            profile={this.props.profile}
+
+            locations={this.state.locations}
+            handleItemActiveTab={this.handleItemActiveTab}
+            handleAddDependent={this.handleAddDependent}
+            {...this.props}
           />
         ),
         formWidth: '12',

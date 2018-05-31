@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Alert, Slider, Form, Icon, Input, Button, Col, Row, notification  } from 'antd';
+import { Alert, Slider, Form, Icon, Input, Button, Col, Row } from 'antd';
 import  { InputGroup } from '../../../components/uielements/input';
 import SigninWrapper from '../signin.style';
 import IntlMessages from '../../../components/utility/intlMessages';
@@ -82,6 +82,8 @@ class RegisterUser extends Component {
           break;
         case 'forgotpassword':
           this.props.handleTabChange('5');
+          break;
+        default:
           break;
       }
     }

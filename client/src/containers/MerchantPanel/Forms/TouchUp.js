@@ -2,19 +2,13 @@ import React, { Component } from 'react';
 import { Row, Col } from 'antd';
 import { Carousel } from 'antd';
 import { Tabs } from 'antd';
-import { Card, Icon, Popover, Button, Input } from 'antd';
-import { Radio } from 'antd';
+import { Card, Icon, Button, Input } from 'antd';
 import Select, { SelectOption } from '../../../components/uielements/select';
 import  { InputGroup } from '../../../components/uielements/input';
-import MerchantCategoryInputTag from './MerchantCategoryInputTag';
-import BusinessLogo from './BusinessLogo';
-import BusinessQuickChart from './reactVis/BusinessQuickChart';
 import BusinessCard from './BusinessCard';
 const { TextArea } = Input;
 
 const TabPane = Tabs.TabPane;
-const RadioButton = Radio.Button;
-const RadioGroup = Radio.Group;
 const Option = SelectOption;
 
 const children = [];
@@ -30,7 +24,7 @@ class ServiceCard extends Component {
   render() {
     return (
         <Card bordered={false} >
-        
+
         <Row gutter={24}>
            <Col span="24" >
           <Carousel autoplay>
@@ -41,9 +35,9 @@ class ServiceCard extends Component {
   </Carousel>
   <BusinessCard />
           </Col>
-        
+
         </Row>
-       
+
       <Row gutter={24} style={{ marginTop: 20 }}>
       <Tabs defaultActiveKey="2">
     <TabPane tab={<span><Icon type="mail" /> Contact</span>} key="2">

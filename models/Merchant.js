@@ -15,6 +15,12 @@ const MerchantSchema = new Schema({
         category: {
             type: String
         },
+        logo: {
+            type: String
+        },
+        gallery: {
+            type: String
+        },
         // merchants, delivery services, government
         businessType: [{
             type: String,
@@ -77,12 +83,17 @@ const MerchantSchema = new Schema({
         assignedPhoneNumber: {
             type: String
         },
+        personalEmail: {
+            type: String
+        },
+        businessEmail: {
+            type: String
+        },
         handle: {
             type: String,
             required: true,
             max: 40
         },
-
         detail: {
             pitch: {
                 type: String,
@@ -210,18 +221,64 @@ const MerchantSchema = new Schema({
             }
         ],
         associates: [
-                {
-                    googlePlaceId: {
-                        type: String
-                    }
+            {
+                googlePlaceId: {
+                    type: String
                 },
-                {
-                    category: {
-                        type: String
+                category: {
+                    type: String,
+                },
+                businessName: {
+                    type: String
+                },
+                address: {
+                    type: String
+                },
+                suite: {
+                    type: String
+                },
+                longitude: {
+                    type: String
+                },
+                lattitude: {
+                    type: String
+                },
+                phone: {
+                    type: String
+                },
+                photo: {
+                    type: String
+                },
+                googlePlaceCategories: {
+                    type: [String]
+                },
+                notes: {
+                    type: String
+                },
+                comments: [
+                    {
+                        profile: {
+                            type: Schema.Types.ObjectId,
+                            ref: 'profile'
+                        },
+                        text: {
+                            type: String,
+                            required: true
+                        },
+                        name: {
+                            type: String
+                        },
+                        created_at: {
+                            type: Date,
+                            default: Date.now
+                        },
+                        updated_at: {
+                            type: Date
+                        },
                     }
-                }
-            ]
-        ,
+                ]
+            }
+        ],
         created_at: {
             type: Date,
             default: Date.now

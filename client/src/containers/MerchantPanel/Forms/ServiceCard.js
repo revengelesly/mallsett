@@ -1,21 +1,6 @@
 import React, { Component } from 'react';
 import { Row, Col } from 'antd';
-import { Card, Icon, Popover, Button } from 'antd';
-import { Radio } from 'antd';
-import Select, { SelectOption } from '../../../components/uielements/select';
-import Input, { InputGroup } from '../../../components/uielements/input';
-import MerchantCategoryInputTag from './MerchantCategoryInputTag';
-import BusinessLogo from './BusinessLogo';
-import BusinessQuickChart from './reactVis/BusinessQuickChart';
-
-const RadioButton = Radio.Button;
-const RadioGroup = Radio.Group;
-const Option = SelectOption;
-
-const children = [];
-for (let i = 10; i < 36; i++) {
-  children.push(<Option key={i.toString(36) + i}>{i.toString(36) + i}</Option>);
-}
+import { Card, Icon, Button } from 'antd';
 
 class MerchantTitle extends Component {
   handleRemove = () => {
@@ -81,6 +66,7 @@ class ServiceCard extends Component {
             <img
               src={this.props.photo || "http://via.placeholder.com/350x250g"}
               style={{ width: '100%' }}
+              alt='avatar'
             />
           </Col>
           <Col span="18">

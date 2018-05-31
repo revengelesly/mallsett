@@ -98,7 +98,7 @@ const ProfileSchema = new Schema({
                     required: true
                 },
                 categories: {
-                   type: String,
+                   type: [String],
                    required: true
                 },
                 directory: {

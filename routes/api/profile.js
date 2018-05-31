@@ -46,8 +46,6 @@ router.post(
       return res.status(400).json(errors);
     }
 
-    console.log(req.body)
-
     // Get fields
     const profileFields = {};
     profileFields.user = req.user.id;
@@ -69,29 +67,32 @@ router.post(
     if (req.body.status) profileFields.status = req.body.status;
 
     // locations - Spilt into array
-    if (typeof req.body.locations !== 'undefined') {
-      profileFields.locations = req.body.locations;
+    if (req.body.profileType !== 'main') {
+      if (typeof req.body.locations !== 'undefined') {
+        profileFields.locations = req.body.locations;
+      }
+      // files - Spilt into array
+      if (typeof req.body.files !== 'undefined') {
+        profileFields.files = req.body.files;
+      }
     }
-    // files - Spilt into array
-    if (typeof req.body.files !== 'undefined') {
-      profileFields.files = req.body.files;
-    }
+
     // Created at have a default
     // Automaticly add updated time
     profileFields.updated_at = MomentNow;
 
     //TO DO: later do the followign apis, attributes, profiles, order tracking, faq, terms, conditions, privacy, ratings, cotting
 
+    console.log(req.body);
     Profile.findOne({
-      user: req.user.id,
-      _id: req.body.profileId
+      _id: req.body._id
     }).then(profile => {
       if (profile) {
         // Update
         Profile.findOneAndUpdate(
-          { user: req.user.id, profileType: req.body.profileType },
+          { _id: req.body._id },
           { $set: profileFields },
-          { new: true }
+          { upsert: true, 'new': true }
         ).then(profile => res.json(profile));
       } else {
         // Create
@@ -99,6 +100,7 @@ router.post(
         Profile.findOne({ handle: profileFields.handle }).then(profile => {
           if (profile) {
             errors.handle = 'That handle already exists';
+            console.log(errors);
             res.status(400).json(errors);
           }
 
@@ -119,12 +121,10 @@ router.get('/all', (req, res) => {
 
   Profile.find()
     .then(profiles => {
-
       if (!profiles) {
         errors.noprofile = 'There are no profiles';
         return res.status(404).json(errors);
       }
-      console.log(profiles.length)
 
       res.json(profiles);
     })
@@ -200,9 +200,14 @@ router.post(
   '/delete',
   passport.authenticate('jwt', { session: false }),
   (req, res) => {
-    Profile.findOneAndRemove({ _id: req.body.profileId }).then(() => {
-      res.json({ success: true })
-    });
+    console.log(req.body);
+    if (req.body.profileType !== 'main') {
+      Profile.findOneAndRemove({ _id: req.body.profileId }).then(() => {
+        res.json({ success: true })
+      });
+    } else {
+      res.status(404).json({ message: 'Cannot delete main profile' });
+    }
   }
 );
 
@@ -252,8 +257,15 @@ router.post(
           updated_at: MomentNow
         };
 
-        // Add to exp array
-        profile.locations.unshift(newFile);
+        let index = profile.locations.map(item => item.id).indexOf(req.body.location_id);
+
+        if (index > -1) {
+          // update
+          profile.locations[index] = Object.assign({}, profile.locations[index], newFile);
+        } else {
+          // Add to exp array
+          profile.locations.unshift(newFile);
+        }
 
         profile.save().then(profile => res.json(profile));
       }
@@ -318,26 +330,26 @@ router.post(
       return res.status(400).json(errors);
     }
 
-    Profile.findOne({ user: req.user.id, _id: req.body.profile }).then(
+    Profile.findOne({ _id: req.body.profile }).then(
       profile => {
         const newFile = {
           displayName: req.body.displayName,
           notes: req.body.notes,
-          categories: (function() {
-            if (typeof req.body.categories !== 'undefined') {
-              return req.body.categories.split(',');
-            }
-            return req.body.categories;
-          })(),
+          categories: req.body.categories,
           directory: req.body.directory,
           owner: req.body.owner,
           updated_at: MomentNow
         };
 
-        console.log(req.body.owner)
-        // Add to exp array
-        profile.files.unshift(newFile);
-        console.log(profile)
+        const index = profile.files.map(item => item.id).indexOf(req.body.file_id);
+
+        if (index > -1) {
+          // update
+          profile.files[index] = Object.assign({}, profile.files[index], newFile);
+        } else {
+          // Add to exp array
+          profile.files.unshift(newFile);
+        }
 
         profile.save().then(profile => res.json(profile));
       }

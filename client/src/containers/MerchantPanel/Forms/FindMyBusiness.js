@@ -2,10 +2,7 @@ import React, { Component } from 'react';
 import { Row, Col } from 'antd';
 import Input, { InputGroup } from '../../../components/uielements/input';
 import ContentHolder from '../../../components/utility/contentHolder';
-
 import AddMerchantForm from './AddMerchant';
-
-
 
 class CreateMerchant extends Component {
   render() {
@@ -22,13 +19,13 @@ class CreateMerchant extends Component {
         </InputGroup>
         <InputGroup size="large" style={{ marginBottom: '15px' }}>
           <Col span="24">
-             <img src="../../images/googleMap.png"  style={{ width: '100%' }} />
+             <img src="../../images/googleMap.png" style={{ width: '100%' }} alt='google map' />
           </Col>
         </InputGroup>
         <InputGroup size="large" style={{ marginBottom: '15px' }}>
         <AddMerchantForm />
         </InputGroup>
-    
+
       </ContentHolder>
   </Col>
 </Row>

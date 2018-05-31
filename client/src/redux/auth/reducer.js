@@ -1,4 +1,4 @@
-import { Map, fromJS } from 'immutable';
+import { Map } from 'immutable';
 import actions from './actions';
 
 const initState = new Map({ idToken: null, profile: null });

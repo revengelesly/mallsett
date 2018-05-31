@@ -18,6 +18,8 @@ export default class FileItem extends Component {
     this.setState({
       activeKey: key
     });
+
+    this.props.handleItemActiveTab(key);
   };
 
   componentWillReceiveProps = nextProps => {
@@ -43,6 +45,7 @@ export default class FileItem extends Component {
             key={x._id}
             handleEditButton={this.props.handleEditButton}
             handleRemoveButton={this.props.handleRemoveButton}
+            profile={this.props.profile}
             {...x}
           />
         )
@@ -63,6 +66,9 @@ export default class FileItem extends Component {
       nav: 'Add New Dependent',
       item: <Dependents
               uploadId='wrapFileItemUpload'
+              locations={this.props.locations}
+              handleAddDependent={this.props.handleAddDependent}
+              {...this.props}
             />,
       formWidth: '12',
       itemWidth: '12',
@@ -70,6 +76,7 @@ export default class FileItem extends Component {
     };
 
     return (
+      <div id={this.props.id || 'fileId'}>
       <Tabs
         defaultActiveKey="1"
         tabPosition="top"
@@ -81,8 +88,9 @@ export default class FileItem extends Component {
           <Row gutter={6}>
             {items &&
               items.length > 0 &&
-              items.map(x => (
+              items.map((x, index) => (
                 <Col
+                  key={index}
                   className="gutter-row"
                   xs={24}
                   sm={24}
@@ -100,6 +108,7 @@ export default class FileItem extends Component {
           {addDependent.item}
         </TabPane>
       </Tabs>
+      </div>
     );
   }
 }

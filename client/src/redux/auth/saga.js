@@ -3,7 +3,6 @@ import { push } from 'react-router-redux';
 import { getToken, getProfile, clearToken } from '../../helpers/utility';
 import actions from './actions';
 import { login, getProfileServer } from './api';
-import axios from 'axios';
 
 const fakeApiCall = false; // auth0 or express JWT
 
