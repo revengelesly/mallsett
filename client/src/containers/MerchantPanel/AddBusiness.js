@@ -190,11 +190,11 @@ class PlugBusiness extends React.Component {
     }
   };
 
-  // handleWindowResize = () => {
-  //   this.setState({
-  //     tabMenuPositon: getView() === ViewPort.DesktopView ? 'right' : 'top'
-  //   });
-  // };
+  handleWindowResize = () => {
+    this.setState({
+      tabMenuPositon: getView() === ViewPort.DesktopView ? 'right' : 'top'
+    });
+  };
 
   bindDataToState = (merchants, profileId) => {
     merchants = merchants.filter(x => x.createdBy === profileId);
@@ -227,8 +227,8 @@ class PlugBusiness extends React.Component {
   };
 
   componentDidMount = () => {
-    // this.handleWindowResize();
-    // window.addEventListener('resize', this.handleWindowResize);
+    this.handleWindowResize();
+    window.addEventListener('resize', this.handleWindowResize);
 
     if (this.props.isLoggedIn && this.props.profile) {
       let businessesList = this.bindDataToState(
@@ -545,8 +545,8 @@ class PlugBusiness extends React.Component {
             activeKey={`${this.state.current}`}
             onChange={this.handleMainTabChange}
             size="small"
-            tabPosition="right"
-            // tabPosition={this.state.tabMenuPositon}
+            // tabPosition="right"
+            tabPosition={this.state.tabMenuPositon}
           >
             {filteredSteps.map((step, i) => (
               <TabPane
