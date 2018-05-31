@@ -52,8 +52,8 @@ class Topbar extends Component {
               style={{ color: customizedTheme.textColor }}
               onClick={toggleCollapsed}
             > 
-            <Icon type="dashboard" /> <Dropdown overlay={myBusinessMenu} trigger={['click']} placement="bottomRight">
-              <span className=""> Manage My Business </span>
+            <Dropdown overlay={myBusinessMenu} trigger={['click']} placement="bottomRight">
+            <Icon type="dashboard" /> <span className=""> Manage My Business </span>
             </Dropdown>
             </li>
             <li>
