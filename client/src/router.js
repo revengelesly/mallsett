@@ -3,7 +3,7 @@ import { Route, Redirect } from 'react-router-dom';
 import { ConnectedRouter } from 'react-router-redux';
 import { connect } from 'react-redux';
 import App from './containers/App/App';
-import StoreFront from './containers/StoreFront/StoreFront';
+import StoreFront from './containers/storeFront';
 
 const RestrictedRoute = ({ component: Component, isLoggedIn, ...rest }) => (
   <Route

@@ -12,8 +12,8 @@ const routes = [
     component: asyncComponent(() => import("../blankPage"))
   },
   {
-    path: "storePage",
-    component: asyncComponent(() => import("../storePage"))
+    path: "backStore",
+    component: asyncComponent(() => import("../backStore"))
   }
 ];
 
