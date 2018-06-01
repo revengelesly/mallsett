@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import userpic from '../../image/user1.png';
 import authAction from '../../redux/auth/actions';
-import { Modal, Button } from 'antd';
+import { Modal, Button, Icon } from 'antd';
 import UserPanel from '../UserPanel/userPanel';
 
 const { login, logout, loginSuccess } = authAction;
@@ -42,13 +42,14 @@ class TopbarUser extends Component {
           <div className="isoImgWrapper" onClick={this.showModal}>
             <img
               alt="user default"
-              style={{ borderRadius: "50%" }}
+              style={{ borderRadius: "50%", maxWidth: "10" }}
               src={this.props.profile && this.props.profile.avatar ? this.props.profile.avatar : userpic} />
             <span className="userActivity online" />
           </div>
         }
         {!this.props.isLoggedIn &&
-          <Button onClick={this.showModal} type="primary" size="large">Login</Button>
+         <span  onClick={this.showModal} > <Icon type="key" /> Login / Register</span>
+         
         }
         <Modal
           title={null}
