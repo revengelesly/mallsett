@@ -34,9 +34,6 @@ class Sidebar extends Component {
     super(props);
     this.handleClick = this.handleClick.bind(this);
     this.onOpenChange = this.onOpenChange.bind(this);
-    this.state = {
-      merchants: this.props.merchants && this.props.merchants.merchants
-    };
   }
 
   handleClick(e) {
@@ -119,12 +116,6 @@ class Sidebar extends Component {
     );
   };
 
-  componentWillReceiveProps = nextProps => {
-    this.setState({
-      merchants: nextProps.merchants && nextProps.merchants.merchants
-    });
-  };
-
   render() {
     const { app, toggleOpenDrawer, height } = this.props;
     const collapsed = clone(app.collapsed) && !clone(app.openDrawer);
@@ -198,8 +189,7 @@ export default connect(
     isLoggedIn:
       state.Auth.get('idToken') !== null &&
       state.Auth.get('idToken') !== 'LOGIN_ERROR',
-    height: state.App.toJS().height,
-    merchants: state.Merchants.toJS()
+    height: state.App.toJS().height
   }),
   { toggleOpenDrawer, changeOpenKeys, changeCurrent, toggleCollapsed }
 )(Sidebar);

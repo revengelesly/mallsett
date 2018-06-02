@@ -111,7 +111,8 @@ class AddMerchantForm extends Component {
             {getFieldDecorator('businessType', {
               rules: [
                 { required: true, message: 'What type of business is this?' }
-              ]
+              ],
+              initialValue: this.props.merchant ? this.props.merchant.businessType : []
             })(
               <Select
                 mode="multiple"
@@ -178,14 +179,14 @@ class AddMerchantForm extends Component {
           </FormItem>
 
           <FormItem label="Personal Phone">
-            {getFieldDecorator('assignedPhoneNumber', {
+            {getFieldDecorator('phone', {
               rules: [
                 {
                   required: true,
                   message: 'please enter you personal phone number.'
                 }
               ],
-              initialValue: this.props.merchant ? this.props.merchant.assignedPhoneNumber : ''
+              initialValue: this.props.merchant ? this.props.merchant.phone : ''
             })(
               <Input
                 autoComplete="phone number"
@@ -206,7 +207,7 @@ class AddMerchantForm extends Component {
               <Input
                 autoComplete="Personal email"
                 prefix={
-                  <Icon type="phone" style={{ color: 'rgba(0,0,0,.25)' }} />
+                  <Icon type="email" style={{ color: 'rgba(0,0,0,.25)' }} />
                 }
                 placeholder="Enter Personal email here"
               />
@@ -222,7 +223,7 @@ class AddMerchantForm extends Component {
               <Input
                 autoComplete="business email"
                 prefix={
-                  <Icon type="phone" style={{ color: 'rgba(0,0,0,.25)' }} />
+                  <Icon type="email" style={{ color: 'rgba(0,0,0,.25)' }} />
                 }
                 placeholder="Enter Business email here"
               />

@@ -14,11 +14,20 @@ import themes from "../../settings/themes";
 import { themeConfig } from "../../settings";
 import AppHolder from "./commonStyle";
 import "./global.css";
+import createHistory from 'history/createBrowserHistory';
+
+const history = createHistory({forceRefresh: true});
 
 const { Content, Footer } = Layout;
 const { logout } = authAction;
 const { toggleAll } = appActions;
 export class App extends Component {
+  componentDidMount = () => {
+    if (!(this.props.merchant && this.props.merchant.place && this.props.merchant.place.googlePlaceId)) {
+      history.push('/');
+    }
+  }
+
   render() {
     const { url } = this.props.match;
     const { height } = this.props;
@@ -77,7 +86,8 @@ export class App extends Component {
 export default connect(
   state => ({
     auth: state.Auth,
-    height: state.App.toJS().height
+    height: state.App.toJS().height,
+    merchant: state.Merchant.get('merchant')
   }),
   { logout, toggleAll }
 )(App);

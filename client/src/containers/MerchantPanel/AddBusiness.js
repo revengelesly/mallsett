@@ -6,7 +6,6 @@ import TouchUp from './Forms/TouchUp';
 import BusinessCardHorizontal from './Forms/BusinessCardHorizontal';
 import AddMerchant from './Forms/AddMerchant';
 import AddBusinessTabComponent from './Forms/AddBusinessTabComponent';
-import Services from './Forms/Services';
 import { getView } from '../../helpers/utility';
 import { ViewPort } from '../../helpers/constants';
 
@@ -23,7 +22,7 @@ class PlugBusiness extends React.Component {
       current: 0,
       changing: true,
       formState: 1,
-      disabledTabs: new Array(13).fill(true, 1),
+      disabledTabs: new Array(15).fill(true, 1),
       tabMenuPositon: 'top',
       associates: new Array(13).fill([], 2)
     };
@@ -94,9 +93,15 @@ class PlugBusiness extends React.Component {
         x => x.category === 'associations'
       );
       associates[9] = merchant.associates.filter(
-        x => x.category === 'pos'
+        x => x.category === 'marketingServices'
       );
       associates[10] = merchant.associates.filter(
+        x => x.category === 'government'
+      );
+      associates[11] = merchant.associates.filter(
+        x => x.category === 'pos'
+      );
+      associates[12] = merchant.associates.filter(
         x => x.category === 'credit'
       );
     }
@@ -119,9 +124,14 @@ class PlugBusiness extends React.Component {
           if (associates[i] && associates[i].length > 0) {
             disabledTabs = disabledTabs.fill(false, 0, i + 1);
 
-            if ((i === 4 || i === 6 || i === 8) && associates[i].length < 3) {
+            if (((i === 4 || i === 6 || i === 8 || i === 10) && associates[i].length < 3) || (i === 9 && associates[i].length < 1)) {
               disabledTabs = disabledTabs.fill(true, i + 1);
               break;
+            }
+
+            if (i === 10 && associates[i].length >= 3) {
+              // open all tabs
+              disabledTabs.fill(false);
             }
           }
         }
@@ -257,7 +267,7 @@ class PlugBusiness extends React.Component {
             {...this.props}
           />
         ),
-        disabledNext: this.state.associates[4] && this.state.associates[4].length > 2 ? false : true,
+        disabledNext: !this.state.associates[4] || this.state.associates[4].length < 3,
         description: '',
         help: 'soemthing here to help'
       },
@@ -288,7 +298,7 @@ class PlugBusiness extends React.Component {
             {...this.props}
           />
         ),
-        disabledNext: this.state.associates[6] && this.state.associates[6].length > 2 ? false : true,
+        disabledNext: !this.state.associates[6] || this.state.associates[6].length < 3,
         description: '',
         help: 'soemthing here to help'
       },
@@ -319,21 +329,35 @@ class PlugBusiness extends React.Component {
             {...this.props}
           />
         ),
-        disabledNext: this.state.associates[8] && this.state.associates[8].length > 2 ? false : true,
+        disabledNext: !this.state.associates[8] || this.state.associates[8].length < 3,
         description: '',
         help: 'soemthing here to help'
       },
       {
         title: 'Marketing Services',
         icon: 'desktop',
-        content: <Services />,
+        content: <BusinessCardHorizontal
+                  key="marketingServices"
+                  category="marketingServices"
+                  places={this.state.associates[9]}
+                  handleUpdateAssociate={this.props.handleUpdateAssociate}
+                  {...this.props}
+                />,
+        disabledNext: !this.state.associates[9] || this.state.associates[9].length < 1,
         description: '',
         help: 'soemthing here to help'
       },
       {
         title: 'Government',
         icon: 'desktop',
-        content: <Services />,
+        content: <BusinessCardHorizontal
+                  key="government"
+                  category="government"
+                  places={this.state.associates[10]}
+                  handleUpdateAssociate={this.props.handleUpdateAssociate}
+                  {...this.props}
+                />,
+        disabledNext: !this.state.associates[10] || this.state.associates[10].length < 3,
         description: '',
         help: 'soemthing here to help'
       },
@@ -343,7 +367,7 @@ class PlugBusiness extends React.Component {
         content: <BusinessCardHorizontal
                     key="pos"
                     category="pos"
-                    places={this.state.associates[9]}
+                    places={this.state.associates[11]}
                     handleUpdateAssociate={this.props.handleUpdateAssociate}
                     {...this.props}
                   />,
@@ -356,7 +380,7 @@ class PlugBusiness extends React.Component {
         content: <BusinessCardHorizontal
                     key="credit"
                     category="credit"
-                    places={this.state.associates[10]}
+                    places={this.state.associates[12]}
                     handleUpdateAssociate={this.props.handleUpdateAssociate}
                     {...this.props}
                   />,
@@ -373,7 +397,7 @@ class PlugBusiness extends React.Component {
       {
         title: 'Preview',
         icon: 'trophy',
-        content: <TouchUp />,
+        content: <TouchUp merchant={this.props.merchant}/>,
         description: '',
         help: 'soemthing here to help'
       }
