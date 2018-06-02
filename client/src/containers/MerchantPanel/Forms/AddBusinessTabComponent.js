@@ -1,8 +1,16 @@
 import React, { Component } from 'react';
 import { Button, message, Popover, Row, Col } from 'antd';
 import { InputGroup } from '../../../components/uielements/input';
+import createHistory from 'history/createBrowserHistory';
+
+const history = createHistory({forceRefresh: true});
 
 class AddBusinessTabComponent extends Component {
+  handleDone = () => {
+    history.push('/dashboard');
+    message.success('Processing complete!');
+  }
+
   render() {
     return (
       <div>
@@ -56,7 +64,7 @@ class AddBusinessTabComponent extends Component {
                     className="fullButton square"
                     type="primary"
                     style={{ marginRight: 8 }}
-                    onClick={() => message.success('Processing complete!')}
+                    onClick={this.handleDone}
                     disabled={this.props.isDisabledDone}
                   >
                     <span>

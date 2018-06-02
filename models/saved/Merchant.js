@@ -7,7 +7,7 @@ const MerchantSchema = new Schema({
         //personal
         creator: {
             type: Schema.Types.ObjectId,
-            ref: 'profiles'    
+            ref: 'profiles'
         },
         owners: [
             {
@@ -81,13 +81,13 @@ const MerchantSchema = new Schema({
                         default: Date.now
                     },
                     updated_at: {
-                        type: Date                
+                        type: Date
                     },
                 }
             ]
-            
+
         },
-        assignedPhoneNumber: {
+        phone: {
             type: String
         },
         handle: {
@@ -95,7 +95,7 @@ const MerchantSchema = new Schema({
             required: true,
             max: 40
         },
-        
+
         detail: {
             pitch: {
                 type: String,
@@ -169,7 +169,7 @@ const MerchantSchema = new Schema({
                 }
             }
         ],
-        
+
         attribute: [
             {
                 category: {
@@ -180,7 +180,7 @@ const MerchantSchema = new Schema({
                     type: String
                 },
                 displayName: {
-                    
+
                 },
                 comments: [
                     {
@@ -200,9 +200,9 @@ const MerchantSchema = new Schema({
                             default: Date.now
                         },
                         updated_at: {
-                            type: Date                
+                            type: Date
                         },
-                    }   
+                    }
                 ]
             }
         ],
@@ -211,16 +211,16 @@ const MerchantSchema = new Schema({
                 category: {
                     type: String,
                     required: true
-                }, 
+                },
                 user: {
                     type: Schema.Types.ObjectId,
-                    ref: 'users' 
-                }, 
+                    ref: 'users'
+                },
                 access: {
                     type: [String],
                     required: true
                 }
-            }    
+            }
         ],
         associates: [
                 {
@@ -233,7 +233,7 @@ const MerchantSchema = new Schema({
                         type: String
                     }
                 }
-            ]  
+            ]
         ,
         created_at: {
             type: Date,
@@ -242,7 +242,7 @@ const MerchantSchema = new Schema({
         updated_at: {
             type: Date
         }
-   
+
 });
 
 module.exports = Merchant = mongoose.model('merchants', MerchantSchema);

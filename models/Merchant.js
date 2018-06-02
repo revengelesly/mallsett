@@ -80,7 +80,7 @@ const MerchantSchema = new Schema({
                 }
             ]
         },
-        assignedPhoneNumber: {
+        phone: {
             type: String
         },
         personalEmail: {

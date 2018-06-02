@@ -1,9 +1,9 @@
 const actions = {
-  GET_MERCHANTS: 'GET_MERCHANTS',
+  SET_MERCHANT: 'SET_MERCHANT',
 
-  getMerchant: (merchants) => ({
-    type: actions.GET_MERCHANTS,
-    merchants
+  setMerchant: (merchant) => ({
+    type: actions.SET_MERCHANT,
+    merchant
   }),
 };
 

@@ -5,21 +5,29 @@ import { Icon } from 'antd';
 class ServiceCard extends Component {
   render() {
     return (
-        <Row gutter={8}>
-          <Col span="6">
-            <img src="http://via.placeholder.com/350x250g" style={{ width: '100%' }} alt='shop' />
-          </Col>
-          <Col span="18">
-          <h4>Panther Coffee Shop </h4>
-
-            <div>
-          <Icon type="environment-o" /> 111 East Flagler,Miami, Fl 32453
+      <Row gutter={8}>
+        <Col span="6">
+          <img
+            src={this.props.photo}
+            style={{ width: '100%' }}
+            alt="shop"
+          />
+        </Col>
+        <Col span="18">
+          <h4>{this.props.businessName}</h4>
+          <div>
+            <Icon type="environment-o" /> {this.props.address}
           </div>
-          <div> <Icon type="phone" /> 305-589-5965</div>
-         <div>  <Icon type="idcard" /> Business Services, Food, Delivery</div>
-
-          </Col>
-        </Row>
+          <div>
+            {' '}
+            <Icon type="phone" /> {this.props.phone}
+          </div>
+          <div>
+            {' '}
+            <Icon type="idcard" /> {this.props.googlePlaceCategories && this.props.googlePlaceCategories.join(', ')}
+          </div>
+        </Col>
+      </Row>
     );
   }
 }

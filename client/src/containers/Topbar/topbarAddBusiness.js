@@ -6,9 +6,12 @@ import authAction from '../../redux/auth/actions';
 import merchantAction from '../../redux/merchant/actions';
 import { BaseURL } from '../../helpers/constants';
 import axios from 'axios';
+import createHistory from 'history/createBrowserHistory';
+
+const history = createHistory({forceRefresh: false});
 
 const { login } = authAction;
-const { getMerchant } = merchantAction;
+const { setMerchant } = merchantAction;
 
 class TopBarAddMerchants extends React.Component {
   state = {
@@ -19,6 +22,7 @@ class TopBarAddMerchants extends React.Component {
   };
 
   showModal = () => {
+    history.push('/dashboard')
     this.setState({
       visible: true
     });
@@ -38,7 +42,7 @@ class TopBarAddMerchants extends React.Component {
     });
   };
 
-  setMerchant = (merchant) => {
+  setMerchantToState = (merchant) => {
     this.setState({
       merchant
     });
@@ -78,6 +82,9 @@ class TopBarAddMerchants extends React.Component {
         this.setState({
           merchant: res.data
         })
+
+        // dispacht merchants
+        this.props.setMerchant(merchant);
       }
     );
   }
@@ -113,7 +120,11 @@ class TopBarAddMerchants extends React.Component {
         console.log('associate', res.data);
         this.setState({
           merchant
-        })}
+        })
+
+        // dispacht merchants
+        this.props.setMerchant(merchant);
+      }
       )
       .catch(err => console.log(err));
   };
@@ -123,12 +134,12 @@ class TopBarAddMerchants extends React.Component {
 
     if (merchant) {
       this.setState({
-        isBusiness: true,
+        isBusiness: merchant.place && merchant.place.googlePlaceId && merchant.place.googlePlaceId.length > 0,
         merchant
       });
 
       // dispacht merchants
-      this.props.getMerchant(merchant);
+      this.props.setMerchant(merchant);
     }
   };
 
@@ -169,7 +180,7 @@ class TopBarAddMerchants extends React.Component {
         <div type="" onClick={this.showModal}>
           <Icon type="shop" />
           {!this.state.isBusiness && <span>Plug My Business</span>}
-          {this.state.isBusiness && <span>Plug my Business</span>}
+          {this.state.isBusiness && <span>Manage my Organization</span>}
         </div>
         <Modal
           visible={this.state.visible}
@@ -187,7 +198,7 @@ class TopBarAddMerchants extends React.Component {
             merchant={this.state.merchant}
             handleUpdateAssociate={this.handleUpdateAssociate}
             handleUpdateMerchant={this.handleUpdateMerchant}
-            setMerchant={this.setMerchant}
+            setMerchant={this.setMerchantToState}
           />
         </Modal>
       </div>
@@ -209,7 +220,7 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return {
     login: (email, password) => dispatch(login(email, password)),
-    getMerchant: merchants => dispatch(getMerchant(merchants))
+    setMerchant: merchant => dispatch(setMerchant(merchant))
   };
 }
 

@@ -53,7 +53,7 @@ class CreateAddress extends Component {
                 googlePlaceId: googlePlaceId,
                 businessName: name,
                 address: address || '',
-                phone: '' || phone,
+                phone: phone || '',
                 googlePlaceCategories: types || '',
                 category: this.props.category,
                 photo: photoSource

@@ -52,7 +52,7 @@ router.post(
       merchantField.businessType = req.body.businessType;
     }
 
-    if (req.body.assignedPhoneNumber) merchantField.assignedPhoneNumber = req.body.assignedPhoneNumber;
+    if (req.body.phone) merchantField.phone = req.body.phone;
 
     if (req.body.associates) {
       merchantField.associates = req.body.associates;
