@@ -1,17 +1,12 @@
 import React, { Component } from 'react';
 import LayoutContentWrapper from '../components/utility/layoutWrapper';
 import LayoutContent from '../components/utility/layoutContent';
-import { Row, Col, Button, Input, Select, Tabs, Icon, Timeline, Pagination} from 'antd';
-import ItemProduct from './Products/lists/ItemProducts';
+import { Row, Col, Tabs,  Timeline, Pagination} from 'antd';
 import ItemMerchant from './Products/lists/ItemMerchant';
-import SideCart from './ShoppingCartPanel/SideCart';
-import SideCartSummary from './ShoppingCartPanel/SideCartSummary';
 import ServiceCard from './MerchantPanel/Forms/ServiceCard';
 
 
 const TabPane = Tabs.TabPane;
-const Search = Input.Search;
-const Option = Select.Option;
 
 function showTotal(total) {
   return `Total ${total} items`;

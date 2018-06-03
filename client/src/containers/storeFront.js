@@ -5,7 +5,7 @@ import TopbarUser from "./Topbar/topbarUser";
 import TopbarAddBusiness from "./Topbar/topbarAddBusiness";
 import MenuWrapper from "./storeFront.style";
 
-const { Header, Content, Footer } = Layout;
+const { Header, Footer } = Layout;
 
 class StoreFront extends Component {
   render() {

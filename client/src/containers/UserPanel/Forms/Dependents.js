@@ -195,9 +195,9 @@ class SettingsUserForm extends Component {
     return (
       <div>
         <Form onSubmit={this.handleSubmit} className="login-form">
-          <FormItem label="Dependent Name" {...formItemLayout}>
+          <FormItem label="Dependent Name" >
             {getFieldDecorator('Dependent Name', {
-              rules: [{ required: true, message: 'please enter you user code' }],
+              rules: [{ required: true, message: 'Dependent name is required.' }],
               initialValue: (this.props.editingDependent ? this.props.editingDependent.displayName: '')
             })(
               <Input
@@ -205,28 +205,28 @@ class SettingsUserForm extends Component {
                 prefix={
                   <Icon type="user-add" style={{ color: 'rgba(0,0,0,.25)' }} />
                 }
-                placeholder="Enter dependent name here"
+                placeholder="name"
                 id={`dn-${this.getRandomId()}`}
               />
             )}
           </FormItem>
-          <FormItem label="Dependent Phone" {...formItemLayout}>
-            {getFieldDecorator('Dependent Phone', {
-              rules: [{ required: true, message: 'please enter you user code' }],
+          <FormItem label="Contact Phone">
+            {getFieldDecorator('Contact Phone', {
+              rules: [{ required: true, message: 'enter your phone or your dependent phone.' }],
               initialValue: (this.props.editingDependent ? this.props.editingDependent.phone: ''),
             })(
               <Input
-                autoComplete="phone number"
+                autoComplete="a contact number"
                 prefix={
                   <Icon type="phone" style={{ color: 'rgba(0,0,0,.25)' }} />
                 }
-                placeholder="Enter dependent name here"
+                placeholder="phone number"
               />
             )}
           </FormItem>
-          <FormItem label="Dependent Age" {...formItemLayout}>
+          <FormItem label="Dependent Age">
             {getFieldDecorator('age', {
-              rules: [{ required: true, message: 'How old is your dependent?' }],
+              rules: [{ required: true, message: 'Not all things are appropriate for all ages.' }],
               initialValue: edittingAge
             })(
               <Input
@@ -248,7 +248,7 @@ class SettingsUserForm extends Component {
             </Select>
             {getFieldDecorator('type', {
               rules: [
-                { required: true, message: 'How is this person a dependent?' }
+                { required: true, message: 'How are you two related?' }
               ],
               initialValue: this.props.editingDependent && this.props.editingDependent.category ? this.props.editingDependent.category : []
             })(
@@ -261,7 +261,7 @@ class SettingsUserForm extends Component {
             )}
           </FormItem>
 
-          <FormItem label="Considerations" {...formItemLayout}>
+          <FormItem label="Considerations">
             {getFieldDecorator('considerations', {
               rules: [
                 {
@@ -288,10 +288,10 @@ class SettingsUserForm extends Component {
               </Select>
             )}
           </FormItem>
-          <FormItem label="Biography" {...formItemLayout}>
+          <FormItem label="Biography">
             {getFieldDecorator('bio', {
               rules: [
-                { required: false, message: 'Please input your Password!' }
+                { required: false, message: 'Tell us a little about this dependent' }
               ],
               initialValue: (this.props.editingDependent ? this.props.editingDependent.bio: '')
             })(
@@ -305,13 +305,13 @@ class SettingsUserForm extends Component {
               />
             )}
           </FormItem>
-          <FormItem {...formItemLayout} label="Photo for Receiving">
+          <FormItem label="Photo for Receiving">
             <UploadComponent isReset={this.state.isUploadComponentReset} id={this.props.uploadId || "uploadDependent"} handleUploadFileSuccess={this.handleUploadFileSuccess} />
             <br />
             Not Required.
           </FormItem>
 
-          <FormItem label="Location" {...formItemLayout}>
+          <FormItem label="Location">
             {getFieldDecorator('locations', {
               rules: [
                 {
@@ -340,7 +340,7 @@ class SettingsUserForm extends Component {
               </a>
             </p>
           </FormItem>
-          <FormItem label="Files" {...formItemLayout}>
+          <FormItem label="Files">
             {getFieldDecorator('files', {
               rules: [{ required: false, message: 'Add a file for dependent' }],
               initialValue: this.props.editingDependent && this.props.editingDependent.files ?this.props.editingDependent.files.map(x => x._id) : []
@@ -365,7 +365,7 @@ class SettingsUserForm extends Component {
               </a>
             </p>
           </FormItem>
-          <FormItem label="." {...formItemLayout}>
+          <FormItem  >
             <Button
               type="primary"
               style={{ width: '100%' }}

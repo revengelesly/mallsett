@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import userpic from '../../image/user1.png';
 import authAction from '../../redux/auth/actions';
-import { Modal, Button, Icon } from 'antd';
+import { Modal, Icon } from 'antd';
 import UserPanel from '../UserPanel/userPanel';
 
 const { login, logout, loginSuccess } = authAction;
