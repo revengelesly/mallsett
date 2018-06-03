@@ -104,6 +104,15 @@ class PlugBusiness extends React.Component {
       associates[12] = merchant.associates.filter(
         x => x.category === 'credit'
       );
+      associates[13] = merchant.associates.filter(
+        x => x.category === 'mall'
+      );
+      associates[14] = merchant.associates.filter(
+        x => x.category === 'delivery'
+      );
+      associates[15] = merchant.associates.filter(
+        x => x.category === 'customerService'
+      );
     }
 
     this.setState({
@@ -335,7 +344,7 @@ class PlugBusiness extends React.Component {
       },
       {
         title: 'Marketing Services',
-        icon: 'desktop',
+        icon: 'notification',
         content: <BusinessCardHorizontal
                   key="marketingServices"
                   category="marketingServices"
@@ -349,7 +358,7 @@ class PlugBusiness extends React.Component {
       },
       {
         title: 'Government',
-        icon: 'desktop',
+        icon: 'safety',
         content: <BusinessCardHorizontal
                   key="government"
                   category="government"
@@ -381,6 +390,45 @@ class PlugBusiness extends React.Component {
                     key="credit"
                     category="credit"
                     places={this.state.associates[12]}
+                    handleUpdateAssociate={this.props.handleUpdateAssociate}
+                    {...this.props}
+                  />,
+        description: '',
+        help: 'soemthing here to help'
+      },
+      {
+        title: 'Mall / Plaza',
+        icon: 'building',
+        content: <BusinessCardHorizontal
+                    key="mall"
+                    category="mall"
+                    places={this.state.associates[13]}
+                    handleUpdateAssociate={this.props.handleUpdateAssociate}
+                    {...this.props}
+                  />,
+        description: '',
+        help: 'soemthing here to help'
+      },
+      {
+        title: 'Delivery & Shoppers',
+        icon: 'car',
+        content: <BusinessCardHorizontal
+                    key="delivery"
+                    category="delivery"
+                    places={this.state.associates[14]}
+                    handleUpdateAssociate={this.props.handleUpdateAssociate}
+                    {...this.props}
+                  />,
+        description: '',
+        help: 'soemthing here to help'
+      },
+      {
+        title: 'Customer Service',
+        icon: 'customer-service',
+        content: <BusinessCardHorizontal
+                    key="customerService"
+                    category="customerService"
+                    places={this.state.associates[15]}
                     handleUpdateAssociate={this.props.handleUpdateAssociate}
                     {...this.props}
                   />,
