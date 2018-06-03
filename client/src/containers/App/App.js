@@ -23,7 +23,8 @@ const { logout } = authAction;
 const { toggleAll } = appActions;
 export class App extends Component {
   componentDidMount = () => {
-    if (!(this.props.merchant && this.props.merchant.place && this.props.merchant.place.googlePlaceId)) {
+	  // Temporary for disabling this constraint to access /dashboard
+    if (false && !(this.props.merchant && this.props.merchant.place && this.props.merchant.place.googlePlaceId)) {
       history.push('/');
     }
   }

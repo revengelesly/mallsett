@@ -53,7 +53,7 @@ class Topbar extends Component {
               onClick={toggleCollapsed}
             > 
             <Dropdown overlay={myBusinessMenu} trigger={['click']} placement="bottomRight">
-            <Icon type="dashboard" /> <span className=""> Manage My Business </span>
+              <div><Icon type="dashboard" /> <span className=""> Manage My Business </span></div>
             </Dropdown>
             </li>
             <li>
