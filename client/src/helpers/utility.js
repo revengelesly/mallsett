@@ -3,6 +3,11 @@ import { ViewPort } from './constants';
 
 export function clearToken() {
   localStorage.removeItem('id_token');
+  clearMerchant();
+}
+
+export function clearMerchant() {
+  localStorage.removeItem('merchant');
 }
 
 export function getToken() {
