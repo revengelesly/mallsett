@@ -3,7 +3,7 @@ import { Route, Redirect } from 'react-router-dom';
 import { ConnectedRouter } from 'react-router-redux';
 import { connect } from 'react-redux';
 import App from './containers/App/App';
-import StoreFront from './containers/storeFront';
+import StoreFront from './containers/Pages/storeFront';
 
 const RestrictedRoute = ({ component: Component, isLoggedIn, ...rest }) => (
   <Route
@@ -28,7 +28,7 @@ const PublicRoutes = ({ history, isLoggedIn }) => {
       <div>
         <Route exact path={'/'} component={StoreFront} />
         <RestrictedRoute
-          path="/dashboard"
+          path="/Pages/dashboard"
           component={App}
           isLoggedIn={isLoggedIn}
         />

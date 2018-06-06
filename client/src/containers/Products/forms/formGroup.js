@@ -5,7 +5,7 @@ import GroupPart3 from './formParts/group-part.3';
 import GroupPart4 from './formParts/group-part.4';
 import GroupPart5 from './formParts/group-part.5';
 import FormWrapper from './form.style';
-import IntlMessages from '../../../../components/utility/intlMessages';
+import IntlMessages from '../../../components/utility/intlMessages';
 import { 
   Row, 
   Button,

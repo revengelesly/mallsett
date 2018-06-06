@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import GroupWrapper from './list.style';
+import GroupWrapper from '../../Styles/list.style';
 import { 
   Row, 
   Collapse,

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import IntlMessages from '../../../../components/utility/intlMessages';
-import GroupWrapper from './list.style';
+import GroupWrapper from '../../Styles/list.style';
 import DateListItem from './DateListItem';
 import { 
   Row, 
