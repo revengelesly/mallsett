@@ -7,8 +7,7 @@ const history = createHistory({forceRefresh: true});
 
 class AddBusinessTabComponent extends Component {
   handleDone = () => {
-    history.push('/dashboard');
-    message.success('Processing complete!');
+    this.props.handleSubmit();
   }
 
   render() {

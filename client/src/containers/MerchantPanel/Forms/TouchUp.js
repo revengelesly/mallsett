@@ -82,7 +82,7 @@ class TouchUp extends Component {
               }
               key="3"
             >
-              {merchant.detail.bio}
+              {this.props.bio && this.props.bio.value }
             </TabPane>
             <TabPane
               tab={
@@ -92,7 +92,7 @@ class TouchUp extends Component {
               }
               key="4"
             >
-              {merchant.detail.privacy}
+              {this.props.privacy && this.props.privacy.value }
             </TabPane>
             <TabPane
               tab={
@@ -102,7 +102,7 @@ class TouchUp extends Component {
               }
               key="5"
             >
-              {merchant.detail.terms}
+              {this.props.terms && this.props.terms.value}
             </TabPane>
           </Tabs>
         </Row>

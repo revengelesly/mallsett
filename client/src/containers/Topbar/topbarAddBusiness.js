@@ -8,7 +8,7 @@ import { BaseURL } from '../../helpers/constants';
 import axios from 'axios';
 import createHistory from 'history/createBrowserHistory';
 
-const history = createHistory({forceRefresh: false});
+const history = createHistory({forceRefresh: true});
 
 const { login } = authAction;
 const { setMerchant } = merchantAction;
@@ -17,15 +17,18 @@ class TopBarAddMerchants extends React.Component {
   state = {
     visible: false,
     merchants: [],
-    isBusiness: false,
-    merchant: null
+    isBusiness: this.props.merchant && this.props.merchant.businessType && this.props.merchant.businessType.length > 0,
+    merchant: this.props.merchant
   };
 
   showModal = () => {
-    history.push('/dashboard')
-    this.setState({
-      visible: true
-    });
+    if (this.state.isBusiness) {
+      history.push('/dashboard');
+    } else {
+      this.setState({
+        visible: true
+      });
+    }
   };
 
   handleOk = e => {
@@ -46,6 +49,9 @@ class TopBarAddMerchants extends React.Component {
     this.setState({
       merchant
     });
+
+    // dispacht merchants
+    this.props.setMerchant(merchant);
   }
 
   handleUpdateMerchant = (business) => {
@@ -84,13 +90,17 @@ class TopBarAddMerchants extends React.Component {
         })
 
         // dispacht merchants
-        this.props.setMerchant(merchant);
+        this.props.setMerchant(res.data);
       }
     );
   }
 
   handleUpdateAssociate = (business) => {
     let merchant = this.state.merchant;
+    if (!merchant.associates) {
+      merchant.associates = []
+    }
+
     let associate = merchant.associates.find(
       x => x && x.googlePlaceId === business.googlePlaceId
     );
@@ -119,54 +129,22 @@ class TopBarAddMerchants extends React.Component {
       .then(res => {
         console.log('associate', res.data);
         this.setState({
-          merchant
+          merchant: res.data
         })
 
         // dispacht merchants
-        this.props.setMerchant(merchant);
+        this.props.setMerchant(res.data);
       }
       )
       .catch(err => console.log(err));
   };
 
-  bindDataWhenLogin = (merchants, profileId) => {
-    let merchant = merchants.find(x => x.createdBy === profileId);
-
-    if (merchant) {
-      this.setState({
-        isBusiness: merchant.place && merchant.place.googlePlaceId && merchant.place.googlePlaceId.length > 0,
-        merchant
-      });
-
-      // dispacht merchants
-      this.props.setMerchant(merchant);
-    }
-  };
-
-  componentDidMount = () => {
-    axios({
-      method: 'GET',
-      url: `${BaseURL}/api/merchant`,
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json'
-      }
-    })
-      .then(res => {
-        this.setState({
-          merchants: res.data
-        });
-
-        if (this.props.isLoggedIn && this.props.profile) {
-          this.bindDataWhenLogin(res.data, this.props.profile._id);
-        }
-      })
-      .catch(err => console.log(err));
-  };
-
   componentWillReceiveProps = nextProps => {
     if (nextProps.isLoggedIn && nextProps.profile) {
-      this.bindDataWhenLogin(this.state.merchants, nextProps.profile._id);
+      this.setState({
+        merchant: nextProps.merchant,
+        isBusiness: nextProps.merchant && nextProps.merchant.businessType && nextProps.merchant.businessType.length > 0
+      })
     } else {
       this.setState({
         isBusiness: false
@@ -179,8 +157,7 @@ class TopBarAddMerchants extends React.Component {
       <div>
         <div type="" onClick={this.showModal}>
           <Icon type="shop" />
-          {!this.state.isBusiness && <span>Plug My Business</span>}
-          {this.state.isBusiness && <span>Manage my Organization</span>}
+          {this.state.isBusiness ? <span>Manage my Organization</span> : <span>Plug My Business</span>}
         </div>
         <Modal
           visible={this.state.visible}
@@ -213,6 +190,7 @@ function mapStateToProps(state) {
       state.Auth.get('idToken') !== 'LOGIN_ERROR',
     profile: state.Auth.get('profile'),
     idToken: state.Auth.get('idToken'),
+    merchant: state.Merchant.get('merchant'),
     ...state.App.toJS()
   };
 }

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Icon } from 'antd';
+import { Icon, message } from 'antd';
 import Box from '../../components/utility/box';
 import AddBusinessIntro from './Forms/AddBusinessIntro';
 import TouchUp from './Forms/TouchUp';
@@ -14,6 +14,11 @@ import LayoutWrapper from '../../components/utility/layoutWrapper';
 import LoginUser from '../UserPanel/Forms/LoginUser';
 import RegisterUser from '../UserPanel/Forms/RegisterUser';
 import RequestUserPassword from '../UserPanel/Forms/RequestUserPassword';
+import { BaseURL } from '../../helpers/constants';
+import axios from 'axios';
+import createHistory from 'history/createBrowserHistory';
+
+const history = createHistory({forceRefresh: true});
 
 class PlugBusiness extends React.Component {
   constructor(props) {
@@ -24,12 +29,101 @@ class PlugBusiness extends React.Component {
       formState: 1,
       disabledTabs: new Array(15).fill(true, 1),
       tabMenuPositon: 'top',
-      associates: new Array(13).fill([], 2)
+      associates: new Array(13).fill([], 2),
+      fields: {}
     };
   }
 
-  next = () => {
+  handleFormChange = changedFields => {
+    console.log(changedFields);
+    this.setState(({ fields }) => ({
+      fields: { ...fields, ...changedFields }
+    }));
+  };
+
+  handleUploadLogoSuccess = link => {
+    this.setState({
+      logo: link
+    });
+  };
+
+  handleUploadGallerySuccess = link => {
+    this.setState({
+      gallery: link
+    });
+  };
+
+  handleSubmit = e => {
+    let fields = this.state.fields;
+
+    if (
+      !(
+        fields.businessType &&
+        fields.targetType &&
+        fields.personalEmail &&
+        fields.phone &&
+        fields.businessEmail &&
+        fields.bio
+      )
+    ) {
+      this.setState({
+        showErroMessage: true
+      });
+    } else {
+      this.setState({
+        showErroMessage: false
+      });
+
+      let merchant = {
+        bio: fields.bio.value,
+        businessEmail: fields.businessEmail.value,
+        businessType: fields.businessType.value,
+        personalEmail: fields.personalEmail.value,
+        phone: fields.phone.value,
+        privacy: fields.privacy && fields.privacy.value,
+        targetType: fields.targetType.value,
+        terms: fields.terms && fields.terms.value
+      };
+      merchant.socialMedia = [
+        {
+          channel: 'B2B Commercial',
+          link: fields.B2Bcommercial && fields.B2Bcommercial.value
+        },
+        {
+          channel: 'Customers Commercial',
+          link: fields.customersCommercial && fields.customersCommercial.value
+        }
+      ];
+      merchant.logo = this.state.logo;
+      merchant.gallery = this.state.gallery;
+
+      axios({
+        method: 'POST',
+        url: `${BaseURL}/api/merchant`,
+        headers: {
+          Authorization: this.props.idToken,
+          Accept: 'application/json',
+          'Content-Type': 'application/json'
+        },
+        data: {
+          ...this.props.merchant,
+          ...merchant,
+          merchant_id: this.props.merchant._id
+        }
+      })
+        .then(res => {
+          console.log(res.data);
+          this.props.setMerchant(res.data);
+          message.success('Processing complete!');
+          history.push('/dashboard');
+        })
+        .catch(err => console.log(err));
+    }
+  };
+
+  next = merchant => {
     const current = this.getCurrent() + 1;
+
     this.setState({ current });
     let disabledTabs = this.state.disabledTabs;
     disabledTabs[current] = false;
@@ -58,7 +152,7 @@ class PlugBusiness extends React.Component {
     });
   };
 
-  handleMainTabChange = (key) => {
+  handleMainTabChange = key => {
     if (!this.state.disabledTabs[parseInt(key, 10)]) {
       this.setState({
         current: parseInt(key, 10)
@@ -98,12 +192,8 @@ class PlugBusiness extends React.Component {
       associates[10] = merchant.associates.filter(
         x => x.category === 'government'
       );
-      associates[11] = merchant.associates.filter(
-        x => x.category === 'pos'
-      );
-      associates[12] = merchant.associates.filter(
-        x => x.category === 'credit'
-      );
+      associates[11] = merchant.associates.filter(x => x.category === 'pos');
+      associates[12] = merchant.associates.filter(x => x.category === 'credit');
     }
 
     this.setState({
@@ -124,16 +214,24 @@ class PlugBusiness extends React.Component {
           if (associates[i] && associates[i].length > 0) {
             disabledTabs = disabledTabs.fill(false, 0, i + 1);
 
-            if (((i === 4 || i === 6 || i === 8 || i === 10) && associates[i].length < 3) || (i === 9 && associates[i].length < 1)) {
+            if (
+              ((i === 4 || i === 6 || i === 8 || i === 10) &&
+                associates[i].length < 3) ||
+              (i === 9 && associates[i].length < 1)
+            ) {
               disabledTabs = disabledTabs.fill(true, i + 1);
               break;
             }
-
-            if (i === 10 && associates[i].length >= 3) {
-              // open all tabs
-              disabledTabs.fill(false);
-            }
           }
+        }
+
+        if (
+          associates[10].length >= 3 &&
+          merchant.businessType &&
+          merchant.businessType.length > 0
+        ) {
+          // open all tabs
+          disabledTabs.fill(false);
         }
       }
     } else {
@@ -143,13 +241,14 @@ class PlugBusiness extends React.Component {
     this.setState({
       disabledTabs: disabledTabs
     });
-  }
+  };
 
   componentDidMount = () => {
     this.handleWindowResize();
     window.addEventListener('resize', this.handleWindowResize);
 
     if (this.props.isLoggedIn && this.props.profile) {
+      console.log(this.props);
       let associates = this.bindDataToState(this.props.merchant);
       this.handleDisableTabs(this.props.merchant, associates);
     }
@@ -221,7 +320,8 @@ class PlugBusiness extends React.Component {
             {...this.props}
           />
         ),
-        disabledNext: this.props.merchant && this.props.merchant.place ? false : true,
+        disabledNext:
+          this.props.merchant && this.props.merchant.place ? false : true,
         description: '',
         help: 'soemthing here to help'
       },
@@ -267,7 +367,8 @@ class PlugBusiness extends React.Component {
             {...this.props}
           />
         ),
-        disabledNext: !this.state.associates[4] || this.state.associates[4].length < 3,
+        disabledNext:
+          !this.state.associates[4] || this.state.associates[4].length < 3,
         description: '',
         help: 'soemthing here to help'
       },
@@ -298,7 +399,8 @@ class PlugBusiness extends React.Component {
             {...this.props}
           />
         ),
-        disabledNext: !this.state.associates[6] || this.state.associates[6].length < 3,
+        disabledNext:
+          !this.state.associates[6] || this.state.associates[6].length < 3,
         description: '',
         help: 'soemthing here to help'
       },
@@ -329,75 +431,98 @@ class PlugBusiness extends React.Component {
             {...this.props}
           />
         ),
-        disabledNext: !this.state.associates[8] || this.state.associates[8].length < 3,
+        disabledNext:
+          !this.state.associates[8] || this.state.associates[8].length < 3,
         description: '',
         help: 'soemthing here to help'
       },
       {
         title: 'Marketing Services',
         icon: 'desktop',
-        content: <BusinessCardHorizontal
-                  key="marketingServices"
-                  category="marketingServices"
-                  places={this.state.associates[9]}
-                  handleUpdateAssociate={this.props.handleUpdateAssociate}
-                  {...this.props}
-                />,
-        disabledNext: !this.state.associates[9] || this.state.associates[9].length < 1,
+        content: (
+          <BusinessCardHorizontal
+            key="marketingServices"
+            category="marketingServices"
+            places={this.state.associates[9]}
+            handleUpdateAssociate={this.props.handleUpdateAssociate}
+            {...this.props}
+          />
+        ),
+        disabledNext:
+          !this.state.associates[9] || this.state.associates[9].length < 1,
         description: '',
         help: 'soemthing here to help'
       },
       {
         title: 'Government',
         icon: 'desktop',
-        content: <BusinessCardHorizontal
-                  key="government"
-                  category="government"
-                  places={this.state.associates[10]}
-                  handleUpdateAssociate={this.props.handleUpdateAssociate}
-                  {...this.props}
-                />,
-        disabledNext: !this.state.associates[10] || this.state.associates[10].length < 3,
+        content: (
+          <BusinessCardHorizontal
+            key="government"
+            category="government"
+            places={this.state.associates[10]}
+            handleUpdateAssociate={this.props.handleUpdateAssociate}
+            {...this.props}
+          />
+        ),
+        disabledNext:
+          !this.state.associates[10] || this.state.associates[10].length < 3,
         description: '',
         help: 'soemthing here to help'
       },
       {
         title: 'POS Systems',
         icon: 'desktop',
-        content: <BusinessCardHorizontal
-                    key="pos"
-                    category="pos"
-                    places={this.state.associates[11]}
-                    handleUpdateAssociate={this.props.handleUpdateAssociate}
-                    {...this.props}
-                  />,
+        content: (
+          <BusinessCardHorizontal
+            key="pos"
+            category="pos"
+            places={this.state.associates[11]}
+            handleUpdateAssociate={this.props.handleUpdateAssociate}
+            {...this.props}
+          />
+        ),
         description: '',
         help: 'soemthing here to help'
       },
       {
         title: 'Credit Card Processor',
         icon: 'credit-card',
-        content: <BusinessCardHorizontal
-                    key="credit"
-                    category="credit"
-                    places={this.state.associates[12]}
-                    handleUpdateAssociate={this.props.handleUpdateAssociate}
-                    {...this.props}
-                  />,
+        content: (
+          <BusinessCardHorizontal
+            key="credit"
+            category="credit"
+            places={this.state.associates[12]}
+            handleUpdateAssociate={this.props.handleUpdateAssociate}
+            {...this.props}
+          />
+        ),
         description: '',
         help: 'soemthing here to help'
       },
       {
         title: 'Closing Details',
         icon: 'profile',
-        content: <AddMerchant merchant={this.props.merchant} {...this.props} />,
+        content: (
+          <AddMerchant
+            ref="addMerchant"
+            showErroMessage={this.state.showErroMessage}
+            handleUploadGallerySuccess={this.handleUploadGallerySuccess}
+            handleUploadLogoSuccess={this.handleUploadLogoSuccess}
+            onChange={this.handleFormChange}
+            merchant={this.props.merchant}
+            next={this.next}
+            {...this.props}
+          />
+        ),
+        disabledNext: (this.state.fields.businessType && this.state.fields.targetType && this.state.fields.personalEmail && this.state.fields.phone && this.state.fields.businessEmail && this.state.fields.bio ? false : true),
         description: '',
         help: 'soemthing here to help'
       },
       {
         title: 'Preview',
         icon: 'trophy',
-        content: <TouchUp merchant={this.props.merchant}/>,
+        content: <TouchUp merchant={this.props.merchant}  bio={this.state.fields.bio} terms={this.state.fields.terms} privacy={this.state.fields.privacy} />,
         description: '',
         help: 'soemthing here to help'
       }
@@ -429,6 +554,8 @@ class PlugBusiness extends React.Component {
                 key={i}
               >
                 <AddBusinessTabComponent
+                  merchant={this.props.merchant}
+                  handleSubmit={this.handleSubmit}
                   title={step.title}
                   help={step.help}
                   description={step.description}
@@ -439,7 +566,9 @@ class PlugBusiness extends React.Component {
                     (this.state.current < filteredSteps.length - 1 ||
                       step.title.indexOf('Login') >= 0)
                   }
-                  isDisabledNext={step.title.indexOf('Login') >= 0 || step.disabledNext}
+                  isDisabledNext={
+                    step.title.indexOf('Login') >= 0 || step.disabledNext
+                  }
                   isDisplayDone={
                     this.state.current === filteredSteps.length - 1 &&
                     step.title.indexOf('Login') < 0
