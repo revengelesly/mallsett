@@ -130,6 +130,7 @@ class CreateAddress extends Component {
                       dataSource={this.state.businesses}
                       renderItem={business => (
                         <List.Item>
+ 
                           <ServiceCard
                             name={business.businessName}
                             address={business.address}
@@ -140,6 +141,7 @@ class CreateAddress extends Component {
                             googlePlaceId={business.googlePlaceId}
                             photo={business.photo}
                           />
+
                         </List.Item>
                       )}
                     />

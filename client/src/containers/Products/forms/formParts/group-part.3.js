@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import IntlMessages from '../../../../../components/utility/intlMessages';
+import IntlMessages from '../../../../components/utility/intlMessages';
 import { 
   Row, 
   Col,

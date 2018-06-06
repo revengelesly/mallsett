@@ -45,6 +45,7 @@ router.post(
       detail: {},
     };
     merchantField.creator = req.body.profile;
+    merchantField.owner = req.body.profile;
     merchantField.updated_at = MomentNow;
     merchantField.place = req.body.place;
 

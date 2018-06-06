@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import LayoutContentWrapper from '../../components/utility/layoutWrapper';
 import LayoutContent from '../../components/utility/layoutContent';
 import { Row, Col, Button, Input, Select} from 'antd';
-import ItemProduct from '../Products/lists/ItemProducts';
-import ItemMerchant from '../Products/lists/ItemMerchant';
+import ItemProduct from '../Products/items/ItemProducts';
+import ItemMerchant from '../Products/items/ItemMerchant';
 import SideCart from '../ShoppingCartPanel/SideCart';
 import SideCartSummary from '../ShoppingCartPanel/SideCartSummary';
 

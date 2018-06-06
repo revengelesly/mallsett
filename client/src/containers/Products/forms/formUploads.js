@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import IntlMessages from '../../../../components/utility/intlMessages';
-import moment from 'moment';
+import IntlMessages from '../../../components/utility/intlMessages';
 import { 
   Row, 
   Col,
@@ -37,7 +36,7 @@ export default class  extends Component {
   render() {
     return (
       <Row gutter={24}>
-        <Col span="24">
+        
         
          
         { /******************************** 
@@ -46,6 +45,27 @@ export default class  extends Component {
               
           ******************************8*/ }
        
+         
+
+        { /* start   upload */ }
+        <Col span={24}  style={{ width: '100%', marginBottom: 15, marginTop: 5 }} >
+         <Popover content={ 
+              <div>
+                {<IntlMessages id="form.part.upload.dagger.popover.title" />} 
+              </div>
+            } title={<IntlMessages id="form.part.upload.dagger.popover.content" />}   trigger="click">
+            <Icon type="question-circle-o" />  <IntlMessages id="form.part.upload.dagger"  />  </Popover>
+            
+            <Dragger {...props} style={{ width: '100%', marginTop: 5 }}>
+              <p className="ant-upload-drag-icon">
+                <Icon type="inbox" />
+              </p>
+              <p className="ant-upload-text">Click or drag file to this area to upload</p>
+              <p className="ant-upload-hint">Support for a single or bulk upload. Strictly prohibit from uploading company data or other band files</p>
+            </Dragger>
+            </Col>
+         { /* end   upload */ }
+
          {/* start name */}
          <Col span={24}  style={{ width: '100%', marginBottom: 15, marginTop: 5 }} >
         <Popover content={ 
@@ -58,39 +78,25 @@ export default class  extends Component {
           
           </Col>
          {/* end name */}
-    
-         {/* start link */}
+         
+         {/* start description */}
          <Col span={24}  style={{ width: '100%', marginBottom: 15, marginTop: 5 }} >
         <Popover content={ 
               <div>
-                {<IntlMessages id="form.part.upload.link.popover.content" />} 
+                {<IntlMessages id="form.part.upload.description.popover.content" />} 
               </div>
-            } title={<IntlMessages id="form.part.upload.link.popover.title" />}  trigger="click">
-            <Icon type="question-circle-o" />  <IntlMessages id="form.part.upload.link" />  </Popover>
-          <Input style={{ width: '100%', marginTop: 5 }} />
+            } title={<IntlMessages id="form.part.upload.description.popover.title" />}  trigger="click">
+            <Icon type="question-circle-o" /> <IntlMessages id="form.part.upload.description" />  </Popover>
+          <Input 
+            type="textarea"
+            autosize={{ minRows: 2, maxRows: 6 }}
+            style={{ width: '100%',marginTop: 5 }}
+          />
           
           </Col>
-         {/* end link */}
+         {/* end description */}
 
-        { /* start   upload */ }
-        <Col span={24}  style={{ width: '100%', marginBottom: 15, marginTop: 5 }} >
-         <Popover content={ 
-              <div>
-                {<IntlMessages id="form.part.upload.dagger.popover.title" />} 
-              </div>
-            } title={<IntlMessages id="form.part.upload.dagger.popover.title" />}   trigger="click">
-            <Icon type="question-circle-o" />  <IntlMessages id="form.part.upload.dagger"  />  </Popover>
-            
-            <Dragger {...props} style={{ width: '100%', marginTop: 5 }}>
-              <p className="ant-upload-drag-icon">
-                <Icon type="inbox" />
-              </p>
-              <p className="ant-upload-text">Click or drag file to this area to upload</p>
-              <p className="ant-upload-hint">Support for a single or bulk upload. Strictly prohibit from uploading company data or other band files</p>
-            </Dragger>
-            </Col>
-         { /* end   upload */ }
-         { /* start   image group */ }
+         { /* start   image category */ }
          <Col span={24}  style={{ width: '100%', marginBottom: 15, marginTop: 5 }} >
          <Popover content={ 
               <IntlMessages id="form.part.upload.category.popover.content" />
@@ -111,26 +117,10 @@ export default class  extends Component {
             
           </Select>
           </Col>
-         { /* end     image group */ }
+         { /* end     image category */ }
          
          
-         {/* start category */}
-         <Col span={24}  style={{ width: '100%', marginBottom: 15, marginTop: 5 }} >
-        <Popover content={ 
-              <div>
-                {<IntlMessages id="form.part.upload.description.popover.content" />} 
-              </div>
-            } title={<IntlMessages id="form.part.upload.description.popover.title" />}  trigger="click">
-            <Icon type="question-circle-o" /> <IntlMessages id="form.part.upload.description" />  </Popover>
-          <Input 
-            type="textarea"
-            autosize={{ minRows: 2, maxRows: 6 }}
-            style={{ width: '100%',marginTop: 5 }}
-          />
-          
-          </Col>
-         {/* end category */}
-       
+         <Col span="24">
          <Button type="primary"  style={{ width: '100%', marginBottom: 15, marginTop: 15, borderRadius: 0 }}>Add Upload</Button>
         </Col>
       </Row>

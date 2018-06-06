@@ -9,10 +9,10 @@ const MerchantSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'profiles'    
     },
-    owners: [{
+    owners: {
         type: Schema.Types.ObjectId,
         ref: 'profiles'    
-    }],
+    },
     google_id: {
         type: String,
         required: true
