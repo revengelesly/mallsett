@@ -14,21 +14,11 @@ import themes from "../../settings/themes";
 import { themeConfig } from "../../settings";
 import AppHolder from "./commonStyle";
 import "./global.css";
-import createHistory from 'history/createBrowserHistory';
-
-const history = createHistory({forceRefresh: true});
 
 const { Content, Footer } = Layout;
 const { logout } = authAction;
 const { toggleAll } = appActions;
 export class App extends Component {
-  componentDidMount = () => {
-	  // Temporary for disabling this constraint to access /dashboard
-    if (false && !(this.props.merchant && this.props.merchant.place && this.props.merchant.place.googlePlaceId)) {
-      history.push('/');
-    }
-  }
-
   render() {
     const { url } = this.props.match;
     const { height } = this.props;

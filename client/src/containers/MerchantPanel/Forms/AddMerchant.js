@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
-import { Form, Icon, Input, Select, Button } from 'antd';
+import { Form, Icon, Input, Select, Alert } from 'antd';
 import UploadComponent from '../../../containers/UserPanel/Forms/uppy/UploadComponent';
-import { BaseURL } from '../../../helpers/constants';
-import axios from 'axios';
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -16,7 +14,6 @@ class AddMerchantForm extends Component {
   state = {
     logo: '',
     gallery: '',
-    isUploadComponentReset: false
   };
 
   onSecondSubCategoryChange = value => {
@@ -33,78 +30,22 @@ class AddMerchantForm extends Component {
     });
   };
 
-  handleUploadGallerySuccess = (link) => {
-    this.setState({
-      logo: link
-    });
-  }
-
-  handleUploadLogoSuccess = (link) => {
-    this.setState({
-      gallery: link
-    });
-  }
-
-  handleSubmit = e => {
-    e.preventDefault();
-    this.props.form.validateFields((err, merchant) => {
-      if (!err) {
-        console.log(merchant);
-        merchant.socialMedia = [
-          {
-            channel: 'B2B Commercial',
-            link: merchant.B2Bcommercial
-          },
-          {
-            channel: 'Customers Commercial',
-            link: merchant.customersCommercial
-          }
-        ];
-        merchant.logo = this.state.logo;
-        merchant.gallery = this.state.gallery;
-
-        axios({
-          method: 'POST',
-          url: `${BaseURL}/api/merchant`,
-          headers: {
-            Authorization: this.props.idToken,
-            Accept: 'application/json',
-            'Content-Type': 'application/json'
-          },
-          data: {
-            ...this.props.merchant,
-            ...merchant,
-            merchant_id: this.props.merchant._id
-          },
-        }).then(res => {
-          this.setState({
-            isUploadComponentReset: !this.state.isUploadComponentReset
-          });
-          this.props.setMerchant(res.data)
-        })
-        .catch(err => console.log(err));
-      }
-    });
-  };
-
   render() {
     const { getFieldDecorator } = this.props.form;
 
     return (
       <div>
-        <Form onSubmit={this.handleSubmit} className="login-form">
+        <Form className="login-form">
           <FormItem label="Business Logo">
             <UploadComponent
-              isReset={this.state.isUploadComponentReset}
               id={this.props.uploadId || 'uploadNusinessLogo'}
-              handleUploadFileSuccess={this.handleUploadLogoSuccess}
+              handleUploadFileSuccess={this.props.handleUploadLogoSuccess}
             />
           </FormItem>
           <FormItem label="Business Gallery">
             <UploadComponent
-              isReset={this.state.isUploadComponentReset}
               id={this.props.uploadId || 'uploadGallery'}
-              handleUploadFileSuccess={this.handleUploadGallerySuccess}
+              handleUploadFileSuccess={this.props.handleUploadGallerySuccess}
             />
           </FormItem>
           <FormItem label="Business Type">
@@ -112,7 +53,9 @@ class AddMerchantForm extends Component {
               rules: [
                 { required: true, message: 'What type of business is this?' }
               ],
-              initialValue: this.props.merchant ? this.props.merchant.businessType : []
+              initialValue: this.props.merchant
+                ? this.props.merchant.businessType
+                : []
             })(
               <Select
                 mode="multiple"
@@ -154,10 +97,13 @@ class AddMerchantForm extends Component {
             )}
           </FormItem>
           <FormItem label="Target Type">
-            {getFieldDecorator('Target Type', {
+            {getFieldDecorator('targetType', {
               rules: [
                 { required: true, message: 'What type of business is this?' }
-              ]
+              ],
+              initialValue: this.props.merchant
+                ? this.props.merchant.targetType
+                : []
             })(
               <Select
                 mode="multiple"
@@ -202,7 +148,9 @@ class AddMerchantForm extends Component {
               rules: [
                 { required: true, message: 'please enter you Personal Email' }
               ],
-              initialValue: this.props.merchant ? this.props.merchant.personalEmail : ''
+              initialValue: this.props.merchant
+                ? this.props.merchant.personalEmail
+                : ''
             })(
               <Input
                 autoComplete="Personal email"
@@ -218,7 +166,9 @@ class AddMerchantForm extends Component {
               rules: [
                 { required: true, message: 'please enter you Business Email' }
               ],
-              initialValue: this.props.merchant ? this.props.merchant.businessEmail : ''
+              initialValue: this.props.merchant
+                ? this.props.merchant.businessEmail
+                : ''
             })(
               <Input
                 autoComplete="business email"
@@ -238,7 +188,10 @@ class AddMerchantForm extends Component {
                   message: 'Please tell us a little bit about your business.'
                 }
               ],
-              initialValue: this.props.merchant && this.props.merchant.detail ? this.props.merchant.detail.bio : ''
+              initialValue:
+                this.props.merchant && this.props.merchant.detail
+                  ? this.props.merchant.detail.bio
+                  : ''
             })(
               <TextArea
                 placeholder="Autosize height with minimum and maximum number of lines"
@@ -255,7 +208,10 @@ class AddMerchantForm extends Component {
                     'add commercial you would like to show to your customers..'
                 }
               ],
-              initialValue: this.props.merchant && this.props.merchant.socialMedia[1] && this.props.merchant.socialMedia[1].link
+              initialValue:
+                this.props.merchant &&
+                this.props.merchant.socialMedia[1] &&
+                this.props.merchant.socialMedia[1].link
             })(
               <Input
                 autoComplete="youtube link"
@@ -275,7 +231,10 @@ class AddMerchantForm extends Component {
                     'add commercial you would like to show to your business..'
                 }
               ],
-              initialValue: this.props.merchant && this.props.merchant.socialMedia[0] && this.props.merchant.socialMedia[0].link
+              initialValue:
+                this.props.merchant &&
+                this.props.merchant.socialMedia[0] &&
+                this.props.merchant.socialMedia[0].link
             })(
               <Input
                 autoComplete="youtube link"
@@ -294,7 +253,9 @@ class AddMerchantForm extends Component {
                   message: 'Please add your terms and conditions here'
                 }
               ],
-              initialValue: this.props.merchant ? this.props.merchant.detail.terms : ''
+              initialValue: this.props.merchant
+                ? this.props.merchant.detail.terms
+                : ''
             })(
               <TextArea
                 placeholder="Let customers know your terms."
@@ -310,7 +271,9 @@ class AddMerchantForm extends Component {
                   message: 'Please add your Privacy Policy here'
                 }
               ],
-              initialValue: this.props.merchant ? this.props.merchant.detail.privacy : ''
+              initialValue: this.props.merchant
+                ? this.props.merchant.detail.privacy
+                : ''
             })(
               <TextArea
                 placeholder="Let customers know your Privacy Policy."
@@ -318,13 +281,22 @@ class AddMerchantForm extends Component {
               />
             )}
           </FormItem>
-
-          <Button htmlType="submit">Submit</Button>
+          {this.props.showErroMessage && (
+            <Alert
+              message="Require fields must be filled"
+              type="error"
+              closable
+            />
+          )}
         </Form>
       </div>
     );
   }
 }
 
-const WrappedSettingsUserForm = Form.create()(AddMerchantForm);
+const WrappedSettingsUserForm = Form.create({
+  onFieldsChange(props, changedFields) {
+    props.onChange(changedFields);
+  }
+})(AddMerchantForm);
 export default WrappedSettingsUserForm;
