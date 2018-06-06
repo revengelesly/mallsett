@@ -45,9 +45,32 @@ export default class  extends Component {
               
           ******************************8*/ }
        
-         
+         {/* start brand */}
+ <Col span={24}  style={{ width: '100%', marginBottom: 15, marginTop: 5 }} >
+        <Popover content={ 
+              <div>
+                {<IntlMessages id="form.part.product.brand.popover.content" />} 
+              </div>
+            } title={<IntlMessages id="form.part.product.brand.popover.title" />}  trigger="click">
+            <Icon type="question-circle-o" />  <IntlMessages id="form.part.product.brand" />  </Popover>
+          <Input style={{ width: '100%', marginTop: 5 }} />
+          
+          </Col>
+         {/* end brand */}
+         {/* start name */}
+         <Col span={24}  style={{ width: '100%', marginBottom: 15, marginTop: 5 }} >
+        <Popover content={ 
+              <div>
+                {<IntlMessages id="form.part.product.name.popover.content" />} 
+              </div>
+            } title={<IntlMessages id="form.part.product.name.popover.title" />}  trigger="click">
+            <Icon type="question-circle-o" />  <IntlMessages id="form.part.product.name" />  </Popover>
+          <Input style={{ width: '100%', marginTop: 5 }} />
+          
+          </Col>
+         {/* end name */}
 
-        { /* start   product */ }
+        { /* start   image */ }
         <Col span={24}  style={{ width: '100%', marginBottom: 15, marginTop: 5 }} >
          <Popover content={ 
               <div>
@@ -64,21 +87,7 @@ export default class  extends Component {
               <p className="ant-upload-hint">Support for a single or bulk upload. Strictly prohibit from uploading company data or other band files</p>
             </Dragger>
             </Col>
-         { /* end   upload */ }
-
-         {/* start name */}
-         <Col span={24}  style={{ width: '100%', marginBottom: 15, marginTop: 5 }} >
-        <Popover content={ 
-              <div>
-                {<IntlMessages id="form.part.product.name.popover.content" />} 
-              </div>
-            } title={<IntlMessages id="form.part.product.name.popover.title" />}  trigger="click">
-            <Icon type="question-circle-o" />  <IntlMessages id="form.part.product.name" />  </Popover>
-          <Input style={{ width: '100%', marginTop: 5 }} />
-          
-          </Col>
-         {/* end name */}
-         
+         { /* end   image */ }       
          {/* start description */}
          <Col span={24}  style={{ width: '100%', marginBottom: 15, marginTop: 5 }} >
         <Popover content={ 
