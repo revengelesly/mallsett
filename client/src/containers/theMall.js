@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import LayoutContentWrapper from '../../components/utility/layoutWrapper';
-import LayoutContent from '../../components/utility/layoutContent';
+import LayoutContentWrapper from '../components/utility/layoutWrapper';
+import LayoutContent from '../components/utility/layoutContent';
 import { Row, Col, Button, Input, Select} from 'antd';
-import ItemProduct from '../Products/items/ItemProducts';
-import ItemMerchant from '../Products/items/ItemMerchant';
-import SideCart from '../ShoppingCartPanel/SideCart';
-import SideCartSummary from '../ShoppingCartPanel/SideCartSummary';
+import ItemProduct from './Products/lists/ItemProducts';
+import ItemMerchant from './Products/lists/ItemMerchant';
+import SideCart from './ShoppingCartPanel/SideCart';
+import SideCartSummary from './ShoppingCartPanel/SideCartSummary';
 
 const Search = Input.Search;
 const Option = Select.Option;
@@ -27,12 +27,12 @@ export default class extends Component {
         <LayoutContent>
           <Row gutter={6} style={{ marginBottom: 15}}>
             <Col className="gutter-row" xs={0} sm={0} md={24} lg={24} xl={24}>
-            <p style={{ color: '#b2b2b2', marginRight: '15px'}} >
+            <div style={{ color: '#b2b2b2', marginRight: '15px'}} >
             a. build your mall <i className="far fa-building"></i>
             <Search addonBefore={selectBefore} placeholder="input search text"
             enterButton="Search" size="large"
             style={{ width: "100%", marginTop: "10px", marginBottom: "10px"}} />
-            </p>
+            </div>
             <Row gutter={6}>
             <Col className="gutter-row" span={24}>
               <Row gutter={6}>

@@ -115,7 +115,7 @@ class PlugBusiness extends React.Component {
           console.log(res.data);
           this.props.setMerchant(res.data);
           message.success('Processing complete!');
-          history.push('/dashboard');
+          history.push('/pages/dashboard');
         })
         .catch(err => console.log(err));
     }

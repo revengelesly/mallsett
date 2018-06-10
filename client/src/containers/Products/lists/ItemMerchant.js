@@ -1,5 +1,7 @@
-import React from 'react';
-import {  Icon, Card } from 'antd';
+import React, { Component } from 'react';
+import { Row, Col, Icon, Card, Avatar, Button } from 'antd';
+
+const { Meta } = Card;
 
 const Rating = () => {
     return (
@@ -9,6 +11,13 @@ const Rating = () => {
     )
 }
 
+// check-circle means the merchant app has at least 10 products for sale.
+//  check-circle-o means that is added on mallsett but does not have any items for sale.
+// warning means that the merchant is not on mallsett. The data is pulled from google.
+// close-circle-o means that the merchant have end relationship with you.
+// heart-o means that you can send the merchant a relationship request.
+// heart means that you and the merchant are in a relationship
+// question means that your relationship with the merchant is pending.
 
 const Action = () => {
     return(

@@ -38,7 +38,7 @@ class ProductCard extends Component {
 				</Row>
 				<Row className="row delivery-item" gutter={16}>
 				<Col className="gutter-row  merchant-group" xs={24} sm={24} md={24} lg={16} xl={16}>
-				<p className="item-group-header "><i class="far fa-trash-alt"></i> Cash</p>
+				<p className="item-group-header "><i className="far fa-trash-alt"></i> Cash</p>
 				</Col>
 				<Col className="gutter-row  merchant-group" xs={24} sm={24} md={24} lg={8} xl={8}>
 					<p className="item-group-header text-right green-text">$47.96</p>
@@ -46,7 +46,7 @@ class ProductCard extends Component {
 			</Row>
 				<Row className="row delivery-item" gutter={16}>
 				<Col className="gutter-row  merchant-group" xs={24} sm={24} md={24} lg={16} xl={16}>
-					<p className="item-group-header "><i class="far fa-trash-alt"></i> Community</p>
+					<p className="item-group-header "><i className="far fa-trash-alt"></i> Community</p>
 					</Col>
 					<Col className="gutter-row  merchant-group" xs={24} sm={24} md={24} lg={8} xl={8}>
 						<p className="item-group-header text-right green-text">$47.96</p>
@@ -54,7 +54,7 @@ class ProductCard extends Component {
 				</Row>
 				<Row className="row delivery-item" gutter={16}>
 					<Col className="gutter-row  merchant-group" xs={24} sm={24} md={24} lg={16} xl={16}>
-					<p className="item-group-header"><i class="far fa-trash-alt"></i> Vouchers </p>
+					<p className="item-group-header"><i className="far fa-trash-alt"></i> Vouchers </p>
 					</Col>
 					<Col className="gutter-row  merchant-group" xs={24} sm={24} md={24} lg={8} xl={8}>
 						<p className="item-group-header text-right green-text">$47.96</p>
