@@ -1,24 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import IntlMessages from '../../../components/utility/intlMessages';
-import { 
-  Alert, 
-  Form, 
-  Icon, 
-  Input, 
-  Button, 
-  Select,
-  Row,
-  Col,
-  Popover 
-} from 'antd';
-import { addProductFile } from '../../../redux/documents/middlewares';
+import { Alert, Form, Icon, Input, Button, Select } from 'antd';
+import { addFile } from '../../../redux/documents/middlewares';
 import { getView } from '../../../helpers/utility';
 import { ViewPort } from '../../../helpers/constants';
 import UploadComponent from './uppy/UploadComponent';
 import createHistory from 'history/createBrowserHistory';
-
-const addFile = addProductFile;
 
 const { Option, OptGroup } = Select;
 
@@ -35,7 +22,19 @@ class FileManagementForm extends Component {
     uploadURL: '',
     editingFile: null,
     showErrorMessage: false,
+    owner: null,
     isUploadComponentReset: false
+  };
+
+  handleAgeChange = e => {
+    this.setState(
+      {
+        checkDob: e.target.checked
+      },
+      () => {
+        this.props.form.validateFields(['nickname'], { force: true });
+      }
+    );
   };
 
   handleUploadFileSuccess = url => {
@@ -80,7 +79,8 @@ class FileManagementForm extends Component {
             isUploadComponentReset: !this.state.isUploadComponentReset,
             showErrorMessage: false
           });
-  
+          this.props.handleItemActiveTab('1');
+
           this.props.handleAddFile(file);
         } else {
           this.setState({
@@ -134,42 +134,16 @@ class FileManagementForm extends Component {
     const formItemLayout = this.state.formItemLayout;
 
     return (
-        <Row gutter={24}>
-        <Form onSubmit={this.handleSubmit}>
-        
-        <FormItem label={
-            <Popover content={ 
-              <div>
-                {<IntlMessages id="form.part.upload.dagger.popover.content" />} 
-              </div>
-            } title={<IntlMessages id="form.part.upload.dagger.popover.title" />}  
-            trigger="click">
-            <Icon type="question-circle-o" 
-            /> <IntlMessages id="form.part.upload.dagger" />  
-          </Popover>
-          }>
-          <Col span={24}  >
-          
+      <div>
+        <Form onSubmit={this.handleSubmit} className="login-form">
+          <FormItem label="." {...formItemLayout}>
             <UploadComponent
               id={this.props.uploadId || 'uploadFile'}
               handleUploadFileSuccess={this.handleUploadFileSuccess}
               isReset={this.state.isUploadComponentReset}
             />
-            </Col>
           </FormItem>
-          <FormItem label={
-    
-            <Popover content={ 
-              <div>
-                {<IntlMessages id="form.part.upload.name.popover.content" />} 
-              </div>
-            } title={<IntlMessages id="form.part.upload.name.popover.title" />}  
-            trigger="click">
-            <Icon type="question-circle-o" 
-            /> <IntlMessages id="form.part.upload.name" />  
-          </Popover>
-          }>
-          <Col span={24}  >
+          <FormItem label="File Name" {...formItemLayout}>
             {getFieldDecorator('name', {
               rules: [{ required: true, message: 'Add the file name' }],
               initialValue: (this.state.editingFile ? this.state.editingFile.displayName : '')
@@ -182,22 +156,9 @@ class FileManagementForm extends Component {
                 placeholder="File name"
               />
             )}
-            </Col>
           </FormItem>
-          
 
-          <FormItem label={
-            <Popover content={ 
-              <div>
-                {<IntlMessages id="form.part.upload.description.popover.content" />} 
-              </div>
-            } title={<IntlMessages id="form.part.upload.description.popover.title" />}  
-            trigger="click">
-            <Icon type="question-circle-o" 
-            /> <IntlMessages id="form.part.upload.description" />  
-          </Popover>
-          }>
-          <Col span={24}  >
+          <FormItem label="Description" {...formItemLayout}>
             {getFieldDecorator('Notes', {
               rules: [
                 {
@@ -216,20 +177,8 @@ class FileManagementForm extends Component {
                 placeholder="Leave a note for delivery services"
               />
             )}
-            </Col>
           </FormItem>
-          <FormItem label={
-            <Popover content={ 
-              <div>
-                {<IntlMessages id="form.part.upload.category.popover.content" />} 
-              </div>
-            } title={<IntlMessages id="form.part.upload.category.popover.title" />}  
-            trigger="click">
-            <Icon type="question-circle-o" 
-            /> <IntlMessages id="form.part.upload.category" />  
-          </Popover>
-          }>
-          <Col span={24}  >
+          <FormItem label="Category" {...formItemLayout}>
             {getFieldDecorator('category', {
               rules: [{ required: true, message: 'File Category' }],
               initialValue: this.state.editingFile ? this.state.editingFile.categories : []
@@ -249,11 +198,30 @@ class FileManagementForm extends Component {
                 </OptGroup>
               </Select>
             )}
-            </Col>
           </FormItem>
-          
-          <FormItem >
-          <Col span={24}  >
+          <FormItem label="Owner" {...formItemLayout}>
+            {getFieldDecorator('profile', {
+              rules: [
+                { required: true, message: 'Who does this address belongs to?' }
+              ],
+              initialValue: this.state.editingFile ? this.props.editingFile.owner : []
+            })(
+              <Select
+                mode="multiple"
+                style={{ width: '100%' }}
+                onChange={this.handleProfileChange}
+              >
+                {this.props.dependents && this.props.dependents.map(x =>
+                    <Option key={x._id} value={x._id}>{x.displayName}</Option>
+                )}
+              </Select>
+            )}
+            Click here to add new dependent or spouse{' '}
+            <a onClick={this.handleItemTabChange}>
+              Add New{' '}
+            </a>
+          </FormItem>
+          <FormItem label="." {...formItemLayout}>
               {this.state.showErrorMessage &&
                 <Alert
                   message="You must upload file"
@@ -270,13 +238,12 @@ class FileManagementForm extends Component {
               htmlType="submit"
               className="login-form-button"
             >
-              {!this.state.editingFile && <span><IntlMessages id="form.part.upload.submit" /></span>}
-              {this.state.editingFile && <span><IntlMessages id="form.part.upload.edit" /></span>}
+              {!this.state.editingFile && <span>Add File</span>}
+              {this.state.editingFile && <span>Update File</span>}
             </Button>
-            </Col>
           </FormItem>
         </Form>
-      </Row>
+      </div>
     );
   }
 }
