@@ -4,16 +4,16 @@ import { Card, Icon, Button } from 'antd';
 
 class MerchantTitle extends Component {
   handleRemove = () => {
-    this.props.handleRemove(this.props.googlePlaceId);
+    this.props.handleRemove(this.props.id, this.props.googlePlaceId);
   }
 
   render() {
     return (
       <span onClick={this.handleRemove} style={{color: "red", cursor: "pointer"}}>
-       
+
        {' '} <Button style={{color: "red", cursor: "pointer"}}  shape="circle" icon="delete"></Button>
-         
-        
+
+
       </span>
     );
   }
@@ -76,6 +76,7 @@ class ServiceCard extends Component {
               handleRemove={this.props.handleRemove}
               googlePlaceId={this.props.googlePlaceId}
               isAdded={this.props.isAdded}
+              id={this.props.id}
             /> <Button icon="check-circle-o"   shape="circle"
             style={{color: "green", cursor: "pointer"}}>
             </Button> <Button icon="check-circle"  shape="circle"

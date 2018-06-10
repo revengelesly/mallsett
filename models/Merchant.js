@@ -9,8 +9,9 @@ const MerchantSchema = new Schema({
             type: Schema.Types.ObjectId,
             ref: 'profiles'
         },
-        createdBy: {
-            type: String,
+        owner: {
+            type: Schema.Types.ObjectId,
+            ref: 'profiles'
         },
         category: {
             type: String
@@ -222,61 +223,15 @@ const MerchantSchema = new Schema({
         ],
         associates: [
             {
-                googlePlaceId: {
+                connectedStatus: {
                     type: String
                 },
                 category: {
                     type: String,
                 },
-                businessName: {
+                merchantId: {
                     type: String
-                },
-                address: {
-                    type: String
-                },
-                suite: {
-                    type: String
-                },
-                longitude: {
-                    type: String
-                },
-                lattitude: {
-                    type: String
-                },
-                phone: {
-                    type: String
-                },
-                photo: {
-                    type: String
-                },
-                googlePlaceCategories: {
-                    type: [String]
-                },
-                notes: {
-                    type: String
-                },
-                comments: [
-                    {
-                        profile: {
-                            type: Schema.Types.ObjectId,
-                            ref: 'profile'
-                        },
-                        text: {
-                            type: String,
-                            required: true
-                        },
-                        name: {
-                            type: String
-                        },
-                        created_at: {
-                            type: Date,
-                            default: Date.now
-                        },
-                        updated_at: {
-                            type: Date
-                        },
-                    }
-                ]
+                }
             }
         ],
         created_at: {

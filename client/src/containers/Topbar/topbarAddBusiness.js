@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Icon, Modal } from 'antd';
+import { Icon, Modal, message } from 'antd';
 import AddBusiness from '../MerchantPanel/AddBusiness';
 import authAction from '../../redux/auth/actions';
 import merchantAction from '../../redux/merchant/actions';
@@ -11,7 +11,7 @@ import createHistory from 'history/createBrowserHistory';
 const history = createHistory({forceRefresh: true});
 
 const { login } = authAction;
-const { setMerchant } = merchantAction;
+const { setMerchant, updateAssociate } = merchantAction;
 
 class TopBarAddMerchants extends React.Component {
   state = {
@@ -23,7 +23,7 @@ class TopBarAddMerchants extends React.Component {
 
   showModal = () => {
     if (this.state.isBusiness) {
-      history.push('/dashboard');
+      history.push('/pages/dashboard');
     } else {
       this.setState({
         visible: true
@@ -61,7 +61,8 @@ class TopBarAddMerchants extends React.Component {
       merchant = {
         category: 'merchant',
         handle: Date.now().toString(),
-        createdBy: this.props.profile._id,
+        owner: this.props.profile._id,
+        creator: this.props.profile._id,
         place: {
           ...business
         }
@@ -92,7 +93,55 @@ class TopBarAddMerchants extends React.Component {
         // dispacht merchants
         this.props.setMerchant(res.data);
       }
-    );
+    ).catch(error => message.error(error.data.message));
+  }
+
+  handleRemoveAssociate = (merchant, business) => {
+    console.log(business);
+    axios({
+      method: 'POST',
+      url: `${BaseURL}/api/merchant/removeassociate`,
+      headers: {
+        Authorization: this.props.idToken,
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
+      },
+      data: {
+        id: business.id,
+        merchant_id: merchant._id
+      }
+    })
+      .then(res => {
+        console.log('associate', res.data);
+
+        // dispacht merchants
+        this.props.setMerchant(res.data);
+      })
+      .catch(err => console.log(err));
+  }
+
+  handleAddAssociate = (merchant, business) => {
+    axios({
+      method: 'POST',
+      url: `${BaseURL}/api/merchant/addassociate`,
+      headers: {
+        Authorization: this.props.idToken,
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
+      },
+      data: {
+        ...business,
+        merchant_id: merchant._id
+      }
+    })
+      .then(res => {
+        console.log('associate', res.data);
+
+
+        // dispacht merchants
+        this.props.setMerchant(res.data);
+      })
+      .catch(err => console.log(err));
   }
 
   handleUpdateAssociate = (business) => {
@@ -102,41 +151,14 @@ class TopBarAddMerchants extends React.Component {
     }
 
     let associate = merchant.associates.find(
-      x => x && x.googlePlaceId === business.googlePlaceId
+      x => x && x.id === business.id
     );
 
     if (!associate) {
-      merchant.associates.push(business);
+      this.handleAddAssociate(merchant, business);
     } else {
-      merchant.associates = merchant.associates.filter(
-        x => x && x.googlePlaceId !== business.googlePlaceId
-      );
+      this.handleRemoveAssociate(merchant, business);
     }
-
-    axios({
-      method: 'POST',
-      url: `${BaseURL}/api/merchant`,
-      headers: {
-        Authorization: this.props.idToken,
-        Accept: 'application/json',
-        'Content-Type': 'application/json'
-      },
-      data: {
-        ...merchant,
-        merchant_id: merchant._id
-      }
-    })
-      .then(res => {
-        console.log('associate', res.data);
-        this.setState({
-          merchant: res.data
-        })
-
-        // dispacht merchants
-        this.props.setMerchant(res.data);
-      }
-      )
-      .catch(err => console.log(err));
   };
 
   componentWillReceiveProps = nextProps => {
@@ -198,7 +220,8 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return {
     login: (email, password) => dispatch(login(email, password)),
-    setMerchant: merchant => dispatch(setMerchant(merchant))
+    setMerchant: merchant => dispatch(setMerchant(merchant)),
+    updateAssociate: merchant => dispatch(updateAssociate(merchant))
   };
 }
 

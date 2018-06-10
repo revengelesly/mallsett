@@ -481,7 +481,7 @@ const Distance = () => {
 const Rating = () => {
     return (
         <span>
-           <i class="fas fa-star"></i>4.3<sup>100%</sup>
+           <i className="fas fa-star"></i>4.3<sup>100%</sup>
         </span>
     )
 }

@@ -9,7 +9,7 @@ import LocationSearchInput from '../../../components/map/locationSearchInput';
 class CreateAddress extends Component {
   constructor(props) {
     super(props);
-
+    console.log(this.props);
     this.state = {
       businesses: this.props.places || []
     };
@@ -77,7 +77,7 @@ class CreateAddress extends Component {
     }
   };
 
-  handleRemove = googlePlaceId => {
+  handleRemove = (id, googlePlaceId) => {
     let businesses = this.state.businesses.filter(
       x => x.googlePlaceId !== googlePlaceId
     );
@@ -86,9 +86,9 @@ class CreateAddress extends Component {
     });
 
     if (this.props.category === 'merchant') {
-      this.props.handleUpdateMerchant({ googlePlaceId });
+      this.props.handleUpdateMerchant({ id, googlePlaceId });
     } else {
-      this.props.handleUpdateAssociate({ googlePlaceId });
+      this.props.handleUpdateAssociate({ id, googlePlaceId });
     }
   };
 
@@ -130,16 +130,17 @@ class CreateAddress extends Component {
                       dataSource={this.state.businesses}
                       renderItem={business => (
                         <List.Item>
- 
+
                           <ServiceCard
                             name={business.businessName}
                             address={business.address}
                             phone={business.phone}
                             types={business.googlePlaceCategories}
-                            handleRemove={this.handleRemove}
                             key={business.googlePlaceId}
                             googlePlaceId={business.googlePlaceId}
                             photo={business.photo}
+                            handleRemove={this.handleRemove}
+                            id={business.id}
                           />
 
                         </List.Item>

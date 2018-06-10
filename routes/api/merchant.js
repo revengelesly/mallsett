@@ -6,8 +6,8 @@ const moment = require('moment');
 
 // add regex
 // remove special characters except for commas
-function cleanString(string){
-  return string.replace(/[^A-Za-z,0-9]/g, "");
+function cleanString(string) {
+  return string.replace(/[^A-Za-z,0-9]/g, '');
 }
 // Load Validation
 // Load Merchant Model
@@ -20,9 +20,6 @@ const MomentNow = moment();
 // @desc    Tests merchant route
 // @access  Public
 router.get('/test', (req, res) => res.json({ msg: 'Merchant Works' }));
-
-
-
 
 /*********************************************************
  *
@@ -42,10 +39,10 @@ router.post(
     // Get fields
     const merchantField = {
       place: {},
-      detail: {},
+      detail: {}
     };
-    merchantField.creator = req.body.profile;
-    merchantField.owner = req.body.profile;
+    merchantField.creator = req.body.creator;
+    merchantField.owner = req.body.owner;
     merchantField.updated_at = MomentNow;
     merchantField.place = req.body.place;
 
@@ -67,7 +64,7 @@ router.post(
     if (req.body.terms) merchantField.detail.terms = req.body.terms;
     if (req.body.privacy) merchantField.detail.privacy = req.body.privacy;
     if (req.body.category) merchantField.category = req.body.category;
-    if (req.body.createdBy) merchantField.createdBy = req.body.createdBy;
+    if (req.body.creator) merchantField.creator = req.body.creator;
 
     if (req.body.logo) merchantField.logo = req.body.logo;
 
@@ -75,20 +72,21 @@ router.post(
 
     if (req.body.socialMedia) merchantField.socialMedia = req.body.socialMedia;
 
-    if (req.body.personalEmail) merchantField.personalEmail = req.body.personalEmail;
+    if (req.body.personalEmail)
+      merchantField.personalEmail = req.body.personalEmail;
 
-    if (req.body.businessEmail) merchantField.businessEmail = req.body.businessEmail;
+    if (req.body.businessEmail)
+      merchantField.businessEmail = req.body.businessEmail;
 
     // check to see if handle exists after merchant update the handle
-
 
     Merchant.findOne({ _id: req.body.merchant_id }).then(merchant => {
       if (merchant) {
         // Update
         Merchant.findOneAndUpdate(
-          { _id: req.body.merchant_id},
+          { _id: req.body.merchant_id },
           { $set: merchantField },
-          { upsert: true, 'new': true }
+          { upsert: true, new: true }
         ).then(merchant => res.json(merchant));
       } else {
         // Create
@@ -101,7 +99,9 @@ router.post(
           }
 
           // Save Profile
-          new Merchant(merchantField).save().then(merchant => res.json(merchant));
+          new Merchant(merchantField)
+            .save()
+            .then(merchant => res.json(merchant));
         });
       }
     });
@@ -109,20 +109,73 @@ router.post(
 );
 
 router.post(
+  '/addassociate/',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    Merchant.findOne({ "place.googlePlaceId": req.body.googlePlaceId }).then(
+      merchant => {
+        if (!merchant) {
+          let merchantField = {
+            place: req.body,
+            handle: Date.now().toString(),
+            creator: req.body.merchant_id
+          };
+          new Merchant(merchantField).save().then(associate => {
+            updateAssociate(associate, req, res);
+          });
+        } else {
+          console.log('existed');
+          updateAssociate(merchant, req, res);
+        }
+      }
+    );
+  }
+);
+
+router.post(
+  '/removeassociate/',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    Merchant.findOne({ _id: req.body.merchant_id }).then(merchant => {
+      if (merchant) {
+        console.log(req.body.id);
+        merchant.associates = merchant.associates.filter(
+          x => x.merchantId != req.body.id
+        );
+        merchant.save().then(merchant => {
+          bindAssociteInfomation(merchant, res);
+        });
+      }
+    });
+  }
+);
+
+
+router.post(
   '/delete/',
   passport.authenticate('jwt', { session: false }),
   (req, res) => {
     Merchant.findOne({ _id: req.body.merchant_id }).then(merchant => {
       if (merchant) {
-        Merchant.deleteOne({_id: req.body.merchant_id})
-        .then(merchant => res.json(merchant))
-        .catch(err => console.log(err));
+        Merchant.deleteOne({ _id: req.body.merchant_id })
+          .then(merchant => res.json(merchant))
+          .catch(err => console.log(err));
       } else {
-        return res.status(404).json({message: 'Merchant not found'});
+        return res.status(404).json({ message: 'Merchant not found' });
       }
     });
   }
-)
+);
+
+router.get('/:profileid', (req, res) => {
+  Merchant.findOne({ owner: req.params.profileid }).then(merchant => {
+    if (merchant) {
+      bindAssociteInfomation(merchant, res);
+    } else {
+      return res.status(404).json({ message: 'Merchant not found' });
+    }
+  });
+});
 
 router.get(
   '/',
@@ -136,5 +189,124 @@ router.get(
     });
   }
 )
+
+router.post(
+  '/updateStatus',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    console.log(req.body);
+    Merchant.findOne({ _id: req.body.merchantId }).then(merchantA => {
+      if (merchantA) {
+        Merchant.findOne({ _id: req.body.associateId }).then(merchantB => {
+          if (merchantB) {
+            let transactionA = {};
+            let transactionB = {};
+            let associateA = merchantA.associates.find(x => x.merchantId === merchantB.id);
+            let associateB = merchantB.associates.find(x => x.merchantId === merchantA.id);
+            console.log('associateA', associateA);
+            console.log('associateB', associateB);
+
+            if (associateA && associateB) {
+              associateA.connectedStatus = req.body.connectedStatus;
+              merchantA.save().then(x => bindAssociteInfomation(x, res));
+
+              associateB.connectedStatus = getSuitableStatus(req.body.connectedStatus);
+              merchantB.save().then(x => x);
+            }
+          }
+        })
+      }
+    })
+  }
+)
+
+function getSuitableStatus (status) {
+  switch (status) {
+    case 'received':
+      return 'requested';
+    case 'accepted':
+      return 'accepted';
+    case 'rejected':
+      return 'denied';
+    default :
+      return 'received';
+  }
+}
+
+function bindAssociteInfomation(merchant, res) {
+  if (merchant) {
+    Merchant.find().then(associates => {
+      if (associates && associates.length > 0) {
+        for (let i = 0; i < merchant.associates.length; i++) {
+          let associate = associates.find(
+            x => x.id === merchant.associates[i].merchantId
+          );
+          if (associate && associate.place) {
+            merchant.associates[i] = Object.assign({}, associate.place, {
+              category: merchant.associates[i].category,
+              id: merchant.associates[i].merchantId,
+              connectedStatus: merchant.associates[i].connectedStatus
+            });
+          }
+        }
+      }
+
+      return res.json(merchant);
+    });
+  }
+}
+
+
+const addAssociate = (merchantA, merchantB, req, res) => {
+  if (merchantA && merchantB) {
+    let backupMerchantA = Object.assign({}, merchantA);
+    let backupMerchantB = Object.assign({}, merchantB);
+
+    merchantA.associates.push({
+      category: req.body.category,
+      merchantId: merchantB.id,
+      connectedStatus: req.body.connectedStatusA || 'requested'
+    });
+
+    let transtionA = merchantA
+      .save()
+      .then(merchantA => merchantA)
+      .catch(error => error);
+
+    merchantB.associates.push({
+      category: 'request',
+      merchantId: merchantA.id,
+      connectedStatus: req.body.connectedStatusB || 'received'
+    });
+
+    let transtionB = merchantB
+      .save()
+      .then(merchantB => merchantB)
+      .catch(error => error);
+
+    Promise.all([transtionA, transtionB]).then(
+      values => {
+        let [merchantA, merchantB] = values
+        console.log('merchantB', merchantB);
+        bindAssociteInfomation(merchantA, res);
+      },
+      error => {
+        backupMerchantA.save();
+        backupMerchantB.save();
+      }
+    );
+  }
+};
+
+const updateAssociate = (associate, req, res) => {
+  Merchant.findOne({ _id: req.body.merchant_id }).then(mainMerchant => {
+    if (mainMerchant) {
+      console.log('mainMerchant', mainMerchant);
+      addAssociate(mainMerchant, associate, req, res);
+    } else {
+      console.log(req.body.merchant_id);
+    }
+  });
+};
 
 module.exports = router;
