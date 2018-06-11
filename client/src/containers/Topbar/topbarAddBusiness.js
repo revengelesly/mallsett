@@ -18,7 +18,8 @@ class TopBarAddMerchants extends React.Component {
     visible: false,
     merchants: [],
     isBusiness: this.props.merchant && this.props.merchant.businessType && this.props.merchant.businessType.length > 0,
-    merchant: this.props.merchant
+    merchant: this.props.merchant,
+    suggestions: []
   };
 
   showModal = () => {
@@ -135,9 +136,6 @@ class TopBarAddMerchants extends React.Component {
       }
     })
       .then(res => {
-        console.log('associate', res.data);
-
-
         // dispacht merchants
         this.props.setMerchant(res.data);
       })
@@ -198,6 +196,7 @@ class TopBarAddMerchants extends React.Component {
             handleUpdateAssociate={this.handleUpdateAssociate}
             handleUpdateMerchant={this.handleUpdateMerchant}
             setMerchant={this.setMerchantToState}
+            suggestions={this.props.suggestions || []}
           />
         </Modal>
       </div>
@@ -213,6 +212,7 @@ function mapStateToProps(state) {
     profile: state.Auth.get('profile'),
     idToken: state.Auth.get('idToken'),
     merchant: state.Merchant.get('merchant'),
+    suggestions: state.Merchant.get('suggestions'),
     ...state.App.toJS()
   };
 }

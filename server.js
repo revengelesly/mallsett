@@ -10,6 +10,7 @@ const location = require('./routes/api/profile');
 const posts = require('./routes/api/posts');
 const merchant = require('./routes/api/merchant');
 const products = require('./routes/api/merchants/products');
+const suggestions = require('./routes/api/merchants/suggestions');
 
 const app = express();
 
@@ -40,6 +41,7 @@ app.use('/api/profile/location', location);
 app.use('/api/posts', posts);
 app.use('/api/merchant', merchant);
 app.use('/api/merchants/products', products);
+app.use('/api/merchants/suggestions', suggestions);
 
 const port = process.env.PORT || 5000;
 

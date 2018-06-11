@@ -124,7 +124,6 @@ router.post(
             updateAssociate(associate, req, res);
           });
         } else {
-          console.log('existed');
           updateAssociate(merchant, req, res);
         }
       }
@@ -138,7 +137,6 @@ router.post(
   (req, res) => {
     Merchant.findOne({ _id: req.body.merchant_id }).then(merchant => {
       if (merchant) {
-        console.log(req.body.id);
         merchant.associates = merchant.associates.filter(
           x => x.merchantId != req.body.id
         );
@@ -194,7 +192,6 @@ router.post(
   '/updateStatus',
   passport.authenticate('jwt', { session: false }),
   (req, res) => {
-    console.log(req.body);
     Merchant.findOne({ _id: req.body.merchantId }).then(merchantA => {
       if (merchantA) {
         Merchant.findOne({ _id: req.body.associateId }).then(merchantB => {
@@ -203,8 +200,6 @@ router.post(
             let transactionB = {};
             let associateA = merchantA.associates.find(x => x.merchantId === merchantB.id);
             let associateB = merchantB.associates.find(x => x.merchantId === merchantA.id);
-            console.log('associateA', associateA);
-            console.log('associateB', associateB);
 
             if (associateA && associateB) {
               associateA.connectedStatus = req.body.connectedStatus;
@@ -244,8 +239,9 @@ function bindAssociteInfomation(merchant, res) {
           if (associate && associate.place) {
             merchant.associates[i] = Object.assign({}, associate.place, {
               category: merchant.associates[i].category,
-              id: merchant.associates[i].merchantId,
-              connectedStatus: merchant.associates[i].connectedStatus
+              id: associate.id,
+              connectedStatus: merchant.associates[i].connectedStatus,
+              merchantId: merchant.associates[i].merchantId
             });
           }
         }
@@ -287,7 +283,6 @@ const addAssociate = (merchantA, merchantB, req, res) => {
     Promise.all([transtionA, transtionB]).then(
       values => {
         let [merchantA, merchantB] = values
-        console.log('merchantB', merchantB);
         bindAssociteInfomation(merchantA, res);
       },
       error => {
@@ -301,7 +296,6 @@ const addAssociate = (merchantA, merchantB, req, res) => {
 const updateAssociate = (associate, req, res) => {
   Merchant.findOne({ _id: req.body.merchant_id }).then(mainMerchant => {
     if (mainMerchant) {
-      console.log('mainMerchant', mainMerchant);
       addAssociate(mainMerchant, associate, req, res);
     } else {
       console.log(req.body.merchant_id);

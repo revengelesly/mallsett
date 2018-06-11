@@ -331,6 +331,7 @@ class PlugBusiness extends React.Component {
             }
             handleUpdateMerchant={this.props.handleUpdateMerchant}
             {...this.props}
+            suggestions={this.props.suggestions.filter(x => x.targeted === "merchant")}
           />
         ),
         disabledNext:
@@ -348,6 +349,8 @@ class PlugBusiness extends React.Component {
             places={this.state.associates[2]}
             handleUpdateAssociate={this.props.handleUpdateAssociate}
             {...this.props}
+            suggestions={this.props.suggestions.filter(x => x.targeted === "parent")}
+
           />
         ),
         description: '',
@@ -363,6 +366,8 @@ class PlugBusiness extends React.Component {
             places={this.state.associates[3]}
             handleUpdateAssociate={this.props.handleUpdateAssociate}
             {...this.props}
+            suggestions={this.props.suggestions.filter(x => x.targeted === "child")}
+
           />
         ),
         description: '',
@@ -378,6 +383,8 @@ class PlugBusiness extends React.Component {
             places={this.state.associates[4]}
             handleUpdateAssociate={this.props.handleUpdateAssociate}
             {...this.props}
+            suggestions={this.props.suggestions.filter(x => x.targeted === "supplier")}
+
           />
         ),
         disabledNext:
@@ -395,6 +402,8 @@ class PlugBusiness extends React.Component {
             places={this.state.associates[5]}
             handleUpdateAssociate={this.props.handleUpdateAssociate}
             {...this.props}
+            suggestions={this.props.suggestions.filter(x => x.targeted === "b2b_customers")}
+
           />
         ),
         description: '',
@@ -410,6 +419,8 @@ class PlugBusiness extends React.Component {
             places={this.state.associates[6]}
             handleUpdateAssociate={this.props.handleUpdateAssociate}
             {...this.props}
+            suggestions={this.props.suggestions.filter(x => x.targeted === "services")}
+
           />
         ),
         disabledNext:
@@ -427,6 +438,8 @@ class PlugBusiness extends React.Component {
             places={this.state.associates[7]}
             handleUpdateMerchant={this.props.handleUpdateAssociate}
             {...this.props}
+            suggestions={this.props.suggestions.filter(x => x.targeted === "competitors")}
+
           />
         ),
         description: '',
@@ -442,6 +455,8 @@ class PlugBusiness extends React.Component {
             places={this.state.associates[8]}
             handleUpdateMerchant={this.props.handleUpdateAssociate}
             {...this.props}
+            suggestions={this.props.suggestions.filter(x => x.targeted === "associations")}
+
           />
         ),
         disabledNext:
@@ -458,6 +473,8 @@ class PlugBusiness extends React.Component {
                   places={this.state.associates[9]}
                   handleUpdateAssociate={this.props.handleUpdateAssociate}
                   {...this.props}
+                  suggestions={this.props.suggestions.filter(x => x.targeted === "marketing")}
+
                 />,
         disabledNext: !this.state.associates[9] || this.state.associates[9].length < 1,
         description: '',
@@ -472,6 +489,8 @@ class PlugBusiness extends React.Component {
                   places={this.state.associates[10]}
                   handleUpdateAssociate={this.props.handleUpdateAssociate}
                   {...this.props}
+                  suggestions={this.props.suggestions.filter(x => x.targeted === "government")}
+
                 />,
         disabledNext: !this.state.associates[10] || this.state.associates[10].length < 3,
         description: '',
@@ -487,6 +506,8 @@ class PlugBusiness extends React.Component {
             places={this.state.associates[11]}
             handleUpdateAssociate={this.props.handleUpdateAssociate}
             {...this.props}
+            suggestions={this.props.suggestions.filter(x => x.targeted === "pos")}
+
           />
         ),
         description: '',
@@ -502,6 +523,8 @@ class PlugBusiness extends React.Component {
             places={this.state.associates[12]}
             handleUpdateAssociate={this.props.handleUpdateAssociate}
             {...this.props}
+            suggestions={this.props.suggestions.filter(x => x.targeted === "credit")}
+
           />
         ),
         description: '',
@@ -516,6 +539,7 @@ class PlugBusiness extends React.Component {
                     places={this.state.associates[13]}
                     handleUpdateAssociate={this.props.handleUpdateAssociate}
                     {...this.props}
+                    suggestions={this.props.suggestions.filter(x => x.targeted === "mall")}
                   />,
         description: '',
         help: 'soemthing here to help'
@@ -529,6 +553,7 @@ class PlugBusiness extends React.Component {
                     places={this.state.associates[14]}
                     handleUpdateAssociate={this.props.handleUpdateAssociate}
                     {...this.props}
+                    suggestions={this.props.suggestions.filter(x => x.targeted === "delivery")}
                   />,
         description: '',
         help: 'soemthing here to help'
@@ -542,6 +567,8 @@ class PlugBusiness extends React.Component {
                     places={this.state.associates[15]}
                     handleUpdateAssociate={this.props.handleUpdateAssociate}
                     {...this.props}
+                    suggestions={this.props.suggestions.filter(x => x.targeted === "customerService")}
+
                   />,
         description: '',
         help: 'soemthing here to help'
