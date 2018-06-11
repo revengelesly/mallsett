@@ -20,6 +20,16 @@ class MerchantTitle extends Component {
 }
 
 class ServiceCard extends Component {
+  handlePlus = () => {
+    if (this.props.isSuggestion) {
+      this.props.handlePlus(this.props.googlePlaceId);
+    }
+  }
+
+  handleMinus = () => {
+    this.props.handleMinus(this.props.id, this.props.googlePlaceId);
+  }
+
   render() {
     let cardContent = this.props.name ? (
       <div>
@@ -71,6 +81,7 @@ class ServiceCard extends Component {
           </Col>
           <Col span="18">
             <h4>{this.props.name || 'Company name'}
+            {this.props.isSuggestion}
             <MerchantTitle
               isDisplayButton={this.props.name ? true : false}
               handleRemove={this.props.handleRemove}
@@ -82,9 +93,9 @@ class ServiceCard extends Component {
             </Button> <Button icon="check-circle"  shape="circle"
             style={{color: "green", cursor: "pointer"}}>
             </Button> <Button icon="plus-circle"  shape="circle"
-            style={{color: "blue", cursor: "pointer"}}>
+            style={{color: "blue", cursor: "pointer"}} onClick={this.handlePlus}>
             </Button> <Button icon="minus-circle-o"  shape="circle"
-            style={{color: "blue", cursor: "pointer"}}>
+            style={{color: "blue", cursor: "pointer"}} onClick={this.handleMinus}>
             </Button>
             </h4>
             {cardContent}

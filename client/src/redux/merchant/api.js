@@ -1,33 +1,34 @@
 import axios from 'axios';
 import { BaseURL } from '../../helpers/constants';
 
-export function getAssociatesInfo(merchant) {
+export function getSuggestionsAPI (idToken) {
   return axios({
     method: 'GET',
-    url: `${BaseURL}/api/merchant/`,
+    url: `${BaseURL}/api/merchants/suggestions`,
     headers: {
+      Authorization: idToken,
+      Accept: 'application/json',
+      'Content-Type': 'application/json'
+    },
+  })
+  .then(res => res.data)
+  .catch(err => console.log(err));
+}
+
+export function getRemoteMerchant(payload) {
+  return axios({
+    method: 'GET',
+    url: `${BaseURL}/api/merchant/${payload.profile._id}`,
+    headers: {
+      Authorization: payload.token,
       Accept: 'application/json',
       'Content-Type': 'application/json'
     }
-  }).then(res => {
-    if (res.data){
-      let associates = merchant.associates;
-      let result = [];
-
-      for (let associate in associates) {
-        if (associate) {
-          let data = res.data.find(x => x.id === associate.merchantId);
-
-          if (data) {
-            result.push({ ...data.place, category: associate.category });
-          }
-        }
-      }
-
-      merchant.associates = result;
-
-      return merchant;
-    }
   })
-  .catch(err => console.log(err));
+    .then(res => {
+      console.log(res.data);
+      return res.data;
+    })
+    .catch(err => console.log(err));
 }
+

@@ -15,30 +15,37 @@ class BusinessRequestComponent extends Component {
 
   render() {
     let { title, type, total, businesses } = this.props;
-    total = total || 50;
+    total = businesses.length;
 
     return (
       <div>
         <h4>{title}</h4>
-        <BusinessRequestCard
-          business={
-            this.props.businesses &&
-            this.props.businesses[this.state.pageNumber - 1]
-          }
-          type={type}
-          handleAccept={this.props.handleAccept}
-          handleReject={this.props.handleReject}
-          handleRequest={this.props.handleRequest}
-        />
-        <Pagination
-          showQuickJumper
-          pageSize={1}
-          size="small"
-          total={total}
-          showTotal={() => `Total ${total} items`}
-          current={this.state.pageNumber}
-          onChange={this.onChange}
-        />
+        {this.props.businesses &&
+          this.props.businesses.length > 0 && (
+            <div>
+              {this.props.businesses[this.state.pageNumber - 1] && (
+                <BusinessRequestCard
+                  business={
+                    this.props.businesses &&
+                    this.props.businesses[this.state.pageNumber - 1]
+                  }
+                  type={type}
+                  handleAccept={this.props.handleAccept}
+                  handleReject={this.props.handleReject}
+                  handleRequest={this.props.handleRequest}
+                />
+              )}
+              <Pagination
+                showQuickJumper
+                pageSize={1}
+                size="small"
+                total={total}
+                showTotal={() => `Total ${total} items`}
+                current={this.state.pageNumber}
+                onChange={this.onChange}
+              />
+            </div>
+          )}
       </div>
     );
   }

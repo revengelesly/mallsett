@@ -99,7 +99,6 @@ class Dashboard extends Component {
                         title="Received Merchant"
                         type="received"
                         businesses={this.props.merchant && this.props.merchant.associates.filter(x => x.connectedStatus === "received")}
-                        total={businesses.length}
                         handleAccept={this.handleAccept}
                         handleReject={this.handleReject}
                       />
@@ -110,7 +109,6 @@ class Dashboard extends Component {
                         title="Accepted Merchant"
                         type="accepted"
                         businesses={this.props.merchant && this.props.merchant.associates.filter(x => x.connectedStatus === "accepted")}
-                        total={businesses.length}
                         handleReject={this.handleReject}
                       />
                     </TabPane>
@@ -119,7 +117,6 @@ class Dashboard extends Component {
                         title="Rejected Merchant"
                         type="rejected"
                         businesses={this.props.merchant && this.props.merchant.associates.filter(x => x.connectedStatus === "rejected")}
-                        total={businesses.length}
                         handleAccept={this.handleAccept}
                       />
                     </TabPane>
@@ -128,7 +125,6 @@ class Dashboard extends Component {
                         title="Requested Merchant"
                         type="requested"
                         businesses={this.props.merchant && this.props.merchant.associates.filter(x => x.connectedStatus === "requested")}
-                        total={businesses.length}
                       />
                     </TabPane>
                     <TabPane tab={<span>Denied</span>} key="5">
@@ -136,7 +132,6 @@ class Dashboard extends Component {
                         title="Denied Merchant"
                         type="denied"
                         businesses={this.props.merchant && this.props.merchant.associates.filter(x => x.connectedStatus === "denied")}
-                        total={businesses.length}
                         handleRequest={this.handleRequest}
                       />
                     </TabPane>

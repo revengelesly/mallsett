@@ -9,7 +9,7 @@ const RestrictedRoute = ({ component: Component, isLoggedIn, ...rest }) => (
   <Route
     {...rest}
     render={props =>
-      true ? (
+      isLoggedIn ? (
         <Component {...props} />
       ) : (
         <Redirect
