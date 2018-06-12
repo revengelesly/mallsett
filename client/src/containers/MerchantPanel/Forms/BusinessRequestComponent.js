@@ -14,8 +14,8 @@ class BusinessRequestComponent extends Component {
   };
 
   render() {
-    let { title, type, total, businesses } = this.props;
-    total = businesses.length;
+    let { title, type, businesses } = this.props;
+    let total = businesses && businesses.length;
 
     return (
       <div>
