@@ -4,7 +4,6 @@ import { Card, Icon, Button } from 'antd';
 
 class BusinessRequestCard extends Component {
   handleAccept = () => {
-    console.log(this.props.business.id);
     this.props.handleAccept(this.props.business.id);
   }
 
