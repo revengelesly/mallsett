@@ -76,7 +76,7 @@ class CreateAddress extends Component {
                 businesses
               });
 
-              if (this.props.category === 'merchant' && this.props.businesses.length === 0) {
+              if (this.props.category === 'merchant') {
                 this.props.handleUpdateMerchant(newBusiness);
               } else {
                 this.props.handleUpdateAssociate(newBusiness);
