@@ -1,8 +1,10 @@
 import { all, takeEvery, put, call, fork } from 'redux-saga/effects';
-import { push } from 'react-router-redux';
 import { getToken, getProfile, clearToken } from '../../helpers/utility';
 import actions from './actions';
 import { login, getProfileServer } from './api';
+import createHistory from 'history/createBrowserHistory';
+
+const history = createHistory({forceRefresh: true});
 
 const fakeApiCall = false; // auth0 or express JWT
 
@@ -46,9 +48,8 @@ export function* loginError() {
 
 export function* logout() {
   yield takeEvery(actions.LOGOUT, function*() {
-    console.log('logout')
     clearToken();
-    yield put(push('/'));
+    yield history.push("/");
   });
 }
 export function* checkAuthorization() {
