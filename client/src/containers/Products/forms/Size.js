@@ -7,33 +7,21 @@ import {
   Icon, 
   Input, 
   Button,
-  Select,
   Row,
   Col,
-  Popover
+  Popover 
 } from 'antd';
+import { addProductFile } from '../../../redux/documents/middlewares';
 import createHistory from 'history/createBrowserHistory';
-const InputGroup = Input.Group;
 
 
-const { Option } = Select;
-const indentSelectAfter = (
-  <Select defaultValue="percent" style={{ width: 150 }}>
-    <Option value="amount">Amount</Option>
-    <Option value="percent">Percent</Option>
-  </Select>
-);
+
+const { TextArea } = Input;
 
 const FormItem = Form.Item;
 const history = createHistory({forceRefresh: true});
 
 
-function onChangeStart(date, dateString) {
-  console.log(date, dateString);
-}
-function onChangeEnd(date, dateString) {
-  console.log(date, dateString);
-}
 
   class SideForm extends Component {
     state = {
@@ -42,10 +30,7 @@ function onChangeEnd(date, dateString) {
     isUploadComponentReset: false
   };
 
-  handleCategoryChange = (value) => {
-
-  }
-
+ 
   handleSubmit = e => {
     e.preventDefault();
     this.props.form.validateFields((err, newFormData) => {
@@ -69,143 +54,87 @@ function onChangeEnd(date, dateString) {
     return (
         <Row gutter={24}>
         <Form onSubmit={this.handleSubmit}>
-        <FormItem label={
-    
-    <Popover content={ 
-      <div>
-        {<IntlMessages id="form.part.variation.option.popover.content" />} 
-      </div>
-    } title={<IntlMessages id="form.part.variation.option.popover.title" />}  
-    trigger="click">
-    <Icon type="question-circle-o" 
-    /> <IntlMessages id="form.part.variation.option" />  
-  </Popover>
-  }>
-  <Col span={24}  >
-    {getFieldDecorator('Name', {
-      rules: [{ required: true, message: 'Add the variation option' }],
-      initialValue: (this.state.editingFile ? this.state.editingFile.displayName : '')
-    })(
-      <Input
-        autoComplete=""
-        
-        prefix={
-          <Icon type="profile" style={{ color: 'rgba(0,0,0,.25)' }} />
-        }
-        placeholder="Variation Option"
-      />
-    )}
-    </Col>
-    </FormItem>
-    
-  <FormItem label={
-    
-    <Popover content={ 
-      <div>
-        {<IntlMessages id="form.part.variation.option.popover.content" />} 
-      </div>
-    } title={<IntlMessages id="form.part.variation.option.popover.title" />}  
-    trigger="click">
-    <Icon type="question-circle-o" 
-    /> <IntlMessages id="form.part.variation.option" />  
-  </Popover>
-  }>
-  <Col span={24}  >
-    {getFieldDecorator('amount', {
-      rules: [{ required: true, message: 'Add the variation option' }],
-      initialValue: (this.state.editingFile ? this.state.editingFile.displayName : '')
-    })(
-      <Input
-        autoComplete=""
-        addonAfter={indentSelectAfter}
-        prefix={
-          <Icon type="profile" style={{ color: 'rgba(0,0,0,.25)' }} />
-        }
-        placeholder="Amount"
-      />
-    )}
-    </Col>
-    
- </FormItem>
-  
-  <Row gutter={12}>
-          <Col xs={24} sm={24} md={12} lg={12} xl={12}>
+          
+          <Row gutter={12}>
+          <Col xs={24} sm={24} md={16} lg={18} xl={18}>
           
           
           <FormItem label={
     
             <Popover content={ 
               <div>
-                {<IntlMessages id="form.part.variation.usage.popover.content" />} 
+                {<IntlMessages id="form.part.variation.name.popover.content" />} 
               </div>
-            } title={<IntlMessages id="form.part.variation.usage.popover.title" />}  
+            } title={<IntlMessages id="form.part.variation.name.popover.title" />}  
             trigger="click">
             <Icon type="question-circle-o" 
-            /> <IntlMessages id="form.part.variation.usage" />  
+            /> <IntlMessages id="form.part.variation.name" />  
           </Popover>
           }>
     
           <Col >
-            {getFieldDecorator('Usage', {
-              rules: [{ required: false, message: 'leave blank for infiit usage.' }],
+            {getFieldDecorator('name', {
+              rules: [{ required: true, message: 'enter the name here' }],
               initialValue: (this.state.editingFile ? this.state.editingFile.displayName : '')
             })(
               <Input  
                 prefix={
                   <Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />
                 }
-                placeholder="Minimum"
+                placeholder="name"
                 style={{width: "100%"}}
               />
             )}
             </Col>
           </FormItem>
           </Col>
-          <Col xs={24} sm={24} md={12} lg={12} xl={12}>
+          <Col xs={24} sm={24} md={8} lg={6} xl={6}>
           <FormItem label={
     
     <Popover content={ 
       <div>
-        {<IntlMessages id="form.part.discount.status.popover.content" />} 
+        {<IntlMessages id="form.part.variation.price.popover.content" />} 
       </div>
-    } title={<IntlMessages id="form.part.discount.status.popover.title" />}  
+    } title={<IntlMessages id="form.part.variation.price.popover.title" />}  
     trigger="click">
     <Icon type="question-circle-o" 
-    /> <IntlMessages id="form.part.discount.status" />  
+    /> <IntlMessages id="form.part.variation.price" />  
   </Popover>
   }>
   <Col  >
-    {getFieldDecorator('Status', {
-      rules: [{ required: false, message: 'Is this published or expired?' }],
+    {getFieldDecorator('price', {
+      rules: [{ required: false, message: 'Enter the price?' }],
       initialValue: (this.state.editingFile ? this.state.editingFile.displayName : '')
     })(
       <Input  
-                prefix={
-                  <Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />
-                }
-                placeholder="Maximum"
-                style={{width: "100%"}}
-              />
+        prefix={
+          <Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />
+        }
+        style={{width: "100%"}}
+        placeholder="price"
+      />
     )}
     </Col>
+    
   </FormItem>
   </Col>
   </Row>
-  <FormItem label={
+
+        <FormItem label={
     
     <Popover content={ 
       <div>
-        {<IntlMessages id="form.part.discount.category.popover.content" />} 
+        {<IntlMessages id="form.part.size.category.popover.content" />} 
       </div>
-    } title={<IntlMessages id="form.part.discount.category.popover.title" />}  
+    } title={<IntlMessages id="form.part.size.category.popover.title" />}  
     trigger="click">
     <Icon type="question-circle-o" 
-    /> <IntlMessages id="form.part.discount.category" />  
+    /> <IntlMessages id="form.part.size.category" />  
   </Popover>
   }>
   <Col span={24}  >
     {getFieldDecorator('option', {
-      rules: [{ required: true, message: 'Add this discount in a category' }],
+      rules: [{ required: true, message: 'Add this size in a category' }],
       initialValue: (this.state.editingFile ? this.state.editingFile.displayName : '')
     })(
       <Input
@@ -241,6 +170,7 @@ function onChangeEnd(date, dateString) {
             </Button>
             </Col>
           </FormItem>
+
         </Form>
       </Row>
     );

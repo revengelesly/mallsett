@@ -3,6 +3,7 @@ import IntlMessages from '../../../../components/utility/intlMessages';
 import { 
   Col, 
   Select,
+  Input,
   Popover,
   Icon,
 } from 'antd';
@@ -23,25 +24,7 @@ export default class  extends Component {
               Ending Section
               
           *******************************/ }
-         { /* start     add on options   */ }
-         <Popover content={ 
-              <div>
-                <p>Content</p>
-                <p>Content</p>
-              </div>
-            } title="Title" trigger="click">
-            <Icon type="question-circle-o" /> Add on Options  </Popover><a href="#">add new</a>
-          <Select
-            mode= "multiple"
-            style={{ width: '100%', marginBottom: 15, marginTop: 5 }}
-          >
-            <OptGroup label="Product Categories">
-              <Option value="21">Product 1</Option>
-              <Option value="21">Product 2</Option>
-              
-            </OptGroup>
-          </Select>
-        { /* end     add on options   */ }
+          
          { /* start   discounts */ }
          <Popover content={ 
               <div>
@@ -123,6 +106,8 @@ export default class  extends Component {
           </Select>
           
           { /* end     other fees */ }
+         
+          
          </Col>
 
     );

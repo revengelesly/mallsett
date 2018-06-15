@@ -5,15 +5,17 @@ import {
   Col,
   Switch,
   Popover,
+  Button,
   Icon,
 } from 'antd';
 
 
 export default class  extends Component {
   state = {
-    navigateSection: true,
+    navigateSection: false,
     publishSection: true,
-    overiderSection: false
+    overiderSection: true,
+    approvalSection: false
   };
   handlePublishedChange = (publishSection) => {
     this.setState({ publishSection });
@@ -24,8 +26,12 @@ export default class  extends Component {
   handleOverideriderChange = (overiderSection) => {
     this.setState({ overiderSection });
   }
+
+  handleApprovalChange = (approvalSection) => {
+    this.setState({ approvalSection });
+  }
   render() {
-     const { navigateSection, publishSection, overiderSection } = this.state;
+     const { navigateSection, publishSection, overiderSection, approvalSection } = this.state;
     return (
       <Row gutter={24}>
          
@@ -34,6 +40,24 @@ export default class  extends Component {
               Ending Section
               
           ******************************8*/ }
+           { /* start   Approval sections */ }
+
+<Col span="24"  style={{ width: '100%', marginBottom: 15, marginTop: 5 }}>
+<Switch size="small" 
+  checked={approvalSection}
+  checkedChildren="yes"
+  unCheckedChildren="no"
+  onChange={this.handleApprovalChange} 
+  style={{ marginBottom: 15,  marginTop: 15  }}
+/> <Popover content={ 
+  <IntlMessages id="form.part.group.approval.popover.content" />
+} title={<div> 
+  <IntlMessages id="form.part.group.main.1" /> <IntlMessages id="form.part.group.approval.popover.title" />
+  </div> } trigger="click">
+<IntlMessages id="form.part.group.approval" /> : <Icon type="question-circle-o" />   </Popover>    
+</Col>
+
+{ /* end     Approval sections */ }
          { /* start   overide products */ }
          <Col span="24"  style={{ width: '100%', marginBottom: 15, marginTop: 5 }}>
             <Switch size="small" 
@@ -86,6 +110,18 @@ export default class  extends Component {
             </Col>
             
          { /* end     publish sections */ }
+        
+         { /* start   button */ }
+              <Button
+              type="primary"
+              style={{ width: '100%' }}
+              onClick={this.handleSubmit}
+              htmlType="submit"
+              className="login-form-button"
+            >
+             <span><IntlMessages id="form.part.groupOne.submit" /></span>
+            </Button>
+         { /* end   button */ }
          </Row>
 
     );

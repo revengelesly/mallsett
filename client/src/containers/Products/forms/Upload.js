@@ -177,7 +177,7 @@ class FileManagementForm extends Component {
               <Input
                 autoComplete="name"
                 prefix={
-                  <Icon type="image" style={{ color: 'rgba(0,0,0,.25)' }} />
+                  <Icon type="profile" style={{ color: 'rgba(0,0,0,.25)' }} />
                 }
                 placeholder="File name"
               />
@@ -213,7 +213,7 @@ class FileManagementForm extends Component {
                   <Icon type="edit" style={{ color: 'rgba(0,0,0,.25)' }} />
                 }
                 type="text"
-                placeholder="Leave a note for delivery services"
+                placeholder="describe this file"
               />
             )}
             </Col>

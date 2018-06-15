@@ -12,27 +12,45 @@ export default class  extends Component {
       <GroupWrapper>
         <Row gutter={6}>
           <Col className="" xs={24} sm={24} md={24} lg={24} xl={24}>
-            <h5>Milk Products <Button type="danger" shape="circle" icon="delete">
+            <h5>Electronic Products <Button type="danger" shape="circle" icon="delete">
             </Button> <Button type="" shape="circle" icon="edit">
             </Button>
             </h5>
             <small>description of goes here. this is a very short description.</small>
             <Row gutter={6}>
               <Col className="" xs={24} sm={24} md={12} lg={12} xl={12}>
-                1 to 5 items:
+                Packaging:
               </Col>
               <Col className="" xs={24} sm={24} md={12} lg={12} xl={12}>
-                10% Off
+                Unopened
               </Col>
-            </Row>   
+            </Row>
             <Row gutter={6}>
               <Col className="" xs={24} sm={24} md={12} lg={12} xl={12}>
-                6 to 10 items:
+                Used
               </Col>
               <Col className="" xs={24} sm={24} md={12} lg={12} xl={12}>
-                15% Off
+                New
               </Col>
-            </Row>      
+            </Row>
+            <Row gutter={6}>
+              <Col className="" xs={24} sm={24} md={12} lg={12} xl={12}>
+                Timeframe:
+              </Col>
+              <Col className="" xs={24} sm={24} md={12} lg={12} xl={12}>
+                24 days
+              </Col>
+            </Row>
+            <Row gutter={6}>
+              <Col className="" xs={24} sm={24} md={12} lg={12} xl={12}>
+                Warranty
+              </Col>
+              <Col className="" xs={24} sm={24} md={12} lg={12} xl={12}>
+                Full refund.
+              </Col>
+            </Row>
+            
+            
           </Col>
         </Row>
       </GroupWrapper>
