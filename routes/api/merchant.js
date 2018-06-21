@@ -236,12 +236,14 @@ function bindAssociteInfomation(merchant, res) {
           let associate = associates.find(
             x => x.id === merchant.associates[i].merchantId
           );
+
           if (associate && associate.place) {
             merchant.associates[i] = Object.assign({}, associate.place, {
               category: merchant.associates[i].category,
               id: associate.id,
               connectedStatus: merchant.associates[i].connectedStatus,
-              merchantId: merchant.associates[i].merchantId
+              merchantId: merchant.associates[i].merchantId,
+              owner: associate.owner
             });
           }
         }

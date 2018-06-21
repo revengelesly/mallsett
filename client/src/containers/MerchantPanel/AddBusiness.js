@@ -473,7 +473,7 @@ class PlugBusiness extends React.Component {
                   places={this.state.associates[9]}
                   handleUpdateAssociate={this.props.handleUpdateAssociate}
                   {...this.props}
-                  suggestions={this.props.suggestions.filter(x => x.targeted === "marketing")}
+                  suggestions={this.props.suggestions.filter(x => x.targeted === "marketingServices")}
 
                 />,
         disabledNext: !this.state.associates[9] || this.state.associates[9].length < 1,

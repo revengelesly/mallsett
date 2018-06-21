@@ -214,12 +214,29 @@ class CreateAddress extends Component {
                             handleRemove={this.handleRemove}
                             handleMinus={this.handleRemoveSuggestion}
                             id={business.id}
+                            isAddedSuggestion={this.state.orginalSuggestions.find(x => x.googlePlaceId === business.googlePlaceId)}
+                            hasOwner={this.props.category === 'merchant' || business.owner}
                           />
                         </List.Item>
                       )}
                     />
                   )}
 
+                {(!this.state.businesses ||
+                  this.state.businesses.length === 0) && (
+                  <p style={{ textAlign: 'center' }}>
+                    Please search and select a business
+                  </p>
+                )}
+                <InputGroup size="large" style={{ marginBottom: '15px' }}>
+                  <Col span="24">
+                    <LocationSearchInput
+                      handleSelect={this.handleSelect}
+                      address={address}
+                      disabled={disabled}
+                    />
+                  </Col>
+                </InputGroup>
                 {suggestions &&
                   suggestions.length > 0 && (
                     <List
@@ -247,21 +264,6 @@ class CreateAddress extends Component {
                       )}
                     />
                   )}
-                {(!this.state.businesses ||
-                  this.state.businesses.length === 0) && (
-                  <p style={{ textAlign: 'center' }}>
-                    Please search and select a business
-                  </p>
-                )}
-                <InputGroup size="large" style={{ marginBottom: '15px' }}>
-                  <Col span="24">
-                    <LocationSearchInput
-                      handleSelect={this.handleSelect}
-                      address={address}
-                      disabled={disabled}
-                    />
-                  </Col>
-                </InputGroup>
               </InputGroup>
               <InputGroup size="large" style={{ marginBottom: '15px' }}>
                 <Col span="24">
