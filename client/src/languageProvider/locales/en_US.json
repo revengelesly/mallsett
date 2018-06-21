@@ -826,6 +826,84 @@
   "form.part.class.edit": "Edit Class Range",
   "form.part.class.description": "Class Range Description",
 
+  "form.dropFiles": "Drop files here, paste, or browse",
+  "form.dropFiles.popover.title": "Help",
+  "form.dropFiles.popover.content": "This .",
+
+  "form.required": "This field is required.",
+
+
+  "form.displayedName": "Displayed Name",
+  "form.displayedName.popover.title": "Help",
+  "form.displayedName.popover.content": "This .",
+  "form.displayedName.required": "You must provide a unique name for this",
+
+
+  "form.startDate": "Start Date",
+  "form.startDate.popover.title": "Help",
+  "form.startDate.popover.content": "This .",
+
+  "form.endDate": "End Date",
+  "form.endDate.popover.title": "Help",
+  "form.endDate.popover.content": "This .",
+
+  "form.startTime": "Start Time",
+  "form.startTime.popover.title": "Help",
+  "form.startTime.popover.content": "This .",
+
+  "form.endTime": "End Time",
+  "form.endTime.popover.title": "Help",
+  "form.endTime.popover.content": "This .",
+
+
+  "form.minimum": "Minimum",
+  "form.minimum.popover.title": "Help",
+  "form.minimum.popover.content": "This .",
+
+  "form.maximum": "Maximum",
+  "form.maximum.popover.title": "Help",
+  "form.maximum.popover.content": "This .",
+
+  "form.itemName": "Title",
+  "form.itemName.popover.title": "Help",
+  "form.itemName.popover.content": "This .",
+
+  "form.price": "Price",
+  "form.price.popover.title": "Help",
+  "form.price.popover.content": "This .",
+
+
+  "form.percent": "Displayed Name",
+  "form.percent.popover.title": "Help",
+  "form.percent.popover.content": "This .",
+
+  
+  "form.amount": "Displayed Name",
+  "form.amount.popover.title": "Help",
+  "form.amount.popover.content": "This .",
+
+  
+
+  "form.usage": "Displayed Name",
+  "form.usage.popover.title": "Help",
+  "form.usage.popover.content": "This .",
+
+  
+  "form.status": "Displayed Name",
+  "form.status.popover.title": "Help",
+  "form.status.popover.content": "This .",
+
+  "form.code": "Displayed Name",
+  "form.code.popover.title": "Help",
+  "form.code.popover.content": "This .",
+
+  
+  "form.generate": "Displayed Name",
+  "form.generate.popover.title": "Help",
+  "form.generate.popover.content": "This .",
+
+
+
   "end": "end"
  
 }

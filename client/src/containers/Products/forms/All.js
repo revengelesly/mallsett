@@ -79,6 +79,44 @@ const indentSelectAfterLifespan = (
 
 /* end for lifespan */
 
+/* start for size */
+const indentSelectAfterLength = (
+  <Select defaultValue="days" style={{ width: 150 }}>
+    <Option value="Millimeters">Millimeters</Option>
+    <Option value="Centimeters">Centimeters</Option>
+    <Option value="Miles">Miles</Option>
+    <Option value="Inches">Inches</Option>
+    <Option value="Meter">Meter</Option>
+    <Option value="Kilometers">Kilometers</Option>
+    <Option value="Feet">Feet</Option>
+    <Option value="Yards">Yards</Option>
+
+
+  </Select>
+);
+
+
+const indentSelectAfterWeight = (
+  <Select defaultValue="days" style={{ width: 150 }}>
+    <Option value="MetricTons	">Metric Tons	</Option>
+    <Option value="Kilograms">Kilograms</Option>
+    <Option value="Pounds">Pounds</Option>
+    <Option value="Oz">Oz</Option>
+    <Option value="Grams">Grams</Option>
+    <Option value="Tons">Tons</Option>
+    <Option value="Milliliters">Milliliters</Option>
+    <Option value="Liters">Liters</Option>
+    <Option value="FluidOunces">Fluid Ounces</Option>
+    <Option value="Pints">Pints</Option>
+    <Option value="Cups">Cups</Option>
+    <Option value="Quarts">Quarts</Option>
+    <Option value="Gallons">Gallons</Option>
+  </Select>
+);
+
+
+/* end for size */
+
 /* start for question */
 const indentSelectAfterQuestion = (
   <Select defaultValue="percent" style={{ width: 150 }}>
@@ -177,24 +215,35 @@ class FileManagementForm extends Component {
     return (
       <div>
         <Form onSubmit={this.handleSubmit} className="login-form">
-          <FormItem label="." {...formItemLayout}>
+          <FormItem {...formItemLayout}>
             <UploadComponent
               id={this.props.uploadId || 'uploadFile'}
               handleUploadFileSuccess={this.handleUploadFileSuccess}
               isReset={this.state.isUploadComponentReset}
             />
           </FormItem>
-          <FormItem label="File Name" {...formItemLayout}>
-            {getFieldDecorator('name', {
-              rules: [{ required: true, message: 'Add the file name' }],
+          <FormItem label={
+    
+    <Popover content={ 
+      <div>
+        {<IntlMessages id="form.displayedName.popover.content" />} 
+      </div>
+    } title={<IntlMessages id="form.displayedName.popover.title" />}  
+    trigger="click">
+    <Icon type="question-circle-o" 
+    /> <IntlMessages id="form.displayedName" />  
+  </Popover>
+  } {...formItemLayout}>
+            {getFieldDecorator('displayName', {
+              rules: [{ required: true, message: <IntlMessages id="form.displayedName.required" />}],
               initialValue: (this.state.editingFile ? this.state.editingFile.displayName : '')
             })(
               <Input
-                autoComplete="name"
+                autoComplete=""
                 prefix={
-                  <Icon type="image" style={{ color: 'rgba(0,0,0,.25)' }} />
+                  <Icon type="profile" style={{ color: 'rgba(0,0,0,.25)' }} />
                 }
-                placeholder="File name"
+                placeHolder="Display Name"
               />
             )}
           </FormItem>
@@ -208,20 +257,20 @@ class FileManagementForm extends Component {
           
           <FormItem label={
     
-            <Popover content={ 
-              <div>
-                {<IntlMessages id="form.part.date.start.popover.content" />} 
-              </div>
-            } title={<IntlMessages id="form.part.date.start.popover.title" />}  
-            trigger="click">
-            <Icon type="question-circle-o" 
-            /> <IntlMessages id="form.part.date.start" />  
-          </Popover>
+    <Popover content={ 
+      <div>
+        {<IntlMessages id="form.startDate.popover.content" />} 
+      </div>
+    } title={<IntlMessages id="form.startDate.popover.title" />}  
+    trigger="click">
+    <Icon type="question-circle-o" 
+    /> <IntlMessages id="form.startDate" />  
+  </Popover>
           }>
     
           <Col >
             {getFieldDecorator('startDate', {
-              rules: [{ required: true, message: 'When does this date start?' }],
+              rules: [{ required: false, message: <IntlMessages id="form.required" />   }],
               initialValue: (this.state.editingFile ? this.state.editingFile.displayName : '')
             })(
               <DatePicker onChange={onDateChangeStart}  
@@ -240,29 +289,30 @@ class FileManagementForm extends Component {
     
     <Popover content={ 
       <div>
-        {<IntlMessages id="form.part.date.end.popover.content" />} 
+        {<IntlMessages id="form.endDate.popover.content" />} 
       </div>
-    } title={<IntlMessages id="form.part.date.end.popover.title" />}  
+    } title={<IntlMessages id="form.endDate.popover.title" />}  
     trigger="click">
     <Icon type="question-circle-o" 
-    /> <IntlMessages id="form.part.date.end" />  
+    /> <IntlMessages id="form.endDate" />  
   </Popover>
-  }>
-  <Col  >
-    {getFieldDecorator('endDate', {
-      rules: [{ required: true, message: 'When does this date end?' }],
-      initialValue: (this.state.editingFile ? this.state.editingFile.displayName : '')
-    })(
-      <DatePicker onChange={onDateChangeEnd} 
-        prefix={
-          <Icon type="calendar" style={{ color: 'rgba(0,0,0,.25)' }} />
-        }
-        style={{width: "100%"}}
-        placeholder="end date"
-      />
-    )}
-    </Col>
-  </FormItem>
+          }>
+    
+          <Col >
+            {getFieldDecorator('endDate', {
+              rules: [{ required: false, message: <IntlMessages id="form.required" />   }],
+              initialValue: (this.state.editingFile ? this.state.editingFile.displayName : '')
+            })(
+              <DatePicker onChange={onDateChangeStart}  
+                prefix={
+                  <Icon type="calendar" style={{ color: 'rgba(0,0,0,.25)' }} />
+                }
+                placeholder="end date"
+                style={{width: "100%"}}
+              />
+            )}
+            </Col>
+          </FormItem>
   </Col>
   </Row>
 
@@ -272,20 +322,20 @@ class FileManagementForm extends Component {
           
           <FormItem label={
     
-            <Popover content={ 
-              <div>
-                {<IntlMessages id="form.part.time.start.popover.content" />} 
-              </div>
-            } title={<IntlMessages id="form.part.time.start.popover.title" />}  
-            trigger="click">
-            <Icon type="question-circle-o" 
-            /> <IntlMessages id="form.part.time.start" />  
-          </Popover>
+    <Popover content={ 
+      <div>
+        {<IntlMessages id="form.startTime.popover.content" />} 
+      </div>
+    } title={<IntlMessages id="form.startTime.popover.title" />}  
+    trigger="click">
+    <Icon type="question-circle-o" 
+    /> <IntlMessages id="form.startTime" />  
+  </Popover>
           }>
     
           <Col >
             {getFieldDecorator('startTime', {
-              rules: [{ required: true, message: 'When does this time start?' }],
+              rules: [{ required: false, message: <IntlMessages id="form.required" />   }],
               initialValue: (this.state.editingFile ? this.state.editingFile.displayName : '')
             })(
               <TimePicker onChange={onTimeChangeStart}  
@@ -304,29 +354,30 @@ class FileManagementForm extends Component {
     
     <Popover content={ 
       <div>
-        {<IntlMessages id="form.part.time.end.popover.content" />} 
+        {<IntlMessages id="form.endTime.popover.content" />} 
       </div>
-    } title={<IntlMessages id="form.part.time.end.popover.title" />}  
+    } title={<IntlMessages id="form.endTime.popover.title" />}  
     trigger="click">
     <Icon type="question-circle-o" 
-    /> <IntlMessages id="form.part.time.end" />  
+    /> <IntlMessages id="form.endTime" />  
   </Popover>
-  }>
-  <Col  >
-    {getFieldDecorator('endTime', {
-      rules: [{ required: true, message: 'When does this time end?' }],
-      initialValue: (this.state.editingFile ? this.state.editingFile.displayName : '')
-    })(
-      <TimePicker onChange={onTimeChangeEnd} 
-        prefix={
-          <Icon type="calendar" style={{ color: 'rgba(0,0,0,.25)' }} />
-        }
-        style={{width: "100%"}}
-        placeholder="end time"
-      />
-    )}
-    </Col>
-  </FormItem>
+          }>
+    
+          <Col >
+            {getFieldDecorator('endTime', {
+              rules: [{ required: false, message: <IntlMessages id="form.required" />   }],
+              initialValue: (this.state.editingFile ? this.state.editingFile.displayName : '')
+            })(
+              <DatePicker onChange={onTimeChangeEnd}  
+                prefix={
+                  <Icon type="calendar" style={{ color: 'rgba(0,0,0,.25)' }} />
+                }
+                placeholder="end time"
+                style={{width: "100%"}}
+              />
+            )}
+            </Col>
+          </FormItem>
   </Col>
   </Row>
 
@@ -338,25 +389,25 @@ class FileManagementForm extends Component {
     
             <Popover content={ 
               <div>
-                {<IntlMessages id="form.part.age.start.popover.content" />} 
+                {<IntlMessages id="form.minimum.popover.content" />} 
               </div>
-            } title={<IntlMessages id="form.part.age.start.popover.title" />}  
+            } title={<IntlMessages id="form.minimum.popover.title" />}  
             trigger="click">
             <Icon type="question-circle-o" 
-            /> <IntlMessages id="form.part.age.start" />  
+            /> <IntlMessages id="form.minimum" />  
           </Popover>
           }>
     
           <Col >
-            {getFieldDecorator('startAge', {
-              rules: [{ required: true, message: 'What is the minimum age?' }],
+            {getFieldDecorator('minimum', {
+              rules: [{ required: false, message: <IntlMessages id="form.required" />  }],
               initialValue: (this.state.editingFile ? this.state.editingFile.displayName : '')
             })(
               <Input  
                 prefix={
                   <Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />
                 }
-                placeholder="minimum age"
+                placeholder="min"
                 style={{width: "100%"}}
               />
             )}
@@ -368,25 +419,26 @@ class FileManagementForm extends Component {
     
     <Popover content={ 
       <div>
-        {<IntlMessages id="form.part.age.end.popover.content" />} 
+        {<IntlMessages id="form.maximum.popover.content" />} 
       </div>
-    } title={<IntlMessages id="form.part.age.end.popover.title" />}  
+    } title={<IntlMessages id="form.maximum.popover.title" />}  
     trigger="click">
     <Icon type="question-circle-o" 
-    /> <IntlMessages id="form.part.age.end" />  
+    /> <IntlMessages id="form.maximum" />  
   </Popover>
   }>
-  <Col  >
-    {getFieldDecorator('endAge', {
-      rules: [{ required: true, message: 'Enter the maximum age?' }],
+
+  <Col >
+    {getFieldDecorator('maximum', {
+      rules: [{ required: false, message: <IntlMessages id="form.required" />  }],
       initialValue: (this.state.editingFile ? this.state.editingFile.displayName : '')
     })(
       <Input  
         prefix={
           <Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />
         }
+        placeholder="max"
         style={{width: "100%"}}
-        placeholder="max age"
       />
     )}
     </Col>
@@ -399,57 +451,58 @@ class FileManagementForm extends Component {
           
           <FormItem label={
     
-            <Popover content={ 
-              <div>
-                {<IntlMessages id="form.part.variation.name.popover.content" />} 
-              </div>
-            } title={<IntlMessages id="form.part.variation.name.popover.title" />}  
-            trigger="click">
-            <Icon type="question-circle-o" 
-            /> <IntlMessages id="form.part.variation.name" />  
-          </Popover>
-          }>
-    
-          <Col >
-            {getFieldDecorator('name', {
-              rules: [{ required: true, message: 'enter the name here' }],
-              initialValue: (this.state.editingFile ? this.state.editingFile.displayName : '')
-            })(
-              <Input  
-                prefix={
-                  <Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />
-                }
-                placeholder="name"
-                style={{width: "100%"}}
-              />
-            )}
-            </Col>
-          </FormItem>
+    <Popover content={ 
+      <div>
+        {<IntlMessages id="form.maximum.popover.content" />} 
+      </div>
+    } title={<IntlMessages id="form.maximum.popover.title" />}  
+    trigger="click">
+    <Icon type="question-circle-o" 
+    /> <IntlMessages id="form.maximum" />  
+  </Popover>
+  }>
+
+  <Col >
+    {getFieldDecorator('title', {
+      rules: [{ required: false, message: <IntlMessages id="form.required" />  }],
+      initialValue: (this.state.editingFile ? this.state.editingFile.displayName : '')
+    })(
+      <Input  
+        prefix={
+          <Icon type="skin" style={{ color: 'rgba(0,0,0,.25)' }} />
+        }
+        placeholder="Title"
+        style={{width: "100%"}}
+      />
+    )}
+    </Col>
+  </FormItem>
           </Col>
           <Col xs={24} sm={24} md={8} lg={6} xl={6}>
           <FormItem label={
     
     <Popover content={ 
       <div>
-        {<IntlMessages id="form.part.variation.price.popover.content" />} 
+        {<IntlMessages id="form.price.popover.content" />} 
       </div>
-    } title={<IntlMessages id="form.part.variation.price.popover.title" />}  
+    } title={<IntlMessages id="form.price.popover.title" />}  
     trigger="click">
     <Icon type="question-circle-o" 
-    /> <IntlMessages id="form.part.variation.price" />  
+    /> <IntlMessages id="form.price" />  
   </Popover>
   }>
-  <Col  >
+
+  <Col >
     {getFieldDecorator('price', {
-      rules: [{ required: false, message: 'Enter the price?' }],
+      rules: [{ required: false, message: <IntlMessages id="form.required" />  }],
       initialValue: (this.state.editingFile ? this.state.editingFile.displayName : '')
     })(
       <Input  
         prefix={
-          <Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />
+          <Icon type="tag" style={{ color: 'rgba(0,0,0,.25)' }} />
         }
-        style={{width: "100%"}}
         placeholder="price"
+        style={{width: "100%"}}
       />
     )}
     </Col>
@@ -487,7 +540,143 @@ class FileManagementForm extends Component {
     </Col>
     
  </FormItem>
-  
+<p>Size Starts</p>
+
+<Row gutter={12}>
+          <Col xs={24} sm={24} md={12} lg={12} xl={12}>
+          
+          
+          <FormItem label={
+    
+            <Popover content={ 
+              <div>
+                {<IntlMessages id="form.part.size.width.popover.content" />} 
+              </div>
+            } title={<IntlMessages id="form.part.size.width.popover.title" />}  
+            trigger="click">
+            <Icon type="question-circle-o" 
+            /> <IntlMessages id="form.part.size.width" />  
+          </Popover>
+          }>
+    
+          <Col >
+            {getFieldDecorator('width', {
+              rules: [{ required: false, message: 'leave blank in no width.' }],
+              initialValue: (this.state.editingFile ? this.state.editingFile.displayName : '')
+            })(
+              <Input  
+                prefix={
+                  <Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />
+                }
+                placeholder="width"
+                addonAfter={indentSelectAfterLength}
+                style={{width: "100%"}}
+              />
+            )}
+            </Col>
+          </FormItem>
+          </Col>
+          <Col xs={24} sm={24} md={12} lg={12} xl={12}>
+          <FormItem label={
+    
+    <Popover content={ 
+      <div>
+        {<IntlMessages id="form.part.size.height.popover.content" />} 
+      </div>
+    } title={<IntlMessages id="form.part.size.height.popover.title" />}  
+    trigger="click">
+    <Icon type="question-circle-o" 
+    /> <IntlMessages id="form.part.size.height" />  
+  </Popover>
+  }>
+  <Col  >
+    {getFieldDecorator('height', {
+      rules: [{ required: false, message: 'you can leave this blank' }],
+      initialValue: (this.state.editingFile ? this.state.editingFile.displayName : '')
+    })(
+      <Input  
+                prefix={
+                  <Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />
+                }
+                placeholder="height"
+                addonAfter={indentSelectAfterLength}
+                style={{width: "100%"}}
+              />
+    )}
+    </Col>
+  </FormItem>
+  </Col>
+  </Row>
+  <Row gutter={12}>
+          <Col xs={24} sm={24} md={12} lg={12} xl={12}>
+          
+          
+          <FormItem label={
+    
+            <Popover content={ 
+              <div>
+                {<IntlMessages id="form.part.size.length.popover.content" />} 
+              </div>
+            } title={<IntlMessages id="form.part.size.length.popover.title" />}  
+            trigger="click">
+            <Icon type="question-circle-o" 
+            /> <IntlMessages id="form.part.size.length" />  
+          </Popover>
+          }>
+    
+          <Col >
+            {getFieldDecorator('length', {
+              rules: [{ required: false, message: 'you can leave this blank.' }],
+              initialValue: (this.state.editingFile ? this.state.editingFile.displayName : '')
+            })(
+              <Input  
+                prefix={
+                  <Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />
+                }
+                placeholder="length"
+                addonAfter={indentSelectAfterLength}
+                style={{width: "100%"}}
+              />
+            )}
+            </Col>
+          </FormItem>
+          </Col>
+          <Col xs={24} sm={24} md={12} lg={12} xl={12}>
+          <FormItem label={
+    
+    <Popover content={ 
+      <div>
+        {<IntlMessages id="form.part.size.weight.popover.content" />} 
+      </div>
+    } title={<IntlMessages id="form.part.size.weight.popover.title" />}  
+    trigger="click">
+    <Icon type="question-circle-o" 
+    /> <IntlMessages id="form.part.size.weight" />  
+  </Popover>
+  }>
+  <Col  >
+    {getFieldDecorator('weight', {
+      rules: [{ required: false, message: 'you can leave this blank' }],
+      initialValue: (this.state.editingFile ? this.state.editingFile.displayName : '')
+    })(
+      <Input  
+                prefix={
+                  <Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />
+                }
+                placeholder="weight"
+                addonAfter={indentSelectAfterWeight}
+                style={{width: "100%"}}
+              />
+    )}
+    </Col>
+  </FormItem>
+  </Col>
+  </Row>
+
+
+<p>Size ends</p>
+
+
   <Row gutter={12}>
           <Col xs={24} sm={24} md={12} lg={12} xl={12}>
           
@@ -1164,9 +1353,30 @@ placeholder="max class"
               />
             )}
           </FormItem>
-          <FormItem label="Category" {...formItemLayout}>
-            {getFieldDecorator('category', {
-              rules: [{ required: true, message: 'File Category' }],
+          <FormItem label="Delivery Considerations" {...formItemLayout}>
+            {getFieldDecorator('Considerations', {
+              rules: [{ required: true, message: ' Category' }],
+              initialValue: this.state.editingFile ? this.state.editingFile.categories : []
+            })(
+              <Select
+                mode="multiple"
+                style={{ width: '100%' }}
+                onChange={this.handleCategoryChange}
+              >
+                <OptGroup label="Personal">
+                  <Option value="self">Birth Certificate</Option>
+                  <Option value="jessica">Jessica (Daughter)</Option>
+                </OptGroup>
+                <OptGroup label="Education">
+                  <Option value="lisa">Transcript</Option>
+                  <Option value="keven">Application</Option>
+                </OptGroup>
+              </Select>
+            )}
+          </FormItem>
+          <FormItem label="Considerations" {...formItemLayout}>
+            {getFieldDecorator('Considerations', {
+              rules: [{ required: true, message: 'File Considerations' }],
               initialValue: this.state.editingFile ? this.state.editingFile.categories : []
             })(
               <Select
