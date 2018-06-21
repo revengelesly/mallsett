@@ -42,8 +42,7 @@ function AboutUs (props){
   return(
   <Row gutter={24}>
   <Col className="gutter-row"  xs={24} sm={24} md={12} lg={8} xl={8} >
-  <h3><strong>Short Description: </strong> </h3>
-  This business is blah blah blah....
+
   <h3><strong>Commercials: </strong> </h3>
   <Tabs defaultActiveKey="1">
           <TabPane
