@@ -28,6 +28,15 @@ import SizeForm  from '../Products/forms/Size';
 import DiscountForm  from '../Products/forms/Discount';
 import ContentForm  from '../Products/forms/Content';
 import QuestionForm from '../Products/forms/Question';
+import CredentialsForm from '../Products/forms/Credentials';
+import DeliveryDistanceForm  from '../Products/forms/DeliveryDistance';
+import DeliverySpeedForm  from '../Products/forms/DeliverySpeed';
+import DeliveryServiceForm  from '../Products/forms/DeliveryService';
+import JobsForm  from '../Products/forms/Jobs';
+import MessagesForm  from '../Products/forms/Messages';
+import StaffsForm  from '../Products/forms/Staffs';
+import AccessForm  from '../Products/forms/Access';
+
 import AllForm from '../Products/forms/All';
 
 
@@ -49,6 +58,16 @@ import SizeItem  from '../Products/items/Size';
 import DiscountItem  from '../Products/items/Discount';
 import ContentItem  from '../Products/items/Content';
 import QuestionItem from '../Products/items/Question';
+import CredentialsItem from '../Products/items/Credentials';
+import DeliveryDistanceItem from '../Products/items/DeliveryDistance';
+import DeliverySpeedItem from '../Products/items/DeliverySpeed';
+import DeliveryServiceItem from '../Products/items/DeliveryService';
+import JobsItem from '../Products/items/Jobs';
+import MessagesItem from '../Products/items/Messages';
+import StaffsItem from '../Products/items/Staffs';
+import AccessItem from '../Products/items/Access';
+
+
 import AllItem from '../Products/items/All';
 
 
@@ -67,7 +86,7 @@ const steps = [
   content: [<AllForm />, <List item={<AllItem />} />],
   description: 'Watch this short video and learn more about plugging your business with other businesses and consumers.',
   help: 'soemthing here to help',
-  key: '18'
+  key: '0'
 }, {
   title: <IntlMessages id="form.part.product.title.tab" />,
   noIcon: 'plus-square-o',
@@ -247,6 +266,94 @@ const steps = [
   help: 'soemthing here to help',
   key: '16'
 }, {
+  title: <IntlMessages id="form.part.credentials.title.tab" />,
+  noIcon: 'environment-o',
+  span: [12, 12],
+  popoverTitle: ['form.part.question.title.popover.title', 'form.part.question.list.popover.title'],
+  popoverContent:  ['form.part.question.form.popover.content', 'form.part.question.list.popover.content'],
+  pageTitle:  ['form.part.question.title.page', 'form.part.question.list.page'],
+  content: [<CredentialsForm />, <CredentialsItem />],
+  description: 'Watch this short video and learn more about plugging your business with other businesses and consumers.',
+  help: 'soemthing here to help',
+  key: '17'
+}, {
+  title: <IntlMessages id="form.part.deliveryDistance.title.tab" />,
+  noIcon: 'environment-o',
+  span: [12, 12],
+  popoverTitle: ['form.part.question.title.popover.title', 'form.part.question.list.popover.title'],
+  popoverContent:  ['form.part.question.form.popover.content', 'form.part.question.list.popover.content'],
+  pageTitle:  ['form.part.question.title.page', 'form.part.question.list.page'],
+  content: [<DeliveryDistanceForm />, <DeliveryDistanceItem />],
+  description: 'Watch this short video and learn more about plugging your business with other businesses and consumers.',
+  help: 'soemthing here to help',
+  key: '18'
+}, {
+  title: <IntlMessages id="form.part.deliverySpeed.title.tab" />,
+  noIcon: 'environment-o',
+  span: [12, 12],
+  popoverTitle: ['form.part.question.title.popover.title', 'form.part.question.list.popover.title'],
+  popoverContent:  ['form.part.question.form.popover.content', 'form.part.question.list.popover.content'],
+  pageTitle:  ['form.part.question.title.page', 'form.part.question.list.page'],
+  content: [<DeliverySpeedForm />, <DeliverySpeedItem />],
+  description: 'Watch this short video and learn more about plugging your business with other businesses and consumers.',
+  help: 'soemthing here to help',
+  key: '19'
+}, {
+  title: <IntlMessages id="form.part.deliveryService.title.tab" />,
+  noIcon: 'environment-o',
+  span: [12, 12],
+  popoverTitle: ['form.part.question.title.popover.title', 'form.part.question.list.popover.title'],
+  popoverContent:  ['form.part.question.form.popover.content', 'form.part.question.list.popover.content'],
+  pageTitle:  ['form.part.question.title.page', 'form.part.question.list.page'],
+  content: [<DeliveryServiceForm />, <DeliveryServiceItem />],
+  description: 'Watch this short video and learn more about plugging your business with other businesses and consumers.',
+  help: 'soemthing here to help',
+  key: '20'
+}, {
+  title: <IntlMessages id="form.part.jobs.title.tab" />,
+  noIcon: 'environment-o',
+  span: [12, 12],
+  popoverTitle: ['form.part.question.title.popover.title', 'form.part.question.list.popover.title'],
+  popoverContent:  ['form.part.question.form.popover.content', 'form.part.question.list.popover.content'],
+  pageTitle:  ['form.part.question.title.page', 'form.part.question.list.page'],
+  content: [<JobsForm />, <JobsItem />],
+  description: 'Watch this short video and learn more about plugging your business with other businesses and consumers.',
+  help: 'soemthing here to help',
+  key: '21'
+}, {
+  title: <IntlMessages id="form.part.messages.title.tab" />,
+  noIcon: 'environment-o',
+  span: [12, 12],
+  popoverTitle: ['form.part.question.title.popover.title', 'form.part.question.list.popover.title'],
+  popoverContent:  ['form.part.question.form.popover.content', 'form.part.question.list.popover.content'],
+  pageTitle:  ['form.part.question.title.page', 'form.part.question.list.page'],
+  content: [<MessagesForm />, <MessagesItem />],
+  description: 'Watch this short video and learn more about plugging your business with other businesses and consumers.',
+  help: 'soemthing here to help',
+  key: '22'
+}, {
+  title: <IntlMessages id="form.part.staffs.title.tab" />,
+  noIcon: 'environment-o',
+  span: [12, 12],
+  popoverTitle: ['form.part.question.title.popover.title', 'form.part.question.list.popover.title'],
+  popoverContent:  ['form.part.question.form.popover.content', 'form.part.question.list.popover.content'],
+  pageTitle:  ['form.part.question.title.page', 'form.part.question.list.page'],
+  content: [<StaffsForm />, <StaffsItem />],
+  description: 'Watch this short video and learn more about plugging your business with other businesses and consumers.',
+  help: 'soemthing here to help',
+  key: '23'
+}, {
+  title: <IntlMessages id="form.part.access.title.tab" />,
+  noIcon: 'environment-o',
+  span: [12, 12],
+  popoverTitle: ['form.part.question.title.popover.title', 'form.part.question.list.popover.title'],
+  popoverContent:  ['form.part.question.form.popover.content', 'form.part.question.list.popover.content'],
+  pageTitle:  ['form.part.question.title.page', 'form.part.question.list.page'],
+  content: [<AccessForm />, <AccessItem />],
+  description: 'Watch this short video and learn more about plugging your business with other businesses and consumers.',
+  help: 'soemthing here to help',
+  key: '24'
+}, {
   title: <IntlMessages id="form.part.warranty.title.tab" />,
   noIcon: 'environment-o',
   span: [12, 12],
@@ -256,8 +363,9 @@ const steps = [
   content: [<WarrantyForm />, <WarrantyItem />],
   description: 'Watch this short video and learn more about plugging your business with other businesses and consumers.',
   help: 'soemthing here to help',
-  key: '17'
+  key: '25'
 }
+
 ];
 
 
