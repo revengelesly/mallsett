@@ -5,8 +5,8 @@ const passport = require('passport');
 const moment = require('moment');
 
 // Load Product Model
-const Product = require('../../models/merchants/Product');
-// Load Profile Model
+const Product = require('../../models/products/Product');
+// Load Profile Model 
 moment().format();
 //get time now
 const MomentNow = moment();
@@ -38,15 +38,23 @@ router.post('/', passport.authenticate('jwt', { session: false }),
     productFields.owner = req.body.owner;
     productFields.creator = req.body.creator;
     if (req.body.product) productFields.id  = req.body.product;
-    if (req.body.group) productFields.group  = req.body.group;
-    if (req.body.displayName) productFields.displayName  = req.body.displayName;
-    if (req.body.pitch) productFields.pitch  = req.body.pitch;
-    if (typeof req.body.availability !== 'undefined') {
-      productFields.availability = req.body.availability.split(',');
+    if (req.body.displayedName) productFields.displayedName  = req.body.displayedName;
+    if (req.body.description) productFields.description  = req.body.description;
+    if (req.body.primaryImage) productFields.primaryImage  = req.body.primaryImage;
+    if (typeof req.body.pricing !== 'undefined') {
+      productFields.pricing = req.body.pricing.split('|');
     }
-    if (typeof req.body.noChanges !== 'undefined') {
-      productFields.noChanges = req.body.noChanges.split(',');
+    if (typeof req.body.grouping !== 'undefined') {
+      productFields.grouping = req.body.grouping.split('|');
     }
+    //we are going to split options, then we are going to map it to the appropriate table.
+    if (typeof req.body.options !== 'undefined') {
+      productFields.options = req.body.options.split('|');
+    }
+    if (req.body.approval) productFields.approval  = req.body.approval;
+    if (req.body.overide) productFields.overide  = req.body.overide;
+    if (req.body.navigate) productFields.navigate  = req.body.navigate;
+    if (req.body.published) productFields.published  = req.body.published;
     productFields.updated_at  = MomentNow;
     Product.findOne({id: req.body.product }).then(product => {
       if (product) {

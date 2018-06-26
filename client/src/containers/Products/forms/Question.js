@@ -6,29 +6,28 @@ import {
   Form, 
   Icon, 
   Input, 
-  Button, 
-  DatePicker,
+  Button,
   Row,
   Col,
+  Select,
   Popover 
 } from 'antd';
-import { addProductFile } from '../../../redux/documents/middlewares';
+
 import createHistory from 'history/createBrowserHistory';
+const { Option } = Select;
 
-
-
+const indentSelectAfter = (
+  <Select defaultValue="percent" style={{ width: 150 }}>
+    <Option value="amount">Question</Option>
+    <Option value="percent">Comment</Option>
+  </Select>
+);
 const { TextArea } = Input;
 
 const FormItem = Form.Item;
 const history = createHistory({forceRefresh: true});
 
 
-  function onChangeStart(date, dateString) {
-    console.log(date, dateString);
-  }
-  function onChangeEnd(date, dateString) {
-    console.log(date, dateString);
-  }
 
   class SideForm extends Component {
     state = {
@@ -65,12 +64,12 @@ const history = createHistory({forceRefresh: true});
     
             <Popover content={ 
               <div>
-                {<IntlMessages id="form.part.date.name.popover.content" />} 
+                {<IntlMessages id="form.part.class.name.popover.content" />} 
               </div>
-            } title={<IntlMessages id="form.part.date.name.popover.title" />}  
+            } title={<IntlMessages id="form.part.class.name.popover.title" />}  
             trigger="click">
             <Icon type="question-circle-o" 
-            /> <IntlMessages id="form.part.date.name" />  
+            /> Request and Comment 
           </Popover>
           }>
           <Col span={24}  >
@@ -79,12 +78,13 @@ const history = createHistory({forceRefresh: true});
               initialValue: (this.state.editingFile ? this.state.editingFile.displayName : '')
             })(
               <Input
-                autoComplete=""
-                prefix={
-                  <Icon type="profile" style={{ color: 'rgba(0,0,0,.25)' }} />
-                }
-                placeholder="Date range name"
-              />
+        autoComplete=""
+        addonAfter={indentSelectAfter}
+        prefix={
+          <Icon type="profile" style={{ color: 'rgba(0,0,0,.25)' }} />
+        }
+        placeholder="Amount"
+      />
             )}
             </Col>
           </FormItem>
@@ -96,25 +96,25 @@ const history = createHistory({forceRefresh: true});
     
             <Popover content={ 
               <div>
-                {<IntlMessages id="form.part.date.start.popover.content" />} 
+                {<IntlMessages id="form.part.class.start.popover.content" />} 
               </div>
-            } title={<IntlMessages id="form.part.date.start.popover.title" />}  
+            } title={<IntlMessages id="form.part.class.start.popover.title" />}  
             trigger="click">
             <Icon type="question-circle-o" 
-            /> <IntlMessages id="form.part.date.start" />  
+            /> Include Files 
           </Popover>
           }>
     
           <Col >
-            {getFieldDecorator('startDate', {
-              rules: [{ required: true, message: 'When does this date start?' }],
+            {getFieldDecorator('startClass', {
+              rules: [{ required: true, message: 'What is the minimum class?' }],
               initialValue: (this.state.editingFile ? this.state.editingFile.displayName : '')
             })(
-              <DatePicker onChange={onChangeStart}  
+              <Input  
                 prefix={
-                  <Icon type="calendar" style={{ color: 'rgba(0,0,0,.25)' }} />
+                  <Icon type="team" style={{ color: 'rgba(0,0,0,.25)' }} />
                 }
-                placeholder="start date"
+                placeholder="minimum class"
                 style={{width: "100%"}}
               />
             )}
@@ -126,25 +126,25 @@ const history = createHistory({forceRefresh: true});
     
     <Popover content={ 
       <div>
-        {<IntlMessages id="form.part.date.end.popover.content" />} 
+        {<IntlMessages id="form.part.class.end.popover.content" />} 
       </div>
-    } title={<IntlMessages id="form.part.date.end.popover.title" />}  
+    } title={<IntlMessages id="form.part.class.end.popover.title" />}  
     trigger="click">
     <Icon type="question-circle-o" 
-    /> <IntlMessages id="form.part.date.end" />  
+    /> Request File Upload?
   </Popover>
   }>
   <Col  >
-    {getFieldDecorator('endDate', {
-      rules: [{ required: true, message: 'When does this date end?' }],
+    {getFieldDecorator('endClass', {
+      rules: [{ required: true, message: 'Enter the maximum class?' }],
       initialValue: (this.state.editingFile ? this.state.editingFile.displayName : '')
     })(
-      <DatePicker onChange={onChangeEnd} 
+      <Input  
         prefix={
-          <Icon type="calendar" style={{ color: 'rgba(0,0,0,.25)' }} />
+          <Icon type="team" style={{ color: 'rgba(0,0,0,.25)' }} />
         }
         style={{width: "100%"}}
-        placeholder="end date"
+        placeholder="max class"
       />
     )}
     </Col>
@@ -155,12 +155,12 @@ const history = createHistory({forceRefresh: true});
           <FormItem label={
             <Popover content={ 
               <div>
-                {<IntlMessages id="form.part.date.description.popover.content" />} 
+                {<IntlMessages id="form.part.class.description.popover.content" />} 
               </div>
-            } title={<IntlMessages id="form.part.date.description.popover.title" />}  
+            } title={<IntlMessages id="form.part.class.description.popover.title" />}  
             trigger="click">
             <Icon type="question-circle-o" 
-            /> <IntlMessages id="form.part.date.description" />  
+            /> Description 
           </Popover>
           }>
           <Col span={24}  >
@@ -168,7 +168,7 @@ const history = createHistory({forceRefresh: true});
               rules: [
                 {
                   required: false,
-                  message: 'Please describe this date.'
+                  message: 'Please describe this class range.'
                 },
               ],
               initialValue: (this.state.editingFile ? this.state.editingFile.notes : '')
@@ -179,14 +179,43 @@ const history = createHistory({forceRefresh: true});
                   <Icon type="edit" style={{ color: 'rgba(0,0,0,.25)' }} />
                 }
                 type="text"
-                placeholder="i.e. Spring mini semester is an exelerated semester."
+                placeholder="i.e. This class range is for this holiday specials."
               />
             )}
             </Col>
           </FormItem>
           
           
-          <FormItem >
+          
+          <FormItem label={
+    
+    <Popover content={ 
+      <div>
+        {<IntlMessages id="form.part.class.name.popover.content" />} 
+      </div>
+    } title={<IntlMessages id="form.part.class.name.popover.title" />}  
+    trigger="click">
+    <Icon type="question-circle-o" 
+    /> Question Category 
+  </Popover>
+  }>
+  <Col span={24}  >
+    {getFieldDecorator('name', {
+      rules: [{ required: true, message: 'Add the file name' }],
+      initialValue: (this.state.editingFile ? this.state.editingFile.displayName : '')
+    })(
+      <Input
+        autoComplete=""
+        prefix={
+          <Icon type="profile" style={{ color: 'rgba(0,0,0,.25)' }} />
+        }
+        placeholder="Class range name"
+      />
+    )}
+    </Col>
+  </FormItem>
+
+  <FormItem >
           <Col span={24}  >
               {this.state.showErrorMessage &&
                 <Alert

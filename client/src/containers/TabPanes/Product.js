@@ -4,8 +4,21 @@ import {
   Row, 
   Col,
   Popover,
-  Icon
+  Icon,
+  Collapse
+
 } from 'antd';
+
+const Panel = Collapse.Panel;
+
+const customPanelStyle = {
+  background: '#f7f7f7',
+  borderRadius: 4,
+  marginBottom: 24,
+  border: 0,
+  overflow: 'hidden',
+};
+
 
 export default class  extends Component {
   render(props) {
@@ -38,8 +51,17 @@ export default class  extends Component {
              <Icon type="question-circle-o" />  <IntlMessages id={this.props.pageTitle[1]} /> 
              </h4>
              </Popover>
-
-              {this.props.content[1]}
+             <Collapse bordered={false} defaultActiveKey={['1']}>
+    <Panel header="This is panel header 1" key="1" style={customPanelStyle}>
+    {this.props.content[1]}
+    </Panel>
+    <Panel header="This is panel header 2" key="2" style={customPanelStyle}>
+    {this.props.content[1]}
+    </Panel>
+    <Panel header="This is panel header 3" key="3" style={customPanelStyle}>
+    {this.props.content[1]}
+    </Panel>
+  </Collapse>
         </Col>
       </Row>
     );

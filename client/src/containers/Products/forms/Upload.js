@@ -27,6 +27,15 @@ const { TextArea } = Input;
 const FormItem = Form.Item;
 const history = createHistory({forceRefresh: true});
 
+const childrenToken = [];
+for (let i = 1; i < 6; i++) {
+  childrenToken.push(<Option key={"fileFolder " + i}>{"File Folder - " + i}</Option>);
+}
+
+function handleChangeToken(value) {
+  console.log(`selected ${value}`);
+}
+
 class FileManagementForm extends Component {
   state = {
     checkDob: false,
@@ -177,7 +186,7 @@ class FileManagementForm extends Component {
               <Input
                 autoComplete="name"
                 prefix={
-                  <Icon type="image" style={{ color: 'rgba(0,0,0,.25)' }} />
+                  <Icon type="profile" style={{ color: 'rgba(0,0,0,.25)' }} />
                 }
                 placeholder="File name"
               />
@@ -201,7 +210,7 @@ class FileManagementForm extends Component {
             {getFieldDecorator('Notes', {
               rules: [
                 {
-                  required: true,
+                  required: false,
                   message: 'Please better describe your files.'
                 },
               ],
@@ -213,7 +222,7 @@ class FileManagementForm extends Component {
                   <Icon type="edit" style={{ color: 'rgba(0,0,0,.25)' }} />
                 }
                 type="text"
-                placeholder="Leave a note for delivery services"
+                placeholder="describe this file"
               />
             )}
             </Col>
@@ -235,18 +244,12 @@ class FileManagementForm extends Component {
               initialValue: this.state.editingFile ? this.state.editingFile.categories : []
             })(
               <Select
-                mode="multiple"
+                mode="tags"
                 style={{ width: '100%' }}
-                onChange={this.handleCategoryChange}
+                onChange={handleChangeToken}
+                tokenSeparators={[',']}
               >
-                <OptGroup label="Personal">
-                  <Option value="self">Birth Certificate</Option>
-                  <Option value="jessica">Jessica (Daughter)</Option>
-                </OptGroup>
-                <OptGroup label="Education">
-                  <Option value="lisa">Transcript</Option>
-                  <Option value="keven">Application</Option>
-                </OptGroup>
+                {childrenToken}
               </Select>
             )}
             </Col>

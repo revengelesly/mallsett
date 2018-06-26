@@ -1,29 +1,223 @@
 import React, { Component } from 'react';
-import GroupWrapper from '../../Styles/list.style';
+import { connect } from 'react-redux';
+import IntlMessages from '../../../components/utility/intlMessages';
 import { 
-  Row, 
+  Alert, 
+  Form, 
+  Icon, 
+  Input, 
+  Button,
+  Row,
   Col,
-  Button
+  Popover 
 } from 'antd';
-export default class  extends Component {
+import { addProductFile } from '../../../redux/documents/middlewares';
+import createHistory from 'history/createBrowserHistory';
+
+
+
+const { TextArea } = Input;
+
+const FormItem = Form.Item;
+const history = createHistory({forceRefresh: true});
+
+
+
+  class SideForm extends Component {
+    state = {
+    editingFile: null,
+    showErrorMessage: false,
+    isUploadComponentReset: false
+  };
+
+ 
+  handleSubmit = e => {
+    e.preventDefault();
+    this.props.form.validateFields((err, newFormData) => {
+      if (!err) {
+    
+
+        } else {
+          this.setState({
+            showErrorMessage: true
+          })
+        }
+      }
+    );
+  };
+
 
   render() {
+    const { getFieldDecorator } = this.props.form;
+    const formItemLayout = this.state.formItemLayout;
+
     return (
-      <GroupWrapper>
-        <Row gutter={6}>
-        <Col className="" xs={24} sm={10} md={6} lg={5} xl={4}>
-            <img alt="merchant name - displayed name - category" src="http://via.placeholder.com/350x250" className="fullWidth" />
+        <Row gutter={24}>
+        <Form onSubmit={this.handleSubmit}>
+          <FormItem label={
+    
+            <Popover content={ 
+              <div>
+                {<IntlMessages id="form.part.class.name.popover.content" />} 
+              </div>
+            } title={<IntlMessages id="form.part.class.name.popover.title" />}  
+            trigger="click">
+            <Icon type="question-circle-o" 
+            /> <IntlMessages id="form.part.class.name" />  
+          </Popover>
+          }>
+          <Col span={24}  >
+            {getFieldDecorator('name', {
+              rules: [{ required: true, message: 'Add the file name' }],
+              initialValue: (this.state.editingFile ? this.state.editingFile.displayName : '')
+            })(
+              <Input
+                autoComplete=""
+                prefix={
+                  <Icon type="profile" style={{ color: 'rgba(0,0,0,.25)' }} />
+                }
+                placeholder="Class range name"
+              />
+            )}
+            </Col>
+          </FormItem>
+          <Row gutter={12}>
+          <Col xs={24} sm={24} md={12} lg={12} xl={12}>
+          
+          
+          <FormItem label={
+    
+            <Popover content={ 
+              <div>
+                {<IntlMessages id="form.part.class.start.popover.content" />} 
+              </div>
+            } title={<IntlMessages id="form.part.class.start.popover.title" />}  
+            trigger="click">
+            <Icon type="question-circle-o" 
+            /> <IntlMessages id="form.part.class.start" />  
+          </Popover>
+          }>
+    
+          <Col >
+            {getFieldDecorator('startClass', {
+              rules: [{ required: true, message: 'What is the minimum class?' }],
+              initialValue: (this.state.editingFile ? this.state.editingFile.displayName : '')
+            })(
+              <Input  
+                prefix={
+                  <Icon type="team" style={{ color: 'rgba(0,0,0,.25)' }} />
+                }
+                placeholder="minimum class"
+                style={{width: "100%"}}
+              />
+            )}
+            </Col>
+          </FormItem>
           </Col>
-          <Col className="" xs={24} sm={14} md={18} lg={19} xl={20}>
-            <h5>Displayed Name  (category) <Button type="danger" shape="circle" icon="delete">
-            </Button> <Button type="" shape="circle" icon="edit">
+          <Col xs={24} sm={24} md={12} lg={12} xl={12}>
+          <FormItem label={
+    
+    <Popover content={ 
+      <div>
+        {<IntlMessages id="form.part.class.end.popover.content" />} 
+      </div>
+    } title={<IntlMessages id="form.part.class.end.popover.title" />}  
+    trigger="click">
+    <Icon type="question-circle-o" 
+    /> <IntlMessages id="form.part.class.end" />  
+  </Popover>
+  }>
+  <Col  >
+    {getFieldDecorator('endClass', {
+      rules: [{ required: true, message: 'Enter the maximum class?' }],
+      initialValue: (this.state.editingFile ? this.state.editingFile.displayName : '')
+    })(
+      <Input  
+        prefix={
+          <Icon type="team" style={{ color: 'rgba(0,0,0,.25)' }} />
+        }
+        style={{width: "100%"}}
+        placeholder="max class"
+      />
+    )}
+    </Col>
+  </FormItem>
+  </Col>
+  </Row>
+
+          <FormItem label={
+            <Popover content={ 
+              <div>
+                {<IntlMessages id="form.part.class.description.popover.content" />} 
+              </div>
+            } title={<IntlMessages id="form.part.class.description.popover.title" />}  
+            trigger="click">
+            <Icon type="question-circle-o" 
+            /> <IntlMessages id="form.part.class.description" />  
+          </Popover>
+          }>
+          <Col span={24}  >
+            {getFieldDecorator('Notes', {
+              rules: [
+                {
+                  required: false,
+                  message: 'Please describe this class range.'
+                },
+              ],
+              initialValue: (this.state.editingFile ? this.state.editingFile.notes : '')
+            })(
+              <TextArea
+                row={2}
+                prefix={
+                  <Icon type="edit" style={{ color: 'rgba(0,0,0,.25)' }} />
+                }
+                type="text"
+                placeholder="i.e. This class range is for this holiday specials."
+              />
+            )}
+            </Col>
+          </FormItem>
+          
+          
+          <FormItem >
+          <Col span={24}  >
+              {this.state.showErrorMessage &&
+                <Alert
+                  message="You must upload file"
+                  type="error"
+                  showIcon
+                  banner
+                  closable
+                />
+              }
+            <Button
+              type="primary"
+              style={{ width: '100%' }}
+              onClick={this.handleSubmit}
+              htmlType="submit"
+              className="login-form-button"
+            >
+              {!this.state.editingFile && <span><IntlMessages id="form.part.upload.submit" /></span>}
+              {this.state.editingFile && <span><IntlMessages id="form.part.upload.edit" /></span>}
             </Button>
-            </h5>
-             goes here. Ohh yeah. don't you love description.  Description goes here. Ohh yeah. don't you love description. 
-          </Col>
-        </Row>
-      </GroupWrapper>
+            </Col>
+          </FormItem>
+        </Form>
+      </Row>
     );
   }
 }
+function mapStateToProps({ Documents }) {
+  return {
+    loading: Documents.loading,
+    error: Documents.error
+  };
+}
 
+function mapDispatchToProps(dispatch) {
+  return "nothing";
+}
+const WrappedForm = Form.create()(SideForm);
+export default connect(mapStateToProps, mapDispatchToProps)(
+  WrappedForm
+);

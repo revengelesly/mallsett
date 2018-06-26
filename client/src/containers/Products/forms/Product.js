@@ -127,12 +127,60 @@ export default class  extends Component {
           </Select>
           </Col>
          { /* end     category */ }
+         { /* start   category */ }
+         <Col span={24}  style={{ width: '100%', marginBottom: 15, marginTop: 5 }} >
+         <Popover content={ 
+              <IntlMessages id="form.part.product.category.popover.content" />
+            } title={<IntlMessages id="form.part.product.category.popover.title" />} trigger="click">
+            <Icon type="question-circle-o" /> Pricing </Popover>
+          <Select
+            mode= "multiple"
+            style={{ width: '100%', marginBottom: 15, marginTop: 5 }}
+          >
+              <Option value="1">Direct</Option>
+              <Option value="2">Quotes</Option>
+            
+          </Select>
+          </Col>
+         { /* end     category */ }
+         { /* start   category */ }
+         <Col span={24}  style={{ width: '100%', marginBottom: 15, marginTop: 5 }} >
+         <Popover content={ 
+              <IntlMessages id="form.part.product.category.popover.content" />
+            } title={<IntlMessages id="form.part.product.category.popover.title" />} trigger="click">
+            <Icon type="question-circle-o" /> Full Description </Popover>
+          <Select
+            mode= ""
+            style={{ width: '100%', marginBottom: 15, marginTop: 5 }}
+          >
+              <Option value="1">Delivered</Option>
+              <Option value="2">Pickup</Option>
+              <Option value="2">Appointments</Option>
+          </Select>
+          </Col>
+         { /* end     category */ }
+         { /* start   category */ }
+         <Col span={24}  style={{ width: '100%', marginBottom: 15, marginTop: 5 }} >
+         <Popover content={ 
+              <IntlMessages id="form.part.product.category.popover.content" />
+            } title={<IntlMessages id="form.part.product.category.popover.title" />} trigger="click">
+            <Icon type="question-circle-o" /> Purchasing </Popover>
+          <Select
+            mode= "multiple"
+            style={{ width: '100%', marginBottom: 15, marginTop: 5 }}
+          >
+              <Option value="1">Delivered</Option>
+              <Option value="2">Pickup</Option>
+              <Option value="2">Appointments</Option>
+          </Select>
+          </Col>
+         { /* end     category */ }
          { /* start   Group */ }
          <Col span={24}  style={{ width: '100%', marginBottom: 15, marginTop: 5 }} >
          <Popover content={ 
               <IntlMessages id="form.part.product.group.popover.content" />
             } title={<IntlMessages id="form.part.product.group.popover.title" />} trigger="click">
-            <Icon type="question-circle-o" /> <IntlMessages id="form.part.product.group" />  </Popover>
+            <Icon type="question-circle-o" /> Group Options  </Popover>
           <Select
             mode= "multiple"
             style={{ width: '100%', marginBottom: 15, marginTop: 5 }}
@@ -150,6 +198,28 @@ export default class  extends Component {
           </Col>
          { /* end     Group */ }
          
+         { /* start   Group */ }
+         <Col span={24}  style={{ width: '100%', marginBottom: 15, marginTop: 5 }} >
+         <Popover content={ 
+              <IntlMessages id="form.part.product.individual.popover.content" />
+            } title={<IntlMessages id="form.part.product.individual.popover.title" />} trigger="click">
+            <Icon type="question-circle-o" /> individual Options </Popover>
+          <Select
+            mode= "multiple"
+            style={{ width: '100%', marginBottom: 15, marginTop: 5 }}
+          >
+            <OptGroup label="Business">
+              <Option value="1">Products</Option>
+              <Option value="2">Sections</Option>
+            </OptGroup>
+            <OptGroup label="Personal">
+              <Option value="3">This</Option>
+              <Option value="4">that</Option>
+            </OptGroup>
+            
+          </Select>
+          </Col>
+         { /* end     Group */ }
        
          <Button type="primary"  style={{ width: '100%', marginBottom: 15, marginTop: 15, borderRadius: 0 }}>Add Product</Button>
         </Col>
