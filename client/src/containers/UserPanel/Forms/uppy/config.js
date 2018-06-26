@@ -8,7 +8,7 @@ let config = {
   Instagram: false,
   autoProceed: true,
   restrictions: {
-    maxFileSize: 1000000,
+    maxFileSize: 3000000, // ~3mb
     maxNumberOfFiles: 1,
     minNumberOfFiles: 1,
     allowedFileTypes: ['image/*']

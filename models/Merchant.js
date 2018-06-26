@@ -20,7 +20,7 @@ const MerchantSchema = new Schema({
             type: String
         },
         gallery: {
-            type: String
+            type: [String]
         },
         // merchants, delivery services, government
         businessType: [{

@@ -4,53 +4,70 @@ import userpic from '../../image/user1.png';
 import authAction from '../../redux/auth/actions';
 import { Modal, Icon } from 'antd';
 import UserPanel from '../UserPanel/userPanel';
+import { withRouter } from 'react-router';
 
 const { login, logout, loginSuccess } = authAction;
 
 class TopbarUser extends Component {
   constructor(props) {
     super(props);
+    this.directHashLinks = ['#terms', '#privacy', '#bio'];
     this.state = {
+      hashRoute: (this.props.location && this.props.location.hash) || '',
+      hasDirectLink: false,
       visible: false
     };
   }
 
   showModal = () => {
     this.setState({
-      visible: true,
+      visible: true
     });
-  }
+  };
 
-  handleOk = (e) => {
-    console.log(e);
+  handleOk = e => {
     this.setState({
-      visible: false,
+      visible: false
     });
-  }
+  };
 
-  handleCancel = (e) => {
-    console.log(e);
+  handleCancel = e => {
     this.setState({
-      visible: false,
+      visible: false
     });
-  }
+  };
+
+  componentDidMount = () => {
+    this.setState({
+      visible: this.directHashLinks.indexOf(this.state.hashRoute) > -1 || false,
+      hasDirectLink:
+        this.directHashLinks.indexOf(this.state.hashRoute) > -1 || false
+    });
+  };
 
   render() {
     return (
       <div>
-        {this.props.isLoggedIn &&
+        {this.props.isLoggedIn && (
           <div className="isoImgWrapper" onClick={this.showModal}>
             <img
               alt="user default"
-              style={{ borderRadius: "50%", maxWidth: "10" }}
-              src={this.props.profile && this.props.profile.avatar ? this.props.profile.avatar : userpic} />
+              style={{ borderRadius: '50%', maxWidth: '10' }}
+              src={
+                this.props.profile && this.props.profile.avatar
+                  ? this.props.profile.avatar
+                  : userpic
+              }
+            />
             <span className="userActivity online" />
           </div>
-        }
-        {!this.props.isLoggedIn &&
-         <span  onClick={this.showModal} > <Icon type="key" /> Login / Register</span>
-         
-        }
+        )}
+        {!this.props.isLoggedIn && (
+          <span onClick={this.showModal}>
+            {' '}
+            <Icon type="key" /> Login / Register
+          </span>
+        )}
         <Modal
           title={null}
           visible={this.state.visible}
@@ -60,7 +77,17 @@ class TopbarUser extends Component {
           width="80%"
           footer={null}
         >
-          <UserPanel login={this.props.login} logout={this.props.logout} isLoggedIn={this.props.isLoggedIn} profile={this.props.profile} idToken={this.props.idToken} {...this.props} />
+          <UserPanel
+            login={this.props.login}
+            logout={this.props.logout}
+            isLoggedIn={this.props.isLoggedIn}
+            profile={this.props.profile}
+            idToken={this.props.idToken}
+            hashRoute={this.state.hashRoute}
+            hasDirectLink={this.state.hasDirectLink}
+            contents={this.props.contents}
+            {...this.props}
+          />
         </Modal>
       </div>
     );
@@ -69,9 +96,12 @@ class TopbarUser extends Component {
 
 function mapStateToProps(state) {
   return {
-    isLoggedIn: state.Auth.get('idToken') !== null && state.Auth.get('idToken') !== 'LOGIN_ERROR',
+    isLoggedIn:
+      state.Auth.get('idToken') !== null &&
+      state.Auth.get('idToken').indexOf('Bear') !== -1,
     idToken: state.Auth.get('idToken'),
-    profile: state.Auth.get('profile')
+    profile: state.Auth.get('profile'),
+    contents: state.Contents.get('contents')
   };
 }
 
@@ -79,8 +109,13 @@ function mapDispatchToProps(dispatch) {
   return {
     logout: () => dispatch(logout()),
     login: (email, password) => dispatch(login(email, password)),
-    loginSuccess: (user, profile) => dispatch(loginSuccess(user, profile)),
+    loginSuccess: (user, profile) => dispatch(loginSuccess(user, profile))
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(TopbarUser);
+export default withRouter(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(TopbarUser)
+);

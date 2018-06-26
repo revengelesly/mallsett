@@ -1,12 +1,7 @@
 import React, { Component } from 'react';
 
 export default class Privacy extends Component {
-
-  render(){
-    return (
-  <p>
-    Privacy Policy Here
-  </p>
-    );
+  render() {
+    return <div dangerouslySetInnerHTML={{__html: this.props.privacy}} />;
   }
-  }
+}

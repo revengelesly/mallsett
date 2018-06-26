@@ -27,9 +27,10 @@ class TouchUp extends Component {
         <Row gutter={24}>
           <Col span="24">
             <Carousel autoplay>
-              <BusinessCard {...merchant.place} />
-              {associates &&
-                associates.map(x => <BusinessCard {...x} />)}
+              {this.props.gallery &&
+                this.props.gallery.map(x => (
+                  <img src={x} style={{ width: '100%' }} alt="shop" />
+                ))}
             </Carousel>
           </Col>
         </Row>
@@ -82,7 +83,7 @@ class TouchUp extends Component {
               }
               key="3"
             >
-              {this.props.bio && this.props.bio.value }
+              <div dangerouslySetInnerHTML={{__html: this.props.bio}} />
             </TabPane>
             <TabPane
               tab={
@@ -92,7 +93,7 @@ class TouchUp extends Component {
               }
               key="4"
             >
-              {this.props.privacy && this.props.privacy.value }
+              <div dangerouslySetInnerHTML={{__html: this.props.privacy}} />
             </TabPane>
             <TabPane
               tab={
@@ -102,7 +103,7 @@ class TouchUp extends Component {
               }
               key="5"
             >
-              {this.props.terms && this.props.terms.value}
+              <div dangerouslySetInnerHTML={{__html: this.props.terms}} />
             </TabPane>
           </Tabs>
         </Row>
