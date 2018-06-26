@@ -197,6 +197,7 @@ class TopBarAddMerchants extends React.Component {
             handleUpdateMerchant={this.handleUpdateMerchant}
             setMerchant={this.setMerchantToState}
             suggestions={this.props.suggestions || []}
+            contents={this.props.contents}
           />
         </Modal>
       </div>
@@ -208,11 +209,12 @@ function mapStateToProps(state) {
   return {
     isLoggedIn:
       state.Auth.get('idToken') !== null &&
-      state.Auth.get('idToken') !== 'LOGIN_ERROR',
+      state.Auth.get('idToken').indexOf('Bear') !== -1,
     profile: state.Auth.get('profile'),
     idToken: state.Auth.get('idToken'),
     merchant: state.Merchant.get('merchant'),
     suggestions: state.Merchant.get('suggestions'),
+    contents: state.Contents.get('contents'),
     ...state.App.toJS()
   };
 }

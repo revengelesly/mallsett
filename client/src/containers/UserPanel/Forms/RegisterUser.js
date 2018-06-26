@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Alert, Slider, Form, Icon, Input, Button, Col, Row } from 'antd';
+import { Alert, Slider, Form, Icon, Input, Button, Col, Row, message } from 'antd';
 import  { InputGroup } from '../../../components/uielements/input';
 import SigninWrapper from '../signin.style';
 import IntlMessages from '../../../components/utility/intlMessages';
@@ -18,22 +18,15 @@ class RegisterUser extends Component {
     checkDob: false,
     ageInfo: '',
     ageStatement: '',
-    errorMessage: '',
-    showSuccessMessage: false
+    loading: false
   };
-
-  check = () => {
-    this.props.form.validateFields(
-      (err) => {
-        if (!err) {
-          console.info('success');
-        }
-      },
-    );
-  }
 
   handleSubmit = (e) => {
     e.preventDefault();
+    this.setState({
+      loading: true
+    });
+
     this.props.form.validateFields((err, newUser) => {
       if (!err) {
         console.log('Received values of form: ', newUser);
@@ -59,11 +52,19 @@ class RegisterUser extends Component {
         .then(res => {
           if (res.status === 200) {
             this.props.login({email: res.data.email, password: password});
+            message.success('Registration success');
           }
         })
         .catch(err => {
+          let error = err && err.response && err.response.data
+                              ? err.response.data.message
+                              : '';
+
+          message.error(error)
+        })
+        .finally(() => {
           this.setState({
-            errorMessage: err.response.data.message
+            loading: false
           });
         });
       }
@@ -148,9 +149,7 @@ class RegisterUser extends Component {
           <div>{this.ageInfo}</div>
           </FormItem>
           <FormItem >
-            { this.state.errorMessage && <Alert message={this.state.errorMessage} type="error" showIcon banner closable />}
-            { this.state.showSuccessMessage &&<Alert message="Registration Successful" type="success" showIcon banner closable /> }
-            <Button type="primary" style={{ width: '100%'}} onClick={this.check} htmlType="submit" className="login-form-button">
+            <Button type="primary" style={{ width: '100%'}} htmlType="submit" className="login-form-button" loading={this.state.loading}>
             Register
             </Button>
           </FormItem>

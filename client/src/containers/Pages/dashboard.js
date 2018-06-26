@@ -150,7 +150,7 @@ function mapStateToProps(state) {
   return {
     isLoggedIn:
       state.Auth.get('idToken') !== null &&
-      state.Auth.get('idToken') !== 'LOGIN_ERROR',
+      state.Auth.get('idToken').indexOf('Bear') !== -1,
     profile: state.Auth.get('profile'),
     idToken: state.Auth.get('idToken'),
     merchant: state.Merchant.get('merchant'),

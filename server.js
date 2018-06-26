@@ -11,6 +11,7 @@ const posts = require('./routes/api/posts');
 const merchant = require('./routes/api/merchant');
 const products = require('./routes/api/merchants/products');
 const suggestions = require('./routes/api/merchants/suggestions');
+const contents = require('./routes/api/admins/contents');
 
 const app = express();
 
@@ -42,6 +43,7 @@ app.use('/api/posts', posts);
 app.use('/api/merchant', merchant);
 app.use('/api/merchants/products', products);
 app.use('/api/merchants/suggestions', suggestions);
+app.use('/api/admins/contents', contents);
 
 const port = process.env.PORT || 5000;
 

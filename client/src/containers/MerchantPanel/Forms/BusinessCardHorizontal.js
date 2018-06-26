@@ -103,8 +103,10 @@ class CreateAddress extends Component {
     }
   };
 
-  handleAddSuggestion = (googlePlaceId) => {
-    let suggestion = this.state.suggestions.find(x => x.googlePlaceId === googlePlaceId);
+  handleAddSuggestion = googlePlaceId => {
+    let suggestion = this.state.suggestions.find(
+      x => x.googlePlaceId === googlePlaceId
+    );
 
     if (suggestion) {
       let business = this.state.businesses.find(
@@ -115,28 +117,39 @@ class CreateAddress extends Component {
         this.handleSelect('', googlePlaceId);
 
         this.setState({
-          suggestions: this.state.suggestions.filter(x => x.googlePlaceId !== googlePlaceId)
-        })
+          suggestions: this.state.suggestions.filter(
+            x => x.googlePlaceId !== googlePlaceId
+          )
+        });
       }
     }
-  }
+  };
 
   handleRemoveSuggestion = (id, googlePlaceId) => {
     this.handleRemove(id, googlePlaceId);
 
-    if (this.state.orginalSuggestions && this.state.orginalSuggestions.length > 0) {
+    if (
+      this.state.orginalSuggestions &&
+      this.state.orginalSuggestions.length > 0
+    ) {
       let business = this.state.businesses.find(x => x.id === id);
-      let suggestion = this.state.orginalSuggestions.find(x => x.googlePlaceId === googlePlaceId);
+      let suggestion = this.state.orginalSuggestions.find(
+        x => x.googlePlaceId === googlePlaceId
+      );
 
       if (suggestion && business) {
-        if (this.state.suggestions.map(x => x.googlePlaceId).indexOf(googlePlaceId) < 0) {
+        if (
+          this.state.suggestions
+            .map(x => x.googlePlaceId)
+            .indexOf(googlePlaceId) < 0
+        ) {
           this.setState({
             suggestions: [...this.state.suggestions, business]
-          })
+          });
         }
       }
     }
-  }
+  };
 
   componentWillReceiveProps = nextProps => {
     this.setState({
@@ -186,13 +199,27 @@ class CreateAddress extends Component {
       this.state.businesses.length > 0;
 
     let businessGooglePlaceId = this.state.businesses.map(x => x.googlePlaceId);
-    let suggestions = this.state.suggestions.filter(x => businessGooglePlaceId.indexOf(x.googlePlaceId) < 0);
+    let suggestions = this.state.suggestions.filter(
+      x => businessGooglePlaceId.indexOf(x.googlePlaceId) < 0
+    );
+    let placeNumber =
+      this.state.businesses && this.state.businesses.length > 0
+        ? this.state.businesses.length
+        : 0;
+    let requiredPlaces = this.props.requiredPlaces - placeNumber;
 
     return (
       <div>
         <Row justify="start">
           <Col md={24} sm={24} xs={24}>
             <ContentHolder>
+              {this.props.requiredPlaces && requiredPlaces > 0 && (
+                <InputGroup size="large">
+                  <Col span="24">
+                    You must add {requiredPlaces} more
+                  </Col>
+                </InputGroup>
+              )}
               <InputGroup size="large" style={{ marginBottom: '15px' }}>
                 {this.state.businesses &&
                   this.state.businesses.length > 0 && (
@@ -214,8 +241,13 @@ class CreateAddress extends Component {
                             handleRemove={this.handleRemove}
                             handleMinus={this.handleRemoveSuggestion}
                             id={business.id}
-                            isAddedSuggestion={this.state.orginalSuggestions.find(x => x.googlePlaceId === business.googlePlaceId)}
-                            hasOwner={this.props.category === 'merchant' || business.owner}
+                            isAddedSuggestion={this.state.orginalSuggestions.find(
+                              x => x.googlePlaceId === business.googlePlaceId
+                            )}
+                            hasOwner={
+                              this.props.category === 'merchant' ||
+                              business.owner
+                            }
                           />
                         </List.Item>
                       )}
@@ -244,24 +276,26 @@ class CreateAddress extends Component {
                       itemLayout="horizontal"
                       split={false}
                       dataSource={suggestions}
-                      renderItem={suggestion => suggestion && (
-                        <List.Item>
-                          <ServiceCard
-                            name={suggestion.businessName}
-                            address={suggestion.address}
-                            phone={suggestion.phone}
-                            types={suggestion.googlePlaceCategories}
-                            key={suggestion.googlePlaceId}
-                            googlePlaceId={suggestion.googlePlaceId}
-                            photo={suggestion.photo}
-                            handleRemove={this.handleRemove}
-                            handleMinus={this.handleRemoveSuggestion}
-                            handlePlus={this.handleAddSuggestion}
-                            id={suggestion.id}
-                            isSuggestion={true}
-                          />
-                        </List.Item>
-                      )}
+                      renderItem={suggestion =>
+                        suggestion && (
+                          <List.Item>
+                            <ServiceCard
+                              name={suggestion.businessName}
+                              address={suggestion.address}
+                              phone={suggestion.phone}
+                              types={suggestion.googlePlaceCategories}
+                              key={suggestion.googlePlaceId}
+                              googlePlaceId={suggestion.googlePlaceId}
+                              photo={suggestion.photo}
+                              handleRemove={this.handleRemove}
+                              handleMinus={this.handleRemoveSuggestion}
+                              handlePlus={this.handleAddSuggestion}
+                              id={suggestion.id}
+                              isSuggestion={true}
+                            />
+                          </List.Item>
+                        )
+                      }
                     />
                   )}
               </InputGroup>

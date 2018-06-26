@@ -56,6 +56,24 @@ export default class ItemFile extends Component {
         }
       </div>
     );
+
+    let actions = [
+      <Popover
+        content={infoContent}
+        title="More Details"
+        trigger="hover"
+        visible={this.state.visible}
+        onVisibleChange={this.handleVisibleChange}
+      >
+        <Icon type="info-circle-o" />
+      </Popover>,
+      <Icon type="edit" onClick={this.handleEdit} />,
+    ];
+
+    actions = this.props.profileType === 'main'
+                              ? actions
+                              : [...actions, <Icon type="delete" onClick={this.handleRemoveDependent}/> ];
+
     return (
       <Card
         hoverable
@@ -66,19 +84,7 @@ export default class ItemFile extends Component {
             src={this.props.avatar || "https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png"}
           />
         }
-        actions={[
-          <Popover
-            content={infoContent}
-            title="More Details"
-            trigger="hover"
-            visible={this.state.visible}
-            onVisibleChange={this.handleVisibleChange}
-          >
-            <Icon type="info-circle-o" />
-          </Popover>,
-          <Icon type="edit" onClick={this.handleEdit} />,
-          <Icon type="delete" onClick={this.handleRemoveDependent} />
-        ]}
+        actions={actions}
       >
         <Meta title={this.props.displayName} description={this.props.bio} />
       </Card>

@@ -191,9 +191,7 @@ export default class UserPanel extends Component {
       .then(res => {
         let dependents = res.data;
         if (this.props.profile) {
-          dependents = res.data.filter(
-            x => x.user === this.props.profile.user
-          );
+          dependents = res.data.filter(x => x.user === this.props.profile.user);
         }
 
         this.setState({
@@ -219,7 +217,7 @@ export default class UserPanel extends Component {
       }
     })
       .then(res => {
-        let dependents = this.state.dependents.map(x => ({...x}));
+        let dependents = this.state.dependents.map(x => ({ ...x }));
         if (res.data) {
           let index = dependents.map(x => x._id).indexOf(res.data._id);
           if (index < 0) {
@@ -256,23 +254,26 @@ export default class UserPanel extends Component {
         Accept: 'application/json',
         'Content-Type': 'application/json'
       }
-    }).then(res => {
-      if (newDependent) {
-        this.handleAddDependent(newDependent);
-      }
+    })
+      .then(res => {
+        if (newDependent) {
+          this.handleAddDependent(newDependent);
+        }
 
-      let dependents = this.state.dependents.map(x => ({...x}));
-      dependents = dependents.filter(x => x._id !== deleteDependent.profileId);
-      this.setState({
-        dependents: dependents
+        let dependents = this.state.dependents.map(x => ({ ...x }));
+        dependents = dependents.filter(
+          x => x._id !== deleteDependent.profileId
+        );
+        this.setState({
+          dependents: dependents
+        });
+      })
+      .catch(err => {
+        console.log(err);
       });
-    })
-    .catch(err => {
-      console.log(err);
-    })
-  }
+  };
 
-  handleEditDependent = (id) => {
+  handleEditDependent = id => {
     let editingDependent = this.state.dependents.find(x => x._id === id);
 
     if (editingDependent) {
@@ -280,7 +281,7 @@ export default class UserPanel extends Component {
         editingDependent: editingDependent
       });
     }
-  }
+  };
 
   componentWillReceiveProps = nextProps => {
     if (nextProps.profile && nextProps.profile.locations) {
@@ -298,9 +299,7 @@ export default class UserPanel extends Component {
     if (nextProps.isLoggedIn && nextProps.profile) {
       let dependents = this.state.dependents.map(x => ({ ...x }));
       this.setState({
-        dependents: dependents.filter(
-          x => x.user === nextProps.profile.user
-        )
+        dependents: dependents.filter(x => x.user === nextProps.profile.user)
       });
     }
   };
@@ -310,6 +309,14 @@ export default class UserPanel extends Component {
     window.addEventListener('resize', this.handleWindowResize);
 
     this.getDependents();
+
+    if (this.props.hasDirectLink) {
+      if (this.props.isLoggedIn) {
+        this.handleTabChange('6');
+      } else {
+        this.handleTabChange('4');
+      }
+    }
   };
 
   componentDidUpdate = (prevProps, prevState) => {
@@ -323,6 +330,19 @@ export default class UserPanel extends Component {
   };
 
   render(props) {
+    let terms =
+      this.props.contents && this.props.contents.site
+        ? this.props.contents.site.terms
+        : '';
+    let privacy =
+      this.props.contents && this.props.contents.site
+        ? this.props.contents.site.privacy
+        : '';
+    let aboutUs =
+      this.props.contents && this.props.contents.site
+        ? this.props.contents.site.aboutUs
+        : '';
+
     let data = [
       {
         header: 'My Dependents',
@@ -338,7 +358,7 @@ export default class UserPanel extends Component {
             editingDependent={this.state.editingDependent}
             files={this.state.files}
             locations={this.state.locations}
-            uploadId='userUploadItem'
+            uploadId="userUploadItem"
             {...this.props}
           />
         ),
@@ -351,7 +371,6 @@ export default class UserPanel extends Component {
             handleRemoveDependent={this.handleRemoveDependent}
             handleEditDependent={this.handleEditDependent}
             handleItemActiveTab={this.handleItemActiveTab}
-
             handleAddLocation={this.handleAddLocation}
             handleAddFile={this.handleAddFile}
             files={this.state.files}
@@ -387,7 +406,6 @@ export default class UserPanel extends Component {
             handleEditButton={this.handleEditLocation}
             handleRemoveButton={this.handleRemoveLocation}
             dependents={this.state.dependents}
-
             handleItemActiveTab={this.handleItemActiveTab}
             handleAddDependent={this.handleAddDependent}
             files={this.state.files}
@@ -410,20 +428,19 @@ export default class UserPanel extends Component {
             editingFile={this.state.editingFile}
             handleRemoveFile={this.handleRemoveFile}
             dependents={this.state.dependents}
-            uploadId='userFileManagementUploadId'
+            uploadId="userFileManagementUploadId"
             {...this.props}
           />
         ),
         item: (
           <WrapFileItems
             key="fileItem"
-            id='fileAnchor'
+            id="fileAnchor"
             activeKey={this.state.itemActiveTab}
             files={this.state.files}
             handleEditButton={this.handleEditFile}
             handleRemoveButton={this.handleRemoveFile}
             profile={this.props.profile}
-
             locations={this.state.locations}
             handleItemActiveTab={this.handleItemActiveTab}
             handleAddDependent={this.handleAddDependent}
@@ -445,7 +462,14 @@ export default class UserPanel extends Component {
             {...this.props}
           />
         ),
-        item: <WrapAboutUsItems />,
+        item: (
+          <WrapAboutUsItems
+            hashRoute={this.props.hashRoute}
+            terms={terms}
+            privacy={privacy}
+            aboutUs={aboutUs}
+          />
+        ),
         formWidth: '12',
         itemWidth: '12',
         isDisplay: !this.props.isLoggedIn
@@ -462,7 +486,14 @@ export default class UserPanel extends Component {
             {...this.props}
           />
         ),
-        item: <WrapAboutUsItems />,
+        item: (
+          <WrapAboutUsItems
+            hashRoute={this.props.hashRoute}
+            terms={terms}
+            privacy={privacy}
+            aboutUs={aboutUs}
+          />
+        ),
         formWidth: '12',
         itemWidth: '12',
         isDisplay: !this.props.isLoggedIn
@@ -477,7 +508,14 @@ export default class UserPanel extends Component {
             {...this.props}
           />
         ),
-        item: <WrapAboutUsItems />,
+        item: (
+          <WrapAboutUsItems
+            hashRoute={this.props.hashRoute}
+            terms={terms}
+            privacy={privacy}
+            aboutUs={aboutUs}
+          />
+        ),
         formWidth: '12',
         itemWidth: '12',
         isDisplay: !this.props.isLoggedIn
@@ -487,9 +525,20 @@ export default class UserPanel extends Component {
         icon: 'tool',
         nav: 'Settings',
         form: (
-          <SettingsUser login={this.props.login} profile={this.props.profile} />
+          <SettingsUser
+            login={this.props.login}
+            profile={this.props.profile}
+            hashRoute={this.props.hashRoute}
+          />
         ),
-        item: <WrapAboutUsItems />,
+        item: (
+          <WrapAboutUsItems
+            hashRoute={this.props.hashRoute}
+            terms={terms}
+            privacy={privacy}
+            aboutUs={aboutUs}
+          />
+        ),
         formWidth: '12',
         itemWidth: '12',
         isDisplay: this.props.isLoggedIn
@@ -498,7 +547,7 @@ export default class UserPanel extends Component {
     let logOutStyle = {
       color: 'red',
       width: '100%'
-    }
+    };
     return (
       <LayoutWrapper>
         <Box>
@@ -534,7 +583,8 @@ export default class UserPanel extends Component {
                 <TabPane
                   tab={
                     <span>
-                      <div style={logOutStyle}><Icon type="logout" /> Logout
+                      <div style={logOutStyle}>
+                        <Icon type="logout" /> Logout
                       </div>
                     </span>
                   }

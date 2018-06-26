@@ -188,7 +188,7 @@ export default connect(
     app: state.App.toJS(),
     isLoggedIn:
       state.Auth.get('idToken') !== null &&
-      state.Auth.get('idToken') !== 'LOGIN_ERROR',
+      state.Auth.get('idToken').indexOf('Bear') !== -1,
     height: state.App.toJS().height
   }),
   { toggleOpenDrawer, changeOpenKeys, changeCurrent, toggleCollapsed }

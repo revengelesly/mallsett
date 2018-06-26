@@ -50,7 +50,6 @@ export function* getMerchant() {
 export function* getSuggestions() {
   yield takeEvery(authActions.LOGIN_SUCCESS, function*(payload) {
     if (payload && payload.profile) {
-      console.log('vô');
       const suggestions = yield call(getSuggestionsAPI, payload.token);
       console.log(suggestions);
       if (suggestions) {

@@ -217,7 +217,6 @@ class TouchUp extends Component {
   <Pagination simple defaultCurrent={2} total={50} />
 
   </Col>
-
         </Row>
 
   
@@ -362,7 +361,7 @@ class TouchUp extends Component {
               }
               key="4"
             >
-              {this.props.privacy && this.props.privacy.value }
+              <div dangerouslySetInnerHTML={{__html: this.props.privacy}} />
             </TabPane>
             <TabPane
               tab={
@@ -372,7 +371,7 @@ class TouchUp extends Component {
               }
               key="5"
             >
-              {this.props.terms && this.props.terms.value}
+              <div dangerouslySetInnerHTML={{__html: this.props.terms}} />
             </TabPane>
           </Tabs>
         </Row>

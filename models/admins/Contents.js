@@ -4,12 +4,11 @@ const Schema = mongoose.Schema;
 
 //create schema
 const AdminContentsSchema = new Schema({
-    
      merchantsSelectOptions: [{
         //personal
         creator: {
             type: Schema.Types.ObjectId,
-            ref: 'profiles'    
+            ref: 'profiles'
         },
         category: {
             type: String,
@@ -35,12 +34,12 @@ const AdminContentsSchema = new Schema({
             default: "Product"
         },
         allowed: [{
-             type: String        
-            
+             type: String
+
         }],
         banned: [{
-             type: String        
-            
+             type: String
+
         }],
         created_at: {
             type: Date,
@@ -67,10 +66,10 @@ const AdminContentsSchema = new Schema({
             required: true,
             default: 10
         },
-        // categories that we are suggesting. 
+        // categories that we are suggesting.
         suggestedCategories: [{
            name: String,
-           // do we automaticly add the nearest on the category. 
+           // do we automaticly add the nearest on the category.
            // For Example: we can automatilcy add the nearest Police Station or Fire Department.
            autoFirst: {
                type: Boolean,
@@ -89,7 +88,7 @@ const AdminContentsSchema = new Schema({
             type: String,
             required: true
         },
-        // categories that we are suggesting. 
+        // categories that we are suggesting.
         googlePlaceId: [{
             type: String
         }]
@@ -97,4 +96,4 @@ const AdminContentsSchema = new Schema({
 
 });
 
-module.exports = AdminContentsOption = mongoose.model('contents', AdminContentsSchema);
+module.exports = Contents = mongoose.model('contents', AdminContentsSchema);

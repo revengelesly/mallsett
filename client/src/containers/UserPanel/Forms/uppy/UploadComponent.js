@@ -11,12 +11,22 @@ export default class extends Component {
   uppy = null;
   componentDidMount() {
     config.target = `#${this.props.id}`;
+    config.restrictions = {
+      maxFileSize: this.props.maxFileSize || 3000000,
+      maxNumberOfFiles: this.props.maxNumberOfFiles || 1,
+      minNumberOfFiles: this.props.minNumberOfFiles || 1,
+      allowedFileTypes: ['image/*']
+    }
     this.uppy = Uppy(config, this.onSuccess);
   }
 
   onSuccess(fileList) {
-    if (fileList.successful && fileList.successful[0]) {
-      this.props.handleUploadFileSuccess(fileList.successful[0].uploadURL);
+    if (fileList.successful) {
+      if (fileList.successful.length === 1) {
+        this.props.handleUploadFileSuccess(fileList.successful[0].uploadURL);
+      } else if (fileList.successful.length > 1) {
+        this.props.handleUploadFileSuccess(fileList.successful.map(x => x.uploadURL));
+      }
     }
   }
 

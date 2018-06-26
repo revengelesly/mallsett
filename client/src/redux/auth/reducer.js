@@ -5,6 +5,8 @@ const initState = new Map({ idToken: null, profile: null });
 
 export default function authReducer(state = initState, action) {
   switch (action.type) {
+    case actions.LOGIN_REQUEST:
+      return state.set('idToken', actions.LOGIN_REQUEST);
     case actions.LOGIN_SUCCESS:
       return state.set('idToken', action.token).set('profile', action.profile);
     case actions.LOGOUT:

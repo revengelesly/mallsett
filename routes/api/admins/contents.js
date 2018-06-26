@@ -5,7 +5,7 @@ const passport = require('passport');
 const moment = require('moment');
 
 // Load Product Model
-const Contents = require('../../../models/admin/Contents');
+const Contents = require('../../../models/admins/Contents');
 // Load Profile Model
 moment().format();
 //get time now
@@ -20,9 +20,9 @@ router.get('/test', (req, res) => res.json({ msg: 'Product Works' }));
 
 
 /*********************************************************
- * 
+ *
  *          CRUD products
- * 
+ *
  * ******************************************************/
 
 // @route    POST api/admin/contents
@@ -63,5 +63,22 @@ router.post('/admin/contents/selectOptions', passport.authenticate('jwt', { sess
     });
   }
 );
+
+// @route    GET api/admin/contents
+// @desc     Create or Update contents
+// @access   Private
+router.get('/',
+  (req, res) => {
+    Contents.find()
+            .then(contents => {
+              console.log('selectOptions');
+              if (contents) {
+                res.json(contents)
+              } else {
+                res.status(404).json({ message: '' })
+             }
+            })
+  }
+)
 
 module.exports = router;

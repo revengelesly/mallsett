@@ -18,7 +18,7 @@ import { BaseURL } from '../../helpers/constants';
 import axios from 'axios';
 import createHistory from 'history/createBrowserHistory';
 
-const history = createHistory({forceRefresh: true});
+const history = createHistory({ forceRefresh: true });
 
 class PlugBusiness extends React.Component {
   constructor(props) {
@@ -27,7 +27,7 @@ class PlugBusiness extends React.Component {
       current: 0,
       changing: true,
       formState: 1,
-      disabledTabs: new Array(15).fill(true, 1),
+      disabledTabs: new Array(18).fill(true, 1),
       tabMenuPositon: 'top',
       associates: new Array(13).fill([], 2),
       fields: {}
@@ -47,9 +47,11 @@ class PlugBusiness extends React.Component {
     });
   };
 
-  handleUploadGallerySuccess = link => {
+  handleUploadGallerySuccess = links => {
     this.setState({
-      gallery: link
+      gallery: this.state.gallery
+        ? this.state.gallery.concat(links)
+        : [...links]
     });
   };
 
@@ -192,15 +194,9 @@ class PlugBusiness extends React.Component {
       associates[10] = merchant.associates.filter(
         x => x.category === 'government'
       );
-      associates[11] = merchant.associates.filter(
-        x => x.category === 'pos'
-      );
-      associates[12] = merchant.associates.filter(
-        x => x.category === 'credit'
-      );
-      associates[13] = merchant.associates.filter(
-        x => x.category === 'mall'
-      );
+      associates[11] = merchant.associates.filter(x => x.category === 'pos');
+      associates[12] = merchant.associates.filter(x => x.category === 'credit');
+      associates[13] = merchant.associates.filter(x => x.category === 'mall');
       associates[14] = merchant.associates.filter(
         x => x.category === 'delivery'
       );
@@ -222,11 +218,19 @@ class PlugBusiness extends React.Component {
     if (merchant && merchant.place) {
       disabledTabs = disabledTabs.fill(false, 0, 2);
 
+      if (
+        associates[15].length > 0 &&
+        merchant.businessType &&
+        merchant.businessType.length > 0
+      ) {
+        // open all tabs
+        disabledTabs.fill(false);
+      }
+
       if (associates.length > 0) {
         for (let i = 0; i < associates.length; i++) {
-          if (associates[i] && associates[i].length > 0) {
+          if (associates[i]) {
             disabledTabs = disabledTabs.fill(false, 0, i + 1);
-
             if (
               ((i === 4 || i === 6 || i === 8 || i === 10) &&
                 associates[i].length < 3) ||
@@ -236,15 +240,6 @@ class PlugBusiness extends React.Component {
               break;
             }
           }
-        }
-
-        if (
-          associates[10].length >= 3 &&
-          merchant.businessType &&
-          merchant.businessType.length > 0
-        ) {
-          // open all tabs
-          disabledTabs.fill(false);
         }
       }
     } else {
@@ -331,7 +326,9 @@ class PlugBusiness extends React.Component {
             }
             handleUpdateMerchant={this.props.handleUpdateMerchant}
             {...this.props}
-            suggestions={this.props.suggestions.filter(x => x.targeted === "merchant")}
+            suggestions={this.props.suggestions.filter(
+              x => x.targeted === 'merchant'
+            )}
           />
         ),
         disabledNext:
@@ -349,8 +346,9 @@ class PlugBusiness extends React.Component {
             places={this.state.associates[2]}
             handleUpdateAssociate={this.props.handleUpdateAssociate}
             {...this.props}
-            suggestions={this.props.suggestions.filter(x => x.targeted === "parent")}
-
+            suggestions={this.props.suggestions.filter(
+              x => x.targeted === 'parent'
+            )}
           />
         ),
         description: '',
@@ -366,8 +364,9 @@ class PlugBusiness extends React.Component {
             places={this.state.associates[3]}
             handleUpdateAssociate={this.props.handleUpdateAssociate}
             {...this.props}
-            suggestions={this.props.suggestions.filter(x => x.targeted === "child")}
-
+            suggestions={this.props.suggestions.filter(
+              x => x.targeted === 'child'
+            )}
           />
         ),
         description: '',
@@ -383,8 +382,10 @@ class PlugBusiness extends React.Component {
             places={this.state.associates[4]}
             handleUpdateAssociate={this.props.handleUpdateAssociate}
             {...this.props}
-            suggestions={this.props.suggestions.filter(x => x.targeted === "supplier")}
-
+            suggestions={this.props.suggestions.filter(
+              x => x.targeted === 'supplier'
+            )}
+            requiredPlaces={3}
           />
         ),
         disabledNext:
@@ -402,8 +403,9 @@ class PlugBusiness extends React.Component {
             places={this.state.associates[5]}
             handleUpdateAssociate={this.props.handleUpdateAssociate}
             {...this.props}
-            suggestions={this.props.suggestions.filter(x => x.targeted === "b2b_customers")}
-
+            suggestions={this.props.suggestions.filter(
+              x => x.targeted === 'b2b_customers'
+            )}
           />
         ),
         description: '',
@@ -419,8 +421,10 @@ class PlugBusiness extends React.Component {
             places={this.state.associates[6]}
             handleUpdateAssociate={this.props.handleUpdateAssociate}
             {...this.props}
-            suggestions={this.props.suggestions.filter(x => x.targeted === "services")}
-
+            suggestions={this.props.suggestions.filter(
+              x => x.targeted === 'services'
+            )}
+            requiredPlaces={3}
           />
         ),
         disabledNext:
@@ -438,8 +442,9 @@ class PlugBusiness extends React.Component {
             places={this.state.associates[7]}
             handleUpdateMerchant={this.props.handleUpdateAssociate}
             {...this.props}
-            suggestions={this.props.suggestions.filter(x => x.targeted === "competitors")}
-
+            suggestions={this.props.suggestions.filter(
+              x => x.targeted === 'competitors'
+            )}
           />
         ),
         description: '',
@@ -455,8 +460,10 @@ class PlugBusiness extends React.Component {
             places={this.state.associates[8]}
             handleUpdateMerchant={this.props.handleUpdateAssociate}
             {...this.props}
-            suggestions={this.props.suggestions.filter(x => x.targeted === "associations")}
-
+            suggestions={this.props.suggestions.filter(
+              x => x.targeted === 'associations'
+            )}
+            requiredPlaces={3}
           />
         ),
         disabledNext:
@@ -467,32 +474,42 @@ class PlugBusiness extends React.Component {
       {
         title: 'Marketing Services',
         icon: 'notification',
-        content: <BusinessCardHorizontal
-                  key="marketingServices"
-                  category="marketingServices"
-                  places={this.state.associates[9]}
-                  handleUpdateAssociate={this.props.handleUpdateAssociate}
-                  {...this.props}
-                  suggestions={this.props.suggestions.filter(x => x.targeted === "marketingServices")}
-
-                />,
-        disabledNext: !this.state.associates[9] || this.state.associates[9].length < 1,
+        content: (
+          <BusinessCardHorizontal
+            key="marketingServices"
+            category="marketingServices"
+            places={this.state.associates[9]}
+            handleUpdateAssociate={this.props.handleUpdateAssociate}
+            {...this.props}
+            suggestions={this.props.suggestions.filter(
+              x => x.targeted === 'marketingServices'
+            )}
+            requiredPlaces={1}
+          />
+        ),
+        disabledNext:
+          !this.state.associates[9] || this.state.associates[9].length < 1,
         description: '',
         help: 'soemthing here to help'
       },
       {
         title: 'Government',
         icon: 'safety',
-        content: <BusinessCardHorizontal
-                  key="government"
-                  category="government"
-                  places={this.state.associates[10]}
-                  handleUpdateAssociate={this.props.handleUpdateAssociate}
-                  {...this.props}
-                  suggestions={this.props.suggestions.filter(x => x.targeted === "government")}
-
-                />,
-        disabledNext: !this.state.associates[10] || this.state.associates[10].length < 3,
+        content: (
+          <BusinessCardHorizontal
+            key="government"
+            category="government"
+            places={this.state.associates[10]}
+            handleUpdateAssociate={this.props.handleUpdateAssociate}
+            {...this.props}
+            suggestions={this.props.suggestions.filter(
+              x => x.targeted === 'government'
+            )}
+            requiredPlaces={3}
+          />
+        ),
+        disabledNext:
+          !this.state.associates[10] || this.state.associates[10].length < 3,
         description: '',
         help: 'soemthing here to help'
       },
@@ -506,8 +523,9 @@ class PlugBusiness extends React.Component {
             places={this.state.associates[11]}
             handleUpdateAssociate={this.props.handleUpdateAssociate}
             {...this.props}
-            suggestions={this.props.suggestions.filter(x => x.targeted === "pos")}
-
+            suggestions={this.props.suggestions.filter(
+              x => x.targeted === 'pos'
+            )}
           />
         ),
         description: '',
@@ -523,8 +541,9 @@ class PlugBusiness extends React.Component {
             places={this.state.associates[12]}
             handleUpdateAssociate={this.props.handleUpdateAssociate}
             {...this.props}
-            suggestions={this.props.suggestions.filter(x => x.targeted === "credit")}
-
+            suggestions={this.props.suggestions.filter(
+              x => x.targeted === 'credit'
+            )}
           />
         ),
         description: '',
@@ -533,43 +552,54 @@ class PlugBusiness extends React.Component {
       {
         title: 'Mall / Plaza',
         icon: 'building',
-        content: <BusinessCardHorizontal
-                    key="mall"
-                    category="mall"
-                    places={this.state.associates[13]}
-                    handleUpdateAssociate={this.props.handleUpdateAssociate}
-                    {...this.props}
-                    suggestions={this.props.suggestions.filter(x => x.targeted === "mall")}
-                  />,
+        content: (
+          <BusinessCardHorizontal
+            key="mall"
+            category="mall"
+            places={this.state.associates[13]}
+            handleUpdateAssociate={this.props.handleUpdateAssociate}
+            {...this.props}
+            suggestions={this.props.suggestions.filter(
+              x => x.targeted === 'mall'
+            )}
+          />
+        ),
         description: '',
         help: 'soemthing here to help'
       },
       {
         title: 'Delivery & Shoppers',
         icon: 'car',
-        content: <BusinessCardHorizontal
-                    key="delivery"
-                    category="delivery"
-                    places={this.state.associates[14]}
-                    handleUpdateAssociate={this.props.handleUpdateAssociate}
-                    {...this.props}
-                    suggestions={this.props.suggestions.filter(x => x.targeted === "delivery")}
-                  />,
+        content: (
+          <BusinessCardHorizontal
+            key="delivery"
+            category="delivery"
+            places={this.state.associates[14]}
+            handleUpdateAssociate={this.props.handleUpdateAssociate}
+            {...this.props}
+            suggestions={this.props.suggestions.filter(
+              x => x.targeted === 'delivery'
+            )}
+          />
+        ),
         description: '',
         help: 'soemthing here to help'
       },
       {
         title: 'Customer Service',
         icon: 'customer-service',
-        content: <BusinessCardHorizontal
-                    key="customerService"
-                    category="customerService"
-                    places={this.state.associates[15]}
-                    handleUpdateAssociate={this.props.handleUpdateAssociate}
-                    {...this.props}
-                    suggestions={this.props.suggestions.filter(x => x.targeted === "customerService")}
-
-                  />,
+        content: (
+          <BusinessCardHorizontal
+            key="customerService"
+            category="customerService"
+            places={this.state.associates[15]}
+            handleUpdateAssociate={this.props.handleUpdateAssociate}
+            {...this.props}
+            suggestions={this.props.suggestions.filter(
+              x => x.targeted === 'customerService'
+            )}
+          />
+        ),
         description: '',
         help: 'soemthing here to help'
       },
@@ -588,14 +618,45 @@ class PlugBusiness extends React.Component {
             {...this.props}
           />
         ),
-        disabledNext: (this.state.fields.businessType && this.state.fields.targetType && this.state.fields.personalEmail && this.state.fields.phone && this.state.fields.businessEmail && this.state.fields.bio ? false : true),
+        disabledNext:
+          this.state.fields.businessType &&
+          this.state.fields.targetType &&
+          this.state.fields.personalEmail &&
+          this.state.fields.phone &&
+          this.state.fields.businessEmail &&
+          this.state.fields.bio
+            ? false
+            : true,
         description: '',
         help: 'soemthing here to help'
       },
       {
         title: 'Preview',
         icon: 'trophy',
-        content: <TouchUp merchant={this.props.merchant}  bio={this.state.fields.bio} terms={this.state.fields.terms} privacy={this.state.fields.privacy} />,
+        content: (
+          <TouchUp
+            merchant={this.props.merchant}
+            bio={
+              (this.state.fields.bio && this.state.fields.bio.value) ||
+              (this.props.contents && this.props.contents.site
+                ? this.props.contents.site.aboutUs
+                : '')
+            }
+            terms={
+              (this.state.fields.terms && this.state.fields.terms.value) ||
+              (this.props.contents && this.props.contents.site
+                ? this.props.contents.site.terms
+                : '')
+            }
+            privacy={
+              (this.state.fields.privacy && this.state.fields.privacy.value) ||
+              (this.props.contents && this.props.contents.site
+                ? this.props.contents.site.privacy
+                : '')
+            }
+            gallery={this.state.gallery}
+          />
+        ),
         description: '',
         help: 'soemthing here to help'
       }

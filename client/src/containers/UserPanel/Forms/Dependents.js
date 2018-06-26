@@ -42,19 +42,23 @@ class SettingsUserForm extends Component {
     secondSubCategory: secondaryType[primaryType[0]][0],
     ageStatement: '',
     formItemLayout: {},
-    isUploadComponentReset: false
+    isUploadComponentReset: false,
+    role: 'Dependent'
   };
+
   handleCategoryChange = value => {
     this.setState({
       cities: secondaryType[value],
       secondSubCategory: secondaryType[value][0]
     });
   };
+
   onSecondSubCategoryChange = value => {
     this.setState({
       secondSubCategory: value
     });
   };
+
   check = () => {
     this.props.form.validateFields(err => {
       if (!err) {
@@ -62,6 +66,7 @@ class SettingsUserForm extends Component {
       }
     });
   };
+
   handleAgeChange = e => {
     this.setState(
       {
@@ -164,8 +169,17 @@ class SettingsUserForm extends Component {
   componentDidMount = () => {
     this.handleWindowResize();
     window.addEventListener('resize', this.handleWindowResize);
-
   };
+
+  componentDidUpdate = (prevProps) => {
+    if (this.props.editingDependent !== prevProps.editingDependent) {
+      this.setState({
+        role: this.props.editingDependent && this.props.editingDependent.profileType === 'main'
+                  ? 'My'
+                  : 'Dependent'
+      })
+    }
+  }
 
   ageInfoHandler = e => {
     console.log('was click');
@@ -174,6 +188,7 @@ class SettingsUserForm extends Component {
   getRandomId = prefix => {
     return prefix + (new Date()).getTime();
   }
+
   render() {
     const { getFieldDecorator } = this.props.form;
     const categoryOptions = primaryType.map(category => (
@@ -192,10 +207,12 @@ class SettingsUserForm extends Component {
       edittingAge = this.props.editingDependent && this.props.editingDependent.dob ? (now.getFullYear() - dob.getFullYear()) : '';
     }
 
+    console.log(this.props.editingDependent);
+
     return (
       <div>
         <Form onSubmit={this.handleSubmit} className="login-form">
-          <FormItem label="Dependent Name" >
+          <FormItem label={this.state.role + ' Name'} >
             {getFieldDecorator('Dependent Name', {
               rules: [{ required: true, message: 'Dependent name is required.' }],
               initialValue: (this.props.editingDependent ? this.props.editingDependent.displayName: '')
@@ -224,7 +241,7 @@ class SettingsUserForm extends Component {
               />
             )}
           </FormItem>
-          <FormItem label="Dependent Age">
+          <FormItem label={this.state.role + " Age"}>
             {getFieldDecorator('age', {
               rules: [{ required: true, message: 'Not all things are appropriate for all ages.' }],
               initialValue: edittingAge
@@ -239,10 +256,11 @@ class SettingsUserForm extends Component {
             )}
             {this.state.ageStatement && <div>{this.state.ageStatement}</div>}
           </FormItem>
-          <FormItem label="Dependent type" {...formItemLayout}>
+          <FormItem label={this.state.role + " type"} {...formItemLayout}>
             <Select
               style={{ width: '100%' }}
               onChange={this.handleCategoryChange}
+              disabled={this.props.editingDependent && this.props.editingDependent.profileType === 'main'}
             >
               {categoryOptions}
             </Select>
@@ -255,6 +273,7 @@ class SettingsUserForm extends Component {
               <Select
                 style={{ width: '100%' }}
                 onChange={this.onSecondSubCategoryChange}
+                disabled={this.props.editingDependent && this.props.editingDependent.profileType === 'main'}
               >
                 {subCategoryOptions}
               </Select>

@@ -1,23 +1,17 @@
 import React, { Component } from 'react';
-import { Alert, Form, Icon, Input, Button, Col, Row } from 'antd';
+import { Alert, Form, Icon, Input, Button, Col, Row, message } from 'antd';
 import { InputGroup } from '../../../components/uielements/input';
 import SigninWrapper from '../signin.style';
 import IntlMessages from '../../../components/utility/intlMessages';
+import GoogleSignInWrapper from '../../../components/googleSignIn/GoogleSignInWrapper';
 
 const FormItem = Form.Item;
 
 class LoginUser extends Component {
   state = {
     checkDob: false,
+    loading: false,
     ageInfo: ''
-  };
-
-  check = () => {
-    this.props.form.validateFields(err => {
-      if (!err) {
-        console.info('success');
-      }
-    });
   };
 
   handleSubmit = e => {
@@ -25,6 +19,11 @@ class LoginUser extends Component {
     this.props.form.validateFields((err, user) => {
       if (!err) {
         console.log('Received values of form: ', user);
+
+        this.setState({
+          loading: true
+        });
+
         this.props.login(user);
       }
     });
@@ -43,9 +42,27 @@ class LoginUser extends Component {
     }
   };
 
-  ageInfoHandler = e => {
-    console.log('was click');
-  };
+
+
+  componentWillReceiveProps = (nextProps) => {
+    console.log(this.state.loading);
+    if (nextProps.idToken) {
+      if (nextProps.idToken === 'LOGIN_REQUEST') {
+        this.setState({
+          loading: true
+        });
+      } else {
+        this.setState({
+          loading: false
+        });
+      }
+
+      if (nextProps.idToken === 'LOGIN_ERROR' && this.state.loading) {
+        message.error('Email or Password is incorrect');
+      }
+    }
+  }
+
   render() {
     const { getFieldDecorator } = this.props.form;
     return (
@@ -83,21 +100,12 @@ class LoginUser extends Component {
           </FormItem>
 
           <FormItem>
-            {this.props.idToken === 'LOGIN_ERROR' && (
-              <Alert
-                message="Email or Password is incorrect"
-                type="error"
-                showIcon
-                banner
-                closable
-              />
-            )}
             <Button
               type="primary"
               style={{ width: '100%' }}
-              onClick={this.check}
               htmlType="submit"
               className="login-form-button"
+              loading={this.state.loading}
             >
               Login
             </Button>

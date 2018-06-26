@@ -46,6 +46,8 @@ class AddMerchantForm extends Component {
             <UploadComponent
               id={this.props.uploadId || 'uploadGallery'}
               handleUploadFileSuccess={this.props.handleUploadGallerySuccess}
+              maxFileSize={5000000}
+              maxNumberOfFiles={20}
             />
           </FormItem>
           <FormItem label="Business Type">
