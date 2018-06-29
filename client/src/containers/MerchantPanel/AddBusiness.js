@@ -23,6 +23,7 @@ const history = createHistory({ forceRefresh: true });
 class PlugBusiness extends React.Component {
   constructor(props) {
     super(props);
+
     this.state = {
       current: 0,
       changing: true,
@@ -30,12 +31,42 @@ class PlugBusiness extends React.Component {
       disabledTabs: new Array(18).fill(true, 1),
       tabMenuPositon: 'top',
       associates: new Array(13).fill([], 2),
-      fields: {}
+      fields: {
+        bio: { value: this.props.merchant && this.props.merchant.detail.bio },
+        businessEmail: {
+          value: this.props.merchant && this.props.merchant.businessEmail
+        },
+        businessType: {
+          value: this.props.merchant && this.props.merchant.businessType
+        },
+        personalEmail: {
+          value: this.props.merchant && this.props.merchant.personalEmail
+        },
+        phone: { value: this.props.merchant && this.props.merchant.phone },
+        privacy: {
+          value: this.props.merchant && this.props.merchant.detail.privacy
+        },
+        targetType: {
+          value: this.props.merchant && this.props.merchant.targetType
+        },
+        terms: {
+          value: this.props.merchant && this.props.merchant.detail.terms
+        },
+        B2Bcommercial: {
+          value:
+            this.props.merchant.socialMedia[0] &&
+            this.props.merchant.socialMedia[0].link
+        },
+        customersCommercial: {
+          value:
+            this.props.merchant.socialMedia[1] &&
+            this.props.merchant.socialMedia[1].link
+        }
+      }
     };
   }
 
   handleFormChange = changedFields => {
-    console.log(changedFields);
     this.setState(({ fields }) => ({
       fields: { ...fields, ...changedFields }
     }));
@@ -77,27 +108,54 @@ class PlugBusiness extends React.Component {
       });
 
       let merchant = {
-        bio: fields.bio.value,
-        businessEmail: fields.businessEmail.value,
-        businessType: fields.businessType.value,
-        personalEmail: fields.personalEmail.value,
-        phone: fields.phone.value,
-        privacy: fields.privacy && fields.privacy.value,
-        targetType: fields.targetType.value,
-        terms: fields.terms && fields.terms.value
+        bio:
+          fields.bio.value ||
+          (this.props.merchant && this.props.merchant.detail.bio),
+        businessEmail:
+          fields.businessEmail.value ||
+          (this.props.merchant && this.props.merchant.businessEmail),
+        businessType:
+          fields.businessType.value ||
+          (this.props.merchant && this.props.merchant.businessType),
+        personalEmail:
+          fields.personalEmail.value ||
+          (this.props.merchant && this.props.merchant.personalEmail),
+        phone:
+          fields.phone.value ||
+          (this.props.merchant && this.props.merchant.phone),
+        privacy:
+          (fields.privacy && fields.privacy.value) ||
+          (this.props.merchant && this.props.merchant.detail.privacy),
+        targetType:
+          fields.targetType.value ||
+          (this.props.merchant && this.props.merchant.targetType),
+        terms:
+          (fields.terms && fields.terms.value) ||
+          (this.props.merchant && this.props.merchant.detail.terms)
       };
       merchant.socialMedia = [
         {
           channel: 'B2B Commercial',
-          link: fields.B2Bcommercial && fields.B2Bcommercial.value
+          link:
+            (fields.B2Bcommercial && fields.B2Bcommercial.value) ||
+            (this.props.merchant &&
+              this.props.merchant.socialMedia[0] &&
+              this.props.merchant.socialMedia[0].link)
         },
         {
           channel: 'Customers Commercial',
-          link: fields.customersCommercial && fields.customersCommercial.value
+          link:
+            (fields.customersCommercial && fields.customersCommercial.value) ||
+            (this.props.merchant &&
+              this.props.merchant.socialMedia[1] &&
+              this.props.merchant.socialMedia[1].link)
         }
       ];
-      merchant.logo = this.state.logo;
-      merchant.gallery = this.state.gallery;
+      merchant.logo =
+        this.state.logo || (this.props.merchant && this.props.merchant.logo);
+      merchant.gallery =
+        this.state.gallery ||
+        (this.props.merchant && this.props.merchant.gallery);
 
       axios({
         method: 'POST',
@@ -114,7 +172,6 @@ class PlugBusiness extends React.Component {
         }
       })
         .then(res => {
-          console.log(res.data);
           this.props.setMerchant(res.data);
           message.success('Processing complete!');
           history.push('/pages/dashboard');
@@ -123,7 +180,7 @@ class PlugBusiness extends React.Component {
     }
   };
 
-  next = merchant => {
+  next = () => {
     const current = this.getCurrent() + 1;
 
     this.setState({ current });
@@ -256,7 +313,6 @@ class PlugBusiness extends React.Component {
     window.addEventListener('resize', this.handleWindowResize);
 
     if (this.props.isLoggedIn && this.props.profile) {
-      console.log(this.props);
       let associates = this.bindDataToState(this.props.merchant);
       this.handleDisableTabs(this.props.merchant, associates);
     }
@@ -270,6 +326,8 @@ class PlugBusiness extends React.Component {
   };
 
   render() {
+    console.log(this.props.merchant);
+    console.log(this.state.fields);
     let step1Content = <LoginUser login={this.props.login} />;
     switch (this.state.formState) {
       case '3':
@@ -307,7 +365,15 @@ class PlugBusiness extends React.Component {
       {
         title: '2 Minute Intro',
         icon: 'bell',
-        content: <AddBusinessIntro />,
+        content: (
+          <AddBusinessIntro
+            content={
+              this.props.contents &&
+              this.props.contents.site &&
+              this.props.contents.site.intro
+            }
+          />
+        ),
         description:
           'Watch this short video and learn more about plugging your business with other businesses and consumers.',
         help: 'soemthing here to help'
@@ -615,18 +681,27 @@ class PlugBusiness extends React.Component {
             onChange={this.handleFormChange}
             merchant={this.props.merchant}
             next={this.next}
+            businessType={
+              this.props.contents &&
+              this.props.contents.businessPanel &&
+              this.props.contents.businessPanel.businessType
+            }
+            targetType={
+              this.props.contents &&
+              this.props.contents.businessPanel &&
+              this.props.contents.businessPanel.targetType
+            }
             {...this.props}
           />
         ),
-        disabledNext:
+        disabledNext: !(
           this.state.fields.businessType &&
           this.state.fields.targetType &&
           this.state.fields.personalEmail &&
           this.state.fields.phone &&
           this.state.fields.businessEmail &&
           this.state.fields.bio
-            ? false
-            : true,
+        ),
         description: '',
         help: 'soemthing here to help'
       },
@@ -638,23 +713,41 @@ class PlugBusiness extends React.Component {
             merchant={this.props.merchant}
             bio={
               (this.state.fields.bio && this.state.fields.bio.value) ||
+              (this.props.merchant &&
+                this.props.merchant.detail &&
+                this.props.merchant.detail.bio) ||
               (this.props.contents && this.props.contents.site
                 ? this.props.contents.site.aboutUs
                 : '')
             }
             terms={
               (this.state.fields.terms && this.state.fields.terms.value) ||
+              (this.props.merchant &&
+                this.props.merchant.detail &&
+                this.props.merchant.detail.terms) ||
               (this.props.contents && this.props.contents.site
                 ? this.props.contents.site.terms
                 : '')
             }
             privacy={
               (this.state.fields.privacy && this.state.fields.privacy.value) ||
+              (this.props.merchant &&
+                this.props.merchant.detail &&
+                this.props.merchant.detail.privacy) ||
               (this.props.contents && this.props.contents.site
                 ? this.props.contents.site.privacy
                 : '')
             }
-            gallery={this.state.gallery}
+            gallery={
+              this.state.gallery ||
+              (this.props.merchant && this.props.merchant.gallery)
+            }
+            logo={
+              this.state.logo || (this.props.merchant && this.props.merchant.logo)
+            }
+            photo={
+              this.props.merchant && this.props.merchant.place.photo
+            }
           />
         ),
         description: '',

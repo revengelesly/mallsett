@@ -22,13 +22,17 @@ class TopBarAddMerchants extends React.Component {
     suggestions: []
   };
 
-  showModal = () => {
-    if (this.state.isBusiness) {
-      history.push('/pages/dashboard');
+  handleClick = () => {
+    if (this.props.isOnDashboard) {
+      history.push('/');
     } else {
-      this.setState({
-        visible: true
-      });
+      if (this.state.isBusiness) {
+        history.push('/pages/dashboard');
+      } else {
+        this.setState({
+          visible: true
+        });
+      }
     }
   };
 
@@ -172,12 +176,22 @@ class TopBarAddMerchants extends React.Component {
     }
   };
 
+  componentDidUpdate = (preProps) => {
+    if (this.props.displayAddBusinessModal !== preProps.displayAddBusinessModal) {
+      this.setState({
+        visible: this.props.displayAddBusinessModal
+      });
+    }
+  }
+
   render() {
     return (
       <div>
-        <div type="" onClick={this.showModal}>
+        <div onClick={this.handleClick}>
           <Icon type="shop" />
-          {this.state.isBusiness ? <span>Manage my Organization</span> : <span>Plug My Business</span>}
+          {this.props.isOnDashboard
+                    ? <span>View the Site</span>
+                    : this.state.isBusiness ? <span>Manage my Organization</span> : <span>Plug My Business</span>}
         </div>
         <Modal
           visible={this.state.visible}

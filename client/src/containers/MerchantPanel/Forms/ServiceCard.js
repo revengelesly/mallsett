@@ -34,7 +34,7 @@ class ServiceCard extends Component {
         {this.props.types && (
           <div>
             {' '}
-            <Icon type="idcard" /> {this.props.types}
+            <Icon type="idcard" /> {this.props.types.join(' | ')}
           </div>
         )}
       </div>

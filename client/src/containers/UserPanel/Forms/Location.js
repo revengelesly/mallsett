@@ -252,8 +252,11 @@ class SettingsUserForm extends Component {
                 style={{ width: '100%' }}
                 onChange={handleLocationTypeChange}
               >
-                <Option value="2">Home</Option>
-                <Option value="3">Work</Option>
+                {this.props.contents &&
+                  this.props.contents.userPanel &&
+                  this.props.contents.userPanel.locationType.map(x => (
+                    <Option value={x.replace(/ /g, '')}>{x}</Option>
+                  ))}
               </Select>
             )}
           </FormItem>

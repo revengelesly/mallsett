@@ -83,22 +83,43 @@ export function timeDifference(givenTime) {
   return getTime();
 }
 
-export function getAgeStatement(age) {
-  if (age < 0) {
-    return '';
-  } else if (age < 13) {
-    return 'You just a baby';
-  } else if (age < 18) {
-    return 'Teenager';
-  } else if (age < 21) {
-    return 'You are an adult';
-  } else if (age < 35) {
-    return 'You can purchase alcohol';
-  } else if (age < 55){
-    return 'You are marturing';
-  } else {
-    return 'You are well matured';
-  }
+export function getAgeStatement(contents, age) {
+  console.log(age);
+  contents = {
+    "0": [
+        "You are a baby"
+    ],
+    "5": [
+        "You are still a baby"
+    ],
+    "10": [
+        "You are getting big"
+    ],
+    "15": [
+        "You are getting big"
+    ],
+    "18": [
+        "You are an adult"
+    ],
+    "21": [
+        "You are are twenty",
+        "do something with your life"
+    ],
+    "45": [
+        "You are fourtyFive",
+        "You are almost very old"
+    ],
+    "55": [
+        "You are mature",
+        "you are very old"
+    ],
+    "65": [
+        "You are retired",
+        "Thank you for your contribution to our society"
+    ]
+  };
+
+  return contents['' + age] ? contents['' + age].join(' ') : '';
 }
 
 export function getView(width) {

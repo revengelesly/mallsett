@@ -91,8 +91,9 @@ class RegisterUser extends Component {
   }
 
   handleAgeChange = (value) => {
+    let dependentAge = this.props.contents && this.props.contents.dependentAge;
     this.setState({
-      ageStatement: getAgeStatement(value)
+      ageStatement: getAgeStatement(dependentAge, value)
     });
   }
 

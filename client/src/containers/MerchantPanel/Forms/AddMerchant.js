@@ -13,7 +13,7 @@ function handleBusinessTypeChange(value) {
 class AddMerchantForm extends Component {
   state = {
     logo: '',
-    gallery: '',
+    gallery: ''
   };
 
   onSecondSubCategoryChange = value => {
@@ -64,37 +64,13 @@ class AddMerchantForm extends Component {
                 style={{ width: '100%' }}
                 onChange={handleBusinessTypeChange}
               >
-                <Option value="manageProducts">Business to Customers</Option>
-                <Option value="manageWholeSale">Business to Business</Option>
-                <Option value="manageDeliveryService">Delivery Services</Option>
-                <Option value="maangeRentals">Rent and Lease</Option>
-                <Option value="manageShoppingService">
-                  Shopping and Styling
-                </Option>
-                <Option value="manageIndemandServices">
-                  Indemand Services
-                </Option>
-                <Option value="manageEvents">Events and Entertainment</Option>
-                <Option value="manageCourse">Schools and Courses</Option>
-                <Option value="manageBrands">Brand Management</Option>
-                <Option value="marketingAgency">Marketing Agencies</Option>
-                <Option value="manageAssociations">Associations</Option>
-                <Option value="manageChurch">Church</Option>
-                <Option value="manageNews">News and Contents</Option>
-                <Option value="manageFilms">Films</Option>
-                <Option value="manageMusic">Music</Option>
-                <Option value="manageBooks">Books</Option>
-                <Option value="manageNonProfit">Non-Profit</Option>
-                <Option value="manageBooks">Parent Company</Option>
-                <Option value="manageBooks">Child Company</Option>
-                <Option value="manageBooks">Supplier</Option>
-                <Option value="manageBooks">B2B Customer</Option>
-                <Option value="manageBooks">Professional Services</Option>
-                <Option value="manageBooks">Associations</Option>
-                <Option value="manageBooks">Marketing Services</Option>
-                <Option value="manageBooks">Government</Option>
-                <Option value="manageBooks">POS System</Option>
-                <Option value="manageBooks">Credit Card Processor</Option>
+                {this.props.businessType &&
+                  this.props.businessType.map(x => (
+                    <Option value={x.replace(/\s/g, '')}>
+                      {x}
+                    </Option>
+                  ))
+                }
               </Select>
             )}
           </FormItem>
@@ -112,16 +88,13 @@ class AddMerchantForm extends Component {
                 style={{ width: '100%' }}
                 onChange={handleBusinessTypeChange}
               >
-                <Option value="manageBooks">Parent Company</Option>
-                <Option value="manageBooks">Child Company</Option>
-                <Option value="manageBooks">Supplier</Option>
-                <Option value="manageBooks">B2B Customer</Option>
-                <Option value="manageBooks">Professional Services</Option>
-                <Option value="manageBooks">Associations</Option>
-                <Option value="manageBooks">Marketing Services</Option>
-                <Option value="manageBooks">Government</Option>
-                <Option value="manageBooks">POS System</Option>
-                <Option value="manageBooks">Credit Card Processor</Option>
+                {this.props.targetType &&
+                  this.props.targetType.map(x => (
+                    <Option value={x.replace(/\s/g, '')}>
+                      {x}
+                    </Option>
+                  ))
+                }
               </Select>
             )}
           </FormItem>

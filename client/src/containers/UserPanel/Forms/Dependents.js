@@ -5,10 +5,16 @@ import { ViewPort } from '../../../helpers/constants';
 import UploadComponent from './uppy/UploadComponent';
 import createHistory from 'history/createBrowserHistory';
 
-const history = createHistory({forceRefresh: true});
+const history = createHistory({ forceRefresh: true });
 
 const { Option, OptGroup } = Select;
-const primaryType = ['Family', 'Friends', 'Pet Animal', 'Others'];
+const { TextArea } = Input;
+const FormItem = Form.Item;
+
+function handleSpecialConsiderationChange(value) {
+  console.log(`selected ${value}`);
+}
+
 const secondaryType = {
   Family: [
     'Son',
@@ -29,27 +35,36 @@ const secondaryType = {
   PetAnimal: ['Dog', 'Cat', 'Reptiles', 'Rats', 'Others'],
   Others: ['Others']
 };
-const { TextArea } = Input;
-const FormItem = Form.Item;
-
-function handleSpecialConsiderationChange(value) {
-  console.log(`selected ${value}`);
-}
 
 class SettingsUserForm extends Component {
-  state = {
-    cities: secondaryType[primaryType[0]],
-    secondSubCategory: secondaryType[primaryType[0]][0],
-    ageStatement: '',
-    formItemLayout: {},
-    isUploadComponentReset: false,
-    role: 'Dependent'
-  };
+  constructor(props) {
+    super(props);
+
+    this.primaryType = [];
+    this.secondaryType = {};
+
+    if (props.contents && props.contents.userPanel && props.contents.userPanel.dependentType) {
+      console.log(props.contents.userPanel.dependentType);
+      this.primaryType = Object.keys(props.contents.userPanel.dependentType);
+      this.primaryType.forEach(x => this.secondaryType[x] = props.contents.userPanel.dependentType[x]);
+    }
+
+    console.log(this.secondaryType);
+
+    this.state = {
+      cities: this.secondaryType[this.primaryType[0]],
+      secondSubCategory: this.secondaryType[this.primaryType[0]][0],
+      ageStatement: '',
+      formItemLayout: {},
+      isUploadComponentReset: false,
+      role: 'Dependent'
+    };
+  }
 
   handleCategoryChange = value => {
     this.setState({
-      cities: secondaryType[value],
-      secondSubCategory: secondaryType[value][0]
+      cities: this.secondaryType[value],
+      secondSubCategory: this.secondaryType[value][0]
     });
   };
 
@@ -89,8 +104,16 @@ class SettingsUserForm extends Component {
     this.props.form.validateFields((err, newUser) => {
       let now = new Date();
       console.log(newUser);
-      let locations = newUser['locations'] && newUser['locations'].map(x => this.props.locations.find(location => x === location._id));
-      let files = newUser['files'] && newUser['files'].map(x => this.props.files.find(file => x === file._id));
+      let locations =
+        newUser['locations'] &&
+        newUser['locations'].map(x =>
+          this.props.locations.find(location => x === location._id)
+        );
+      let files =
+        newUser['files'] &&
+        newUser['files'].map(x =>
+          this.props.files.find(file => x === file._id)
+        );
       let dependent = {
         profile: {
           category: newUser.type,
@@ -99,7 +122,9 @@ class SettingsUserForm extends Component {
           displayName: newUser['Dependent Name'],
           phone: newUser['Dependent Phone'],
           dob: now.getFullYear() - newUser.age,
-          profileType: this.props.editingDependent ? this.props.editingDependent.profileType : 'dependent',
+          profileType: this.props.editingDependent
+            ? this.props.editingDependent.profileType
+            : 'dependent',
           bio: newUser['bio'],
           avatar: this.state.uploadURL,
           considerations: newUser['considerations']
@@ -114,7 +139,11 @@ class SettingsUserForm extends Component {
         });
 
         if (this.props.editingDependent) {
-          dependent.profile = Object.assign({}, this.props.editingDependent, dependent.profile);
+          dependent.profile = Object.assign(
+            {},
+            this.props.editingDependent,
+            dependent.profile
+          );
         }
 
         this.props.handleItemActiveTab('1');
@@ -125,8 +154,13 @@ class SettingsUserForm extends Component {
 
   handleAgeTextChange = event => {
     if (event && event.target && event.target.value) {
+      let dependentAge =
+        this.props.contents &&
+        this.props.contents.userPanel &&
+        this.props.contents.userPanel.dependentAge;
+
       this.setState({
-        ageStatement: getAgeStatement(event.target.value)
+        ageStatement: getAgeStatement(dependentAge, event.target.value)
       });
     }
   };
@@ -171,27 +205,29 @@ class SettingsUserForm extends Component {
     window.addEventListener('resize', this.handleWindowResize);
   };
 
-  componentDidUpdate = (prevProps) => {
+  componentDidUpdate = prevProps => {
     if (this.props.editingDependent !== prevProps.editingDependent) {
       this.setState({
-        role: this.props.editingDependent && this.props.editingDependent.profileType === 'main'
-                  ? 'My'
-                  : 'Dependent'
-      })
+        role:
+          this.props.editingDependent &&
+          this.props.editingDependent.profileType === 'main'
+            ? 'My'
+            : 'Dependent'
+      });
     }
-  }
+  };
 
   ageInfoHandler = e => {
     console.log('was click');
   };
 
   getRandomId = prefix => {
-    return prefix + (new Date()).getTime();
-  }
+    return prefix + new Date().getTime();
+  };
 
   render() {
     const { getFieldDecorator } = this.props.form;
-    const categoryOptions = primaryType.map(category => (
+    const categoryOptions = this.primaryType.map(category => (
       <Option key={category}>{category}</Option>
     ));
     const subCategoryOptions = this.state.cities.map(subCategory => (
@@ -204,18 +240,25 @@ class SettingsUserForm extends Component {
       const now = new Date();
       const dob = new Date(this.props.editingDependent.dob);
 
-      edittingAge = this.props.editingDependent && this.props.editingDependent.dob ? (now.getFullYear() - dob.getFullYear()) : '';
+      edittingAge =
+        this.props.editingDependent && this.props.editingDependent.dob
+          ? now.getFullYear() - dob.getFullYear()
+          : '';
     }
-
-    console.log(this.props.editingDependent);
 
     return (
       <div>
         <Form onSubmit={this.handleSubmit} className="login-form">
-          <FormItem label={this.state.role + ' Name'} >
+          <FormItem label={this.state.role + ' Name'}>
             {getFieldDecorator('Dependent Name', {
-              rules: [{ required: true, message: 'Dependent name is required.' }],
-              initialValue: (this.props.editingDependent ? this.props.editingDependent.displayName: '')
+              rules: [
+                { required: true, message: 'Dependent name is required.' }
+              ],
+              initialValue: this.props.editingDependent
+                ? `(${this.props.editingDependent.category.join('')})` +
+                  ' ' +
+                  this.props.editingDependent.displayName
+                : ''
             })(
               <Input
                 autoComplete="name"
@@ -229,8 +272,15 @@ class SettingsUserForm extends Component {
           </FormItem>
           <FormItem label="Contact Phone">
             {getFieldDecorator('Contact Phone', {
-              rules: [{ required: true, message: 'enter your phone or your dependent phone.' }],
-              initialValue: (this.props.editingDependent ? this.props.editingDependent.phone: ''),
+              rules: [
+                {
+                  required: true,
+                  message: 'enter your phone or your dependent phone.'
+                }
+              ],
+              initialValue: this.props.editingDependent
+                ? this.props.editingDependent.phone
+                : ''
             })(
               <Input
                 autoComplete="a contact number"
@@ -241,9 +291,14 @@ class SettingsUserForm extends Component {
               />
             )}
           </FormItem>
-          <FormItem label={this.state.role + " Age"}>
+          <FormItem label={this.state.role + ' Age'}>
             {getFieldDecorator('age', {
-              rules: [{ required: true, message: 'Not all things are appropriate for all ages.' }],
+              rules: [
+                {
+                  required: true,
+                  message: 'Not all things are appropriate for all ages.'
+                }
+              ],
               initialValue: edittingAge
             })(
               <Input
@@ -256,24 +311,32 @@ class SettingsUserForm extends Component {
             )}
             {this.state.ageStatement && <div>{this.state.ageStatement}</div>}
           </FormItem>
-          <FormItem label={this.state.role + " type"} {...formItemLayout}>
+          <FormItem label={this.state.role + ' type'} {...formItemLayout}>
             <Select
               style={{ width: '100%' }}
               onChange={this.handleCategoryChange}
-              disabled={this.props.editingDependent && this.props.editingDependent.profileType === 'main'}
+              disabled={
+                this.props.editingDependent &&
+                this.props.editingDependent.profileType === 'main'
+              }
             >
               {categoryOptions}
             </Select>
             {getFieldDecorator('type', {
-              rules: [
-                { required: true, message: 'How are you two related?' }
-              ],
-              initialValue: this.props.editingDependent && this.props.editingDependent.category ? this.props.editingDependent.category : []
+              rules: [{ required: true, message: 'How are you two related?' }],
+              initialValue:
+                this.props.editingDependent &&
+                this.props.editingDependent.category
+                  ? this.props.editingDependent.category
+                  : []
             })(
               <Select
                 style={{ width: '100%' }}
                 onChange={this.onSecondSubCategoryChange}
-                disabled={this.props.editingDependent && this.props.editingDependent.profileType === 'main'}
+                disabled={
+                  this.props.editingDependent &&
+                  this.props.editingDependent.profileType === 'main'
+                }
               >
                 {subCategoryOptions}
               </Select>
@@ -289,7 +352,11 @@ class SettingsUserForm extends Component {
                     'Does you dependent have any health issue or situations'
                 }
               ],
-              initialValue: this.props.editingDependent && this.props.editingDependent.considerations ? this.props.editingDependent.considerations : []
+              initialValue:
+                this.props.editingDependent &&
+                this.props.editingDependent.considerations
+                  ? this.props.editingDependent.considerations
+                  : []
             })(
               <Select
                 mode="multiple"
@@ -310,9 +377,14 @@ class SettingsUserForm extends Component {
           <FormItem label="Biography">
             {getFieldDecorator('bio', {
               rules: [
-                { required: false, message: 'Tell us a little about this dependent' }
+                {
+                  required: false,
+                  message: 'Tell us a little about this dependent'
+                }
               ],
-              initialValue: (this.props.editingDependent ? this.props.editingDependent.bio: '')
+              initialValue: this.props.editingDependent
+                ? this.props.editingDependent.bio
+                : ''
             })(
               <TextArea
                 row={6}
@@ -325,7 +397,11 @@ class SettingsUserForm extends Component {
             )}
           </FormItem>
           <FormItem label="Photo for Receiving">
-            <UploadComponent isReset={this.state.isUploadComponentReset} id={this.props.uploadId || "uploadDependent"} handleUploadFileSuccess={this.handleUploadFileSuccess} />
+            <UploadComponent
+              isReset={this.state.isUploadComponentReset}
+              id={this.props.uploadId || 'uploadDependent'}
+              handleUploadFileSuccess={this.handleUploadFileSuccess}
+            />
             <br />
             Not Required.
           </FormItem>
@@ -338,17 +414,22 @@ class SettingsUserForm extends Component {
                   message: 'Add delivery Address for dependent'
                 }
               ],
-              initialValue:  this.props.editingDependent && this.props.editingDependent.locations ? this.props.editingDependent.locations.map(x => x._id) : []
+              initialValue:
+                this.props.editingDependent &&
+                this.props.editingDependent.locations
+                  ? this.props.editingDependent.locations.map(x => x._id)
+                  : []
             })(
               <Select
                 mode="multiple"
                 style={{ width: '100%' }}
                 onChange={handleSpecialConsiderationChange}
-                notFoundContent='You have not added a location'
+                notFoundContent="You have not added a location"
               >
-                {this.props.locations && this.props.locations.map(x =>
-                  <Option key={x._id}>{x.address}</Option>
-                )}
+                {this.props.locations &&
+                  this.props.locations.map(x => (
+                    <Option key={x._id}>{x.address}</Option>
+                  ))}
               </Select>
             )}
             <p>
@@ -362,18 +443,21 @@ class SettingsUserForm extends Component {
           <FormItem label="Files">
             {getFieldDecorator('files', {
               rules: [{ required: false, message: 'Add a file for dependent' }],
-              initialValue: this.props.editingDependent && this.props.editingDependent.files ?this.props.editingDependent.files.map(x => x._id) : []
+              initialValue:
+                this.props.editingDependent && this.props.editingDependent.files
+                  ? this.props.editingDependent.files.map(x => x._id)
+                  : []
             })(
               <Select
                 mode="multiple"
                 style={{ width: '100%' }}
                 onChange={handleSpecialConsiderationChange}
-                notFoundContent='You have not add a document'
+                notFoundContent="You have not add a document"
               >
-
-                {this.props.files && this.props.files.map(x =>
-                  <Option key={x._id}>{x.displayName}</Option>
-                )}
+                {this.props.files &&
+                  this.props.files.map(x => (
+                    <Option key={x._id}>{x.displayName}</Option>
+                  ))}
               </Select>
             )}
             <p>
@@ -384,7 +468,7 @@ class SettingsUserForm extends Component {
               </a>
             </p>
           </FormItem>
-          <FormItem  >
+          <FormItem>
             <Button
               type="primary"
               style={{ width: '100%' }}
@@ -397,7 +481,7 @@ class SettingsUserForm extends Component {
             </Button>
           </FormItem>
         </Form>
-        <BackTop visibilityHeight={50}/>
+        <BackTop visibilityHeight={50} />
       </div>
     );
   }

@@ -309,12 +309,30 @@ export default class UserPanel extends Component {
     window.addEventListener('resize', this.handleWindowResize);
 
     this.getDependents();
-
     if (this.props.hasDirectLink) {
-      if (this.props.isLoggedIn) {
-        this.handleTabChange('6');
-      } else {
-        this.handleTabChange('4');
+      switch (this.props.hashRoute) {
+        case '#login':
+          if (!this.props.isLoggedIn) {
+            this.handleTabChange('4');
+          }
+          break;
+        case '#register':
+          if (!this.props.isLoggedIn) {
+            this.handleTabChange('3');
+          }
+          break;
+        case '#forgotpassword':
+          if (!this.props.isLoggedIn) {
+            this.handleTabChange('5');
+          }
+          break;
+        default:
+          if (this.props.isLoggedIn) {
+            this.handleTabChange('6');
+          } else {
+            this.handleTabChange('4');
+          }
+          break;
       }
     }
   };
@@ -359,6 +377,7 @@ export default class UserPanel extends Component {
             files={this.state.files}
             locations={this.state.locations}
             uploadId="userUploadItem"
+            contents={this.state.contents}
             {...this.props}
           />
         ),
