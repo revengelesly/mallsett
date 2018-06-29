@@ -11,7 +11,7 @@ const { login, logout, loginSuccess } = authAction;
 class TopbarUser extends Component {
   constructor(props) {
     super(props);
-    this.directHashLinks = ['#terms', '#privacy', '#bio'];
+    this.directHashLinks = ['#terms', '#privacy', '#bio', '#login', '#register', '#forgotpassword'];
     this.state = {
       hashRoute: (this.props.location && this.props.location.hash) || '',
       hasDirectLink: false,

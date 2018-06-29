@@ -27,6 +27,10 @@ const MerchantSchema = new Schema({
             type: String,
             required: true
         }],
+        targetType: [{
+            type: String,
+            required: true
+        }],
         place: {
             googlePlaceId: {
                 type: String

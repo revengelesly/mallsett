@@ -41,6 +41,7 @@ router.post(
       place: {},
       detail: {}
     };
+
     merchantField.creator = req.body.creator;
     merchantField.owner = req.body.owner;
     merchantField.updated_at = MomentNow;
@@ -50,15 +51,17 @@ router.post(
       merchantField.businessType = req.body.businessType;
     }
 
+    if (typeof req.body.businessType !== 'undefined') {
+      merchantField.targetType = req.body.targetType;
+    }
+
     if (req.body.phone) merchantField.phone = req.body.phone;
 
     if (req.body.associates) {
       merchantField.associates = req.body.associates;
     }
 
-    if (req.body.photo) merchantField.place.photo = req.body.photo;
     if (req.body.handle) merchantField.handle = req.body.handle;
-    if (req.body.notes) merchantField.place.notes = req.body.notes;
     if (req.body.pitch) merchantField.detail.pitch = req.body.pitch;
     if (req.body.bio) merchantField.detail.bio = req.body.bio;
     if (req.body.terms) merchantField.detail.terms = req.body.terms;

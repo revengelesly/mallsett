@@ -3,7 +3,6 @@ import { Alert, Form, Icon, Input, Button, Col, Row, message } from 'antd';
 import { InputGroup } from '../../../components/uielements/input';
 import SigninWrapper from '../signin.style';
 import IntlMessages from '../../../components/utility/intlMessages';
-import GoogleSignInWrapper from '../../../components/googleSignIn/GoogleSignInWrapper';
 
 const FormItem = Form.Item;
 
@@ -41,8 +40,6 @@ class LoginUser extends Component {
       }
     }
   };
-
-
 
   componentWillReceiveProps = (nextProps) => {
     console.log(this.state.loading);
