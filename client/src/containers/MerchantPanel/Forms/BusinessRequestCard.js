@@ -56,7 +56,6 @@ class BusinessRequestCard extends Component {
     let actions = null;
     switch (this.props.type) {
       case 'received':
-
         actions = (
           <span>
             <Button

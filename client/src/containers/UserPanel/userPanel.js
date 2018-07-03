@@ -548,6 +548,8 @@ export default class UserPanel extends Component {
             login={this.props.login}
             profile={this.props.profile}
             hashRoute={this.props.hashRoute}
+            idToken={this.props.idToken}
+            logout={this.props.logout}
           />
         ),
         item: (

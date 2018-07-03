@@ -5,10 +5,11 @@ import AddBusiness from '../MerchantPanel/AddBusiness';
 import authAction from '../../redux/auth/actions';
 import merchantAction from '../../redux/merchant/actions';
 import { BaseURL } from '../../helpers/constants';
+import { addAssociate } from '../../services/merchantServices';
 import axios from 'axios';
 import createHistory from 'history/createBrowserHistory';
 
-const history = createHistory({forceRefresh: true});
+const history = createHistory({ forceRefresh: true });
 
 const { login } = authAction;
 const { setMerchant, updateAssociate } = merchantAction;
@@ -17,7 +18,10 @@ class TopBarAddMerchants extends React.Component {
   state = {
     visible: false,
     merchants: [],
-    isBusiness: this.props.merchant && this.props.merchant.businessType && this.props.merchant.businessType.length > 0,
+    isBusiness:
+      this.props.merchant &&
+      this.props.merchant.businessType &&
+      this.props.merchant.businessType.length > 0,
     merchant: this.props.merchant,
     suggestions: []
   };
@@ -50,16 +54,16 @@ class TopBarAddMerchants extends React.Component {
     });
   };
 
-  setMerchantToState = (merchant) => {
+  setMerchantToState = merchant => {
     this.setState({
       merchant
     });
 
     // dispacht merchants
     this.props.setMerchant(merchant);
-  }
+  };
 
-  handleUpdateMerchant = (business) => {
+  handleUpdateMerchant = business => {
     let merchant = this.state.merchant;
 
     if (!merchant) {
@@ -76,8 +80,11 @@ class TopBarAddMerchants extends React.Component {
       merchant = {
         ...merchant,
         merchant_id: merchant._id,
-        place: merchant.place && merchant.place.googlePlaceId ? null : { ...business } // remove or update
-      }
+        place:
+          merchant.place && merchant.place.googlePlaceId
+            ? null
+            : { ...business } // remove or update
+      };
     }
 
     axios({
@@ -89,17 +96,18 @@ class TopBarAddMerchants extends React.Component {
         Accept: 'application/json',
         'Content-Type': 'application/json'
       }
-    }).then(res => {
+    })
+      .then(res => {
         console.log(res.data);
         this.setState({
           merchant: res.data
-        })
+        });
 
         // dispacht merchants
         this.props.setMerchant(res.data);
-      }
-    ).catch(error => message.error(error.data.message));
-  }
+      })
+      .catch(error => message.error(error.data.message));
+  };
 
   handleRemoveAssociate = (merchant, business) => {
     console.log(business);
@@ -123,38 +131,21 @@ class TopBarAddMerchants extends React.Component {
         this.props.setMerchant(res.data);
       })
       .catch(err => console.log(err));
-  }
+  };
 
   handleAddAssociate = (merchant, business) => {
-    axios({
-      method: 'POST',
-      url: `${BaseURL}/api/merchant/addassociate`,
-      headers: {
-        Authorization: this.props.idToken,
-        Accept: 'application/json',
-        'Content-Type': 'application/json'
-      },
-      data: {
-        ...business,
-        merchant_id: merchant._id
-      }
-    })
-      .then(res => {
-        // dispacht merchants
-        this.props.setMerchant(res.data);
-      })
-      .catch(err => console.log(err));
-  }
+    addAssociate(this.props.idToken, merchant, business, data => {
+      this.props.setMerchant(data);
+    });
+  };
 
-  handleUpdateAssociate = (business) => {
+  handleUpdateAssociate = business => {
     let merchant = this.state.merchant;
     if (!merchant.associates) {
-      merchant.associates = []
+      merchant.associates = [];
     }
 
-    let associate = merchant.associates.find(
-      x => x && x.id === business.id
-    );
+    let associate = merchant.associates.find(x => x && x.id === business.id);
 
     if (!associate) {
       this.handleAddAssociate(merchant, business);
@@ -167,8 +158,11 @@ class TopBarAddMerchants extends React.Component {
     if (nextProps.isLoggedIn && nextProps.profile) {
       this.setState({
         merchant: nextProps.merchant,
-        isBusiness: nextProps.merchant && nextProps.merchant.businessType && nextProps.merchant.businessType.length > 0
-      })
+        isBusiness:
+          nextProps.merchant &&
+          nextProps.merchant.businessType &&
+          nextProps.merchant.businessType.length > 0
+      });
     } else {
       this.setState({
         isBusiness: false
@@ -176,22 +170,28 @@ class TopBarAddMerchants extends React.Component {
     }
   };
 
-  componentDidUpdate = (preProps) => {
-    if (this.props.displayAddBusinessModal !== preProps.displayAddBusinessModal) {
+  componentDidUpdate = preProps => {
+    if (
+      this.props.displayAddBusinessModal !== preProps.displayAddBusinessModal
+    ) {
       this.setState({
         visible: this.props.displayAddBusinessModal
       });
     }
-  }
+  };
 
   render() {
     return (
       <div>
         <div onClick={this.handleClick}>
           <Icon type="shop" />
-          {this.props.isOnDashboard
-                    ? <span>View the Site</span>
-                    : this.state.isBusiness ? <span>Manage my Organization</span> : <span>Plug My Business</span>}
+          {this.props.isOnDashboard ? (
+            <span>View the Site</span>
+          ) : this.state.isBusiness ? (
+            <span>Manage my Organization</span>
+          ) : (
+            <span>Plug My Business</span>
+          )}
         </div>
         <Modal
           visible={this.state.visible}
@@ -241,4 +241,7 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(TopBarAddMerchants);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(TopBarAddMerchants);

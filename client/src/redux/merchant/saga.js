@@ -1,9 +1,12 @@
-import { all, takeEvery, put, call, fork } from 'redux-saga/effects';
+import { all, takeEvery, put, call, fork, take } from 'redux-saga/effects';
+import { channel } from 'redux-saga'
 import actions from './actions';
 import authActions from '../auth/actions';
 import { clearMerchant } from '../../helpers/utility';
 import { getSuggestionsAPI, getRemoteMerchant } from './api';
+import { newConnection } from '../../socketClient';
 
+const connectionChannel = channel();
 function getMerchantToken() {
   try {
     const merchant = JSON.parse(localStorage.getItem('merchant'));
@@ -38,6 +41,12 @@ export function* getMerchant() {
       const merchant = yield call(getRemoteMerchant, payload);
 
       if (merchant) {
+        newConnection(merchant._id, data => connectionChannel.put({
+            type: actions.SET_MERCHANT,
+            merchant: data
+          })
+        );
+
         yield put({
           type: actions.SET_MERCHANT,
           merchant
@@ -47,11 +56,18 @@ export function* getMerchant() {
   });
 }
 
+export function* watchConnectionChannel() {
+  while (true) {
+    const action = yield take(connectionChannel)
+    yield put(action)
+  }
+}
+
 export function* getSuggestions() {
   yield takeEvery(authActions.LOGIN_SUCCESS, function*(payload) {
     if (payload && payload.profile) {
       const suggestions = yield call(getSuggestionsAPI, payload.token);
-      console.log(suggestions);
+
       if (suggestions) {
         yield put({
           type: actions.SET_SUGGESTIONS,
@@ -67,6 +83,7 @@ export default function* rootSaga() {
     fork(getMerchant),
     fork(setMerchant),
     fork(getLocalMerchant),
-    fork(getSuggestions)
+    fork(getSuggestions),
+    fork(watchConnectionChannel)
   ]);
 }

@@ -5,6 +5,7 @@ import ContentHolder from '../../../components/utility/contentHolder';
 import ServiceCard from './ServiceCard';
 import MapComponent from '../../../components/map/mapComponent';
 import LocationSearchInput from '../../../components/map/locationSearchInput';
+import { createBusiness } from '../../../services/merchantServices';
 
 class CreateAddress extends Component {
   constructor(props) {
@@ -17,73 +18,33 @@ class CreateAddress extends Component {
     };
   }
 
-  createBusiness = (place, googlePlaceId) => {
-    if (place) {
-      let name = place.name;
-      let address = place['formatted_address'];
-      let phone = place['formatted_phone_number'];
-      let photoSource =
-        place['photos'] && place['photos'][0]
-          ? place['photos'][0].getUrl({ maxWidth: 320, maxHeight: 250 })
-          : '';
-      let types = place['types']
-        ? place['types'].map(x =>
-            x.replace(/_/g, ' ').replace(/\w\S*/g, matched => {
-              return (
-                matched.charAt(0).toUpperCase() +
-                matched.substr(1).toLowerCase()
-              );
-            })
-          )
-        : [];
-
-      if (name && (address || phone || types)) {
-        return {
-          lattitude: place.geometry.location.lat(),
-          longitude: place.geometry.location.lng(),
-          googlePlaceId: googlePlaceId,
-          businessName: name,
-          address: address || '',
-          phone: phone || '',
-          googlePlaceCategories: types || '',
-          category: this.props.category,
-          photo: photoSource
-        };
-      }
-
-      return null;
-    }
-  };
-
-  handleSelect = (position, googlePlaceId) => {
+  handleSelect = (place, googlePlaceId) => {
     if (googlePlaceId) {
       let business = this.state.businesses.find(
         x => x.googlePlaceId === googlePlaceId
       );
 
       if (!business) {
-        let service = new window.google.maps.places.PlacesService(
-          document.createElement('div')
-        );
+        if (place) {
+          let newBusiness = createBusiness(
+            place,
+            googlePlaceId,
+            this.props.category
+          );
+          if (newBusiness) {
+            let businesses = this.state.businesses.map(x => ({ ...x }));
+            businesses.push(newBusiness);
+            this.setState({
+              businesses
+            });
 
-        service.getDetails({ placeId: googlePlaceId }, (place, status) => {
-          if (place) {
-            let newBusiness = this.createBusiness(place, googlePlaceId);
-            if (newBusiness) {
-              let businesses = this.state.businesses.map(x => ({ ...x }));
-              businesses.push(newBusiness);
-              this.setState({
-                businesses
-              });
-
-              if (this.props.category === 'merchant') {
-                this.props.handleUpdateMerchant(newBusiness);
-              } else {
-                this.props.handleUpdateAssociate(newBusiness);
-              }
+            if (this.props.category === 'merchant') {
+              this.props.handleUpdateMerchant(newBusiness);
+            } else {
+              this.props.handleUpdateAssociate(newBusiness);
             }
           }
-        });
+        }
       }
     }
   };
@@ -114,7 +75,11 @@ class CreateAddress extends Component {
       );
 
       if (!business) {
-        this.handleSelect('', googlePlaceId);
+        this.setState({
+          businesses: [...this.state.businesses, suggestion]
+        });
+
+        this.props.handleUpdateAssociate(suggestion);
 
         this.setState({
           suggestions: this.state.suggestions.filter(
@@ -167,7 +132,11 @@ class CreateAddress extends Component {
         let googlePlaceId = this.props.suggestions[i].googlePlaceId;
         service.getDetails({ placeId: googlePlaceId }, (place, status) => {
           if (place) {
-            let newBusiness = this.createBusiness(place, googlePlaceId);
+            let newBusiness = createBusiness(
+              place,
+              googlePlaceId,
+              this.props.category
+            );
             if (newBusiness) {
               let suggestions = this.state.suggestions.map(x => ({ ...x }));
               suggestions.push(newBusiness);
@@ -186,7 +155,7 @@ class CreateAddress extends Component {
       this.state.businesses && this.state.businesses.length > 0
         ? this.state.businesses[this.state.businesses.length - 1]
         : null;
-    let address = lastBusiness ? lastBusiness.address : '';
+
     let position = lastBusiness
       ? {
           lat: parseFloat(lastBusiness.lattitude),
@@ -213,13 +182,12 @@ class CreateAddress extends Component {
         <Row justify="start">
           <Col md={24} sm={24} xs={24}>
             <ContentHolder>
-              {this.props.requiredPlaces && requiredPlaces > 0 && (
-                <InputGroup size="large">
-                  <Col span="24">
-                    You must add {requiredPlaces} more
-                  </Col>
-                </InputGroup>
-              )}
+              {this.props.requiredPlaces &&
+                requiredPlaces > 0 && (
+                  <InputGroup size="large">
+                    <Col span="24">You must add {requiredPlaces} more</Col>
+                  </InputGroup>
+                )}
               <InputGroup size="large" style={{ marginBottom: '15px' }}>
                 {this.state.businesses &&
                   this.state.businesses.length > 0 && (
@@ -264,7 +232,6 @@ class CreateAddress extends Component {
                   <Col span="24">
                     <LocationSearchInput
                       handleSelect={this.handleSelect}
-                      address={address}
                       disabled={disabled}
                     />
                   </Col>

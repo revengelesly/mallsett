@@ -8,6 +8,7 @@ import ItemMerchant from '../Products/items/ItemMerchant';
 import BusinessRequestComponent from '../MerchantPanel/Forms/BusinessRequestComponent';
 import merchantAction from '../../redux/merchant/actions';
 import { BaseURL } from '../../helpers/constants';
+import { addAssociate } from '../../services/merchantServices';
 import axios from 'axios';
 
 const { setMerchant, updateAssociate } = merchantAction;
@@ -15,10 +16,6 @@ const TabPane = Tabs.TabPane;
 
 class Dashboard extends Component {
   updateStatus = (merchantId, associateId, connectedStatus) => {
-    console.log(merchantId);
-    console.log(associateId);
-    console.log(connectedStatus);
-
     axios({
       method: 'POST',
       url: `${BaseURL}/api/merchant/updateStatus`,
@@ -31,29 +28,58 @@ class Dashboard extends Component {
         merchantId,
         associateId,
         connectedStatus
-      },
-    }).then(res => {
-      console.log(res.data)
-      this.props.setMerchant(res.data);
+      }
     })
-    .catch(err => console.log(err));
-  }
+      .then(res => {
+        this.props.setMerchant(res.data);
+      })
+      .catch(err => console.log(err));
+  };
 
-
-  handleAccept = (associateId) => {
+  handleAccept = associateId => {
     this.updateStatus(this.props.merchant._id, associateId, 'accepted');
-  }
+  };
 
-  handleReject = (associateId) => {
+  handleReject = associateId => {
     this.updateStatus(this.props.merchant._id, associateId, 'rejected');
-  }
+  };
 
-  handleRequest = (associateId) => {
+  handleRequest = associateId => {
     this.updateStatus(this.props.merchant._id, associateId, 'requested');
+  };
+
+  handleAddAssociate = (business) => {
+    addAssociate(this.props.idToken, this.props.merchant, business, (data) => this.props.setMerchant(data))
   }
 
   render() {
-    let businesses = [];
+    let information = [
+      {
+        title: 'Received Merchant',
+        type: 'received',
+        tabTitle: 'Received'
+      },
+      {
+        title: 'Accepted Merchant',
+        type: 'accepted',
+        tabTitle: 'Accepted'
+      },
+      {
+        title: 'Rejected Merchant',
+        type: 'rejected',
+        tabTitle: 'Rejected'
+      },
+      {
+        title: 'Requested Merchant',
+        type: 'requested',
+        tabTitle: 'Requested'
+      },
+      {
+        title: 'Denied Merchant',
+        type: 'denied',
+        tabTitle: 'Denied'
+      }
+    ];
 
     return (
       <LayoutContentWrapper>
@@ -94,47 +120,27 @@ class Dashboard extends Component {
                   xl={24}
                 >
                   <Tabs defaultActiveKey="1" tabPosition="right" size="small">
-                    <TabPane tab={<span>Received</span>} key="1">
-                      <BusinessRequestComponent
-                        title="Received Merchant"
-                        type="received"
-                        businesses={this.props.merchant && this.props.merchant.associates.filter(x => x.connectedStatus === "received")}
-                        handleAccept={this.handleAccept}
-                        handleReject={this.handleReject}
-                      />
-                    </TabPane>
-
-                    <TabPane tab={<span>Accepted</span>} key="2">
-                      <BusinessRequestComponent
-                        title="Accepted Merchant"
-                        type="accepted"
-                        businesses={this.props.merchant && this.props.merchant.associates.filter(x => x.connectedStatus === "accepted")}
-                        handleReject={this.handleReject}
-                      />
-                    </TabPane>
-                    <TabPane tab={<span>Rejected</span>} key="3">
-                      <BusinessRequestComponent
-                        title="Rejected Merchant"
-                        type="rejected"
-                        businesses={this.props.merchant && this.props.merchant.associates.filter(x => x.connectedStatus === "rejected")}
-                        handleAccept={this.handleAccept}
-                      />
-                    </TabPane>
-                    <TabPane tab={<span>Requested</span>} key="4">
-                      <BusinessRequestComponent
-                        title="Requested Merchant"
-                        type="requested"
-                        businesses={this.props.merchant && this.props.merchant.associates.filter(x => x.connectedStatus === "requested")}
-                      />
-                    </TabPane>
-                    <TabPane tab={<span>Denied</span>} key="5">
-                      <BusinessRequestComponent
-                        title="Denied Merchant"
-                        type="denied"
-                        businesses={this.props.merchant && this.props.merchant.associates.filter(x => x.connectedStatus === "denied")}
-                        handleRequest={this.handleRequest}
-                      />
-                    </TabPane>
+                    {information &&
+                      information.length > 0 &&
+                      information.map((info, i) => (
+                        <TabPane tab={<span>{info.tabTitle}</span>} key={i}>
+                          <BusinessRequestComponent
+                            key={i}
+                            title={info.title}
+                            type={info.type}
+                            businesses={
+                              this.props.merchant &&
+                              this.props.merchant.associates.filter(
+                                x => x.connectedStatus === info.type
+                              )
+                            }
+                            handleAddAssociate={this.handleAddAssociate}
+                            handleAccept={this.handleAccept}
+                            handleReject={this.handleReject}
+                            contentStaments={this.props.contents && this.props.contents.dashboard.connections && this.props.contents.dashboard.connections[info.type]}
+                          />
+                        </TabPane>
+                      ))}
                   </Tabs>
                 </Col>
               </Row>
@@ -154,14 +160,18 @@ function mapStateToProps(state) {
     profile: state.Auth.get('profile'),
     idToken: state.Auth.get('idToken'),
     merchant: state.Merchant.get('merchant'),
+    contents: state.Contents.get('contents'),
     ...state.App.toJS()
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    setMerchant: merchant => dispatch(setMerchant(merchant)),
+    setMerchant: merchant => dispatch(setMerchant(merchant))
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Dashboard);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Dashboard);
