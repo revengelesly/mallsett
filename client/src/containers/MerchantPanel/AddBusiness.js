@@ -30,7 +30,8 @@ class PlugBusiness extends React.Component {
       formState: 1,
       disabledTabs: new Array(18).fill(true, 1),
       tabMenuPositon: 'top',
-      associates: new Array(13).fill([], 2),
+      associates: new Array(16).fill([], 2),
+      gallery: [],
       fields: {
         bio: { value: this.props.merchant && this.props.merchant.detail.bio },
         businessEmail: {
@@ -54,12 +55,12 @@ class PlugBusiness extends React.Component {
         },
         B2Bcommercial: {
           value:
-            this.props.merchant.socialMedia[0] &&
+            this.props.merchant && this.props.merchant.socialMedia[0] &&
             this.props.merchant.socialMedia[0].link
         },
         customersCommercial: {
           value:
-            this.props.merchant.socialMedia[1] &&
+            this.props.merchant && this.props.merchant.socialMedia[1] &&
             this.props.merchant.socialMedia[1].link
         }
       }
@@ -80,9 +81,7 @@ class PlugBusiness extends React.Component {
 
   handleUploadGallerySuccess = links => {
     this.setState({
-      gallery: this.state.gallery
-        ? this.state.gallery.concat(links)
-        : [...links]
+      gallery: this.state.gallery.concat(links)
     });
   };
 
@@ -154,7 +153,7 @@ class PlugBusiness extends React.Component {
       merchant.logo =
         this.state.logo || (this.props.merchant && this.props.merchant.logo);
       merchant.gallery =
-        this.state.gallery ||
+        this.state.gallery.length > 0 ? this.state.gallery :
         (this.props.merchant && this.props.merchant.gallery);
 
       axios({
@@ -274,7 +273,6 @@ class PlugBusiness extends React.Component {
 
     if (merchant && merchant.place) {
       disabledTabs = disabledTabs.fill(false, 0, 2);
-
       if (
         associates[15].length > 0 &&
         merchant.businessType &&
@@ -288,6 +286,7 @@ class PlugBusiness extends React.Component {
         for (let i = 0; i < associates.length; i++) {
           if (associates[i]) {
             disabledTabs = disabledTabs.fill(false, 0, i + 1);
+
             if (
               ((i === 4 || i === 6 || i === 8 || i === 10) &&
                 associates[i].length < 3) ||
@@ -326,8 +325,6 @@ class PlugBusiness extends React.Component {
   };
 
   render() {
-    console.log(this.props.merchant);
-    console.log(this.state.fields);
     let step1Content = <LoginUser login={this.props.login} />;
     switch (this.state.formState) {
       case '3':
@@ -335,6 +332,7 @@ class PlugBusiness extends React.Component {
           <RegisterUser
             login={this.props.login}
             handleTabChange={this.handleTabChange}
+            contents={this.props.contents}
           />
         );
         break;
@@ -739,7 +737,7 @@ class PlugBusiness extends React.Component {
                 : '')
             }
             gallery={
-              this.state.gallery ||
+              this.state.gallery.length > 0 ? this.state.gallery :
               (this.props.merchant && this.props.merchant.gallery)
             }
             logo={

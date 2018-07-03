@@ -24,6 +24,10 @@ const UserSchema = new Schema({
   phone: {
     type: String
   },
+  isActive: {
+    type: Boolean,
+    default: true
+  },
   created_at: {
     type: Date,
     default: Date.now

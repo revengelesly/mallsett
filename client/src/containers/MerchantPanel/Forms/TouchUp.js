@@ -210,6 +210,7 @@ class TouchUp extends Component {
   render() {
     let merchant = this.props.merchant;
     let associates = merchant.associates;
+    let heroImage = this.props.gallery && this.props.gallery[Math.floor(Math.random() * this.props.gallery.length)];
 
     return (
       <Card bordered={false}>
@@ -241,7 +242,7 @@ class TouchUp extends Component {
           </Col>
           <Col className="gutter-row" xs={24} sm={24} md={16} lg={18} xl={18}>
             <img
-              src={this.props.gallery[0] || this.props.photo}
+              src={heroImage || this.props.photo}
               width="100%"
             />
             <Collapse bordered={false} defaultActiveKey={['1']}>

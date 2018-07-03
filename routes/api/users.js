@@ -49,7 +49,8 @@ router.post('/register', (req, res) => {
         dob: req.body.dob,
         avatar,
         password: req.body.password,
-        age: req.body.age
+        age: req.body.age,
+        isActive: true
       });
 
       bcrypt.genSalt(10, (err, salt) => {
@@ -83,7 +84,8 @@ router.post('/login', (req, res) => {
   // Find user by email
   User.findOne({ email }).then(user => {
     // Check for user
-    if (!user) {
+
+    if (!user || !user.isActive) {
       errors.message = 'User not found';
       return res.status(404).json(errors);
     }
@@ -222,6 +224,31 @@ router.get(
       dob: req.user.dob,
       phone: req.user.phone
     });
+  }
+);
+
+// @route   GET api/users/delete
+// @desc    Delete current user
+// @access  Private
+router.delete(
+  '/delete',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    User.findOne({ _id: req.user._id }).then(user => {
+      if (user) {
+        bcrypt.compare(req.body.password, user.password).then(isMatch => {
+          if (isMatch) {
+            user.isActive = false;
+            console.log(user);
+            user.save().then(user => res.json(user));
+          } else {
+            res.status(404).json({ message: 'User not found' });
+          }
+        })
+      } else {
+        res.status(404).json({ message: 'User not found' });
+      }
+    })
   }
 );
 

@@ -9,7 +9,7 @@ class LocationSearchInput extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      address: props.address
+      address: ''
     };
   }
 
@@ -17,23 +17,29 @@ class LocationSearchInput extends React.Component {
     this.setState({ address });
   };
 
-  handleSelect = (address, googlePlaceId) => {
-    geocodeByAddress(address)
-      .then(results => getLatLng(results[0]))
-      .then(latLng => this.props.handleSelect(latLng, googlePlaceId, address))
-      .catch(error => console.error('Error', error));
+  getGooglePlaceDetail = (googlePlaceId, callback) => {
+    if (googlePlaceId) {
+      let service = new window.google.maps.places.PlacesService(
+        document.createElement('div')
+      );
+
+      service.getDetails({ placeId: googlePlaceId }, (place, status) => {
+        callback(place, googlePlaceId);
+        this.setState({
+          address: ''
+        })
+      });
+    }
   };
 
-  componentWillReceiveProps = (nextProps) => {
-    this.setState({
-      address: nextProps.address
-    });
-  }
+  handleSelect = (address, googlePlaceId) => {
+    this.getGooglePlaceDetail(googlePlaceId, this.props.handleSelect);
+  };
 
   render() {
     const resultStyle = {
       position: 'absolute',
-      zIndex:  2,
+      zIndex: 2,
       width: '100%',
       top: '35px',
     };
@@ -45,10 +51,10 @@ class LocationSearchInput extends React.Component {
         onSelect={this.handleSelect}
       >
         {({ getInputProps, suggestions, getSuggestionItemProps }) => (
-          <div style={{position: 'relative'}}>
+          <div style={{ position: 'relative' }}>
             <Input
               {...getInputProps({
-                placeholder: 'Type business name',
+                placeholder: 'Type business name'
               })}
               value={this.state.address}
               disabled={this.props.disabled}
@@ -58,10 +64,14 @@ class LocationSearchInput extends React.Component {
                 const className = suggestion.active
                   ? 'suggestion-item--active'
                   : 'suggestion-item';
-                let style = {border: '1px solid', borderTop: 'none', padding: '7px'};
+                let style = {
+                  border: '1px solid',
+                  borderTop: 'none',
+                  padding: '7px'
+                };
                 style = suggestion.active
-                ? { ...style, backgroundColor: '#fafafa', cursor: 'pointer' }
-                : { ...style, backgroundColor: '#ffffff', cursor: 'pointer' };
+                  ? { ...style, backgroundColor: '#fafafa', cursor: 'pointer' }
+                  : { ...style, backgroundColor: '#ffffff', cursor: 'pointer' };
                 return (
                   <div
                     {...getSuggestionItemProps(suggestion, {

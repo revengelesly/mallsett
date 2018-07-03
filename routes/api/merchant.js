@@ -4,6 +4,8 @@ const mongoose = require('mongoose');
 const passport = require('passport');
 const moment = require('moment');
 
+const clients = [];
+
 // add regex
 // remove special characters except for commas
 function cleanString(string) {
@@ -199,17 +201,26 @@ router.post(
       if (merchantA) {
         Merchant.findOne({ _id: req.body.associateId }).then(merchantB => {
           if (merchantB) {
-            let transactionA = {};
-            let transactionB = {};
             let associateA = merchantA.associates.find(x => x.merchantId === merchantB.id);
             let associateB = merchantB.associates.find(x => x.merchantId === merchantA.id);
+
+            console.log('merchantA', merchantA);
+            console.log('merchantB', merchantB);
+            console.log('associateA', associateA);
+            console.log('associateB', associateB);
 
             if (associateA && associateB) {
               associateA.connectedStatus = req.body.connectedStatus;
               merchantA.save().then(x => bindAssociteInfomation(x, res));
+              console.log(req.body);
 
               associateB.connectedStatus = getSuitableStatus(req.body.connectedStatus);
-              merchantB.save().then(x => x);
+              merchantB.save().then(x => {
+                if (clients[merchantB.id]) {
+                  bindAssociteInfomation(x, null, (merchant) => clients[merchantB.id].emit('updateConnectionStatus', merchant))
+                }
+                return x;
+              });
             }
           }
         })
@@ -231,7 +242,7 @@ function getSuitableStatus (status) {
   }
 }
 
-function bindAssociteInfomation(merchant, res) {
+function bindAssociteInfomation(merchant, res, callback) {
   if (merchant) {
     Merchant.find().then(associates => {
       if (associates && associates.length > 0) {
@@ -252,7 +263,16 @@ function bindAssociteInfomation(merchant, res) {
         }
       }
 
-      return res.json(merchant);
+      console.log('callback', callback);
+      if (callback && typeof callback === 'function') {
+        callback(merchant);
+      }
+
+      if (res) {
+        return res.json(merchant);
+      }
+
+      return null;
     });
   }
 }
@@ -289,6 +309,10 @@ const addAssociate = (merchantA, merchantB, req, res) => {
       values => {
         let [merchantA, merchantB] = values
         bindAssociteInfomation(merchantA, res);
+
+        if (clients[merchantB.id]) {
+          bindAssociteInfomation(merchantB, null, (merchantB) => clients[merchantB.id].emit('updateConnectionStatus', merchantB))
+        }
       },
       error => {
         backupMerchantA.save();
@@ -308,4 +332,18 @@ const updateAssociate = (associate, req, res) => {
   });
 };
 
-module.exports = router;
+module.exports = {
+  router,
+  connectSocket: (io) => {
+    io.on('connection', (socket) => {
+      socket.on('newConnection', (id) => {
+        if (id in clients) {
+
+        } else {
+          clients[id] = socket;
+          console.log('add ' + id);
+        }
+      });
+    });
+  }
+}

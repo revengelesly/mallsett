@@ -84,42 +84,17 @@ export function timeDifference(givenTime) {
 }
 
 export function getAgeStatement(contents, age) {
-  console.log(age);
-  contents = {
-    "0": [
-        "You are a baby"
-    ],
-    "5": [
-        "You are still a baby"
-    ],
-    "10": [
-        "You are getting big"
-    ],
-    "15": [
-        "You are getting big"
-    ],
-    "18": [
-        "You are an adult"
-    ],
-    "21": [
-        "You are are twenty",
-        "do something with your life"
-    ],
-    "45": [
-        "You are fourtyFive",
-        "You are almost very old"
-    ],
-    "55": [
-        "You are mature",
-        "you are very old"
-    ],
-    "65": [
-        "You are retired",
-        "Thank you for your contribution to our society"
-    ]
-  };
+  let keys = Object.keys(contents);
+  let statement = '';
 
-  return contents['' + age] ? contents['' + age].join(' ') : '';
+  for (let i = 0; i < keys.length; i++) {
+    if (age <= Number(keys[i])) {
+      statement = contents[keys[i]].join(' ');
+      break;
+    }
+  }
+
+  return statement;
 }
 
 export function getView(width) {

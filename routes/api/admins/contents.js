@@ -71,7 +71,6 @@ router.get('/',
   (req, res) => {
     Contents.find()
             .then(contents => {
-              console.log('selectOptions');
               if (contents) {
                 res.json(contents)
               } else {
