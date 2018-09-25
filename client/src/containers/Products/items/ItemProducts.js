@@ -12,11 +12,7 @@ const dependentSelected = [];
 
 
 for (let i = 10; i < 36; i++) {
-    dependentSelected.push(<Option key={i.toString(36) + i}>{i.toString(36) + i}</Option>);
-}
-
-function handlePurchasingForChange(value) {
-  console.log(`selected ${value}`);
+    dependentSelected.push(<Option key={i.toString(36) + i} name={i.toString(36) + i}>{i.toString(36) + i}</Option>);
 }
 
 function onDateChange(value, dateString) {
@@ -122,30 +118,195 @@ function FieldHeader (props){
     )
 }
 
-const PurchasingForOption = (
-    <OptionWrapper style={{ paddingLeft: 24, marginBottom: 12 }}>
-        <FieldHeader title={"Purchasing For:"} price={"$12.01"} />
-        <Row gutter={8}>
-        <FieldTitle title={"Purchasing For: "} selected="Lesly (Self), Lance (Son)" />
-            <Col className="gutter-row"  xs={24} sm={24} md={12} lg={16} xl={16} >
+/*
+ *   Purchasing For Option
+ */
+
+class PurchasingForOptionSelected extends React.Component {
+
+    handlePurchasingForChange = (values, options) => {
+        let result = options.map(x => Object.assign({}, { id: x.props.name}, { name: x.props.children }));
+        this.props.handlePurchasingForChange(result);
+    }
+
+    render () {
+        return (
             <Select
                 mode="multiple"
                 style={{ width: '100%' }}
                 placeholder="Please Select a Dependent"
-                defaultValue={['a10', 'c12']}
-                onChange={handlePurchasingForChange}
+                defaultValue={this.props.selectedId}
+                onChange={this.handlePurchasingForChange}
             >
-                {dependentSelected}
+                { this.props.dependentSelected }
+            </Select>)
+    }
+}
+
+class PurchasingForOption extends React.Component {
+
+    constructor (props) {
+        super(props);
+        this.state = {
+            purchasingFor: props.purchasingFor,
+            newPurchaseFor: null
+        }
+    }
+
+    handlePurchasingForChange = (value) => {
+        let purchasingForOptions = this.state.purchasingFor;
+
+        if (value.length > purchasingForOptions.length) {
+            this.setState({
+                newPurchaseFor: value
+            });
+        } else {
+            this.setState({
+                purchasingFor: value,
+                newPurchaseFor: null
+            });
+        }
+    }
+
+    handleAddNewDependent = () => {
+        let purchasingForOptions = this.state.purchasingFor,
+            newPurchaseFor = this.state.newPurchaseFor;
+
+        if (newPurchaseFor) {
+            purchasingForOptions = newPurchaseFor;
+            this.setState({
+                purchasingFor: purchasingForOptions,
+                newPurchaseFor: null
+            });
+        }
+    }
+
+    render () {
+        let displayText = this.state.purchasingFor.map(x => x.name).join(', '),
+            seletectedId = this.state.purchasingFor.map(x => x.id);
+
+        return (
+            <OptionWrapper style={{ paddingLeft: 24, marginBottom: 12 }}>
+                <FieldHeader title={"Purchasing For:"} price={"$12.01"} />
+                <Row gutter={8}>
+                    <FieldTitle title={"Purchasing For: "} selected={displayText} />
+                    <Col className="gutter-row"  xs={24} sm={24} md={12} lg={16} xl={16} >
+                        <PurchasingForOptionSelected selectedId={seletectedId} dependentSelected={dependentSelected} handlePurchasingForChange={this.handlePurchasingForChange} />
+                    </Col>
+                    <Col className="gutter-row "  xs={24} sm={24} md={12} lg={8} xl={8} >
+                        <Button className="fullWidth" onClick={this.handleAddNewDependent} >Add New Dependent</Button>
+                    </Col>
+                </Row>
+            </OptionWrapper>
+        )
+    }
+};
+
+/*
+ *   Delivery Option
+ */
+
+ class DeliveryOptionSelected extends React.Component {
+    constructor (props) {
+        super(props);
+    }
+
+    handleDeliveryOptionChange = (newValue, options) => {
+        let textDisplay = options.map(x => x.props.children).join(' ');
+        this.props.handleDeliveryOptionChange(this.props.type, textDisplay);
+    }
+
+    render () {
+        let placeHolderText = this.props.type  === 'address' ? 'Select an Address'
+                                                        : this.props.type  === 'speed' ? 'Delivery Speed'
+                                                                                         : 'Delivery Service';
+
+        return (
+            <Select
+                mode="multiple"
+                style={{ width: '100%' }}
+                placeholder={placeHolderText}
+                value={this.props.selectItems}
+                onChange={this.handleDeliveryOptionChange}
+            >
+                {this.props.deliverySelected}
             </Select>
-            </Col>
-            <Col className="gutter-row "  xs={24} sm={24} md={12} lg={8} xl={8} >
-                <Button className="fullWidth" >Add New Dependent</Button>
-            </Col>
-        </Row>
+        );
+    }
+ }
 
-    </OptionWrapper>
-  );
+class DeliveryOptions extends React.Component {
 
+    constructor(props) {
+        super(props);
+        this.state = {
+            deliveryOptionSelect : [],
+            deliveryOptions : [{
+                address: '1256 NW 849 Street, Miami, FL',
+                speed: 'Fast',
+                serivce: 'Fast'
+            }],
+            newAddress: {}
+        };
+
+        // TODO: Should remove after using redux
+        for (let i = 10; i < 36; i++) {
+            this.state.deliveryOptionSelect.push(<Option key={i}>{i + " NW 849 Street, Miami, FL"}</Option>);
+        }
+    }
+
+    handleDeliveryOptionChange = (type, value) => {
+        let newAddress = this.state.newAddress;
+        newAddress[type ? type : 'service'] = value;
+
+        this.setState({
+            newAddress: newAddress
+        });
+    }
+
+    handleAddDeliveryOption = (element) => {
+        let deliveryOptions = this.state.deliveryOptions,
+            newAddress = this.state.newAddress;
+
+        deliveryOptions.push(newAddress);
+        this.setState({
+            deliveryOptions: deliveryOptions,
+            newAddress: {}
+        });
+    }
+
+    render () {
+        let addressDisplay = this.state.deliveryOptions.map(x => x.speed + ' from Celie Delivery to ' + x.address).join('; ');
+
+        return (
+            <OptionWrapper style={{ paddingLeft: 24, marginBottom: 12 }}>
+                <FieldHeader title={"Delivery:"} price={"$12.01"} />
+                <FieldTitle title={"Delivery: "} selected={addressDisplay} />
+                <Row gutter={8}>
+                    <Col className="gutter-row"  xs={24} sm={24} md={12} lg={16} xl={16} >
+                        <DeliveryOptionSelected type='address' deliverySelected={this.state.deliveryOptionSelect} selectItems={this.state.newAddress.address ? this.state.newAddress.address : []} handleDeliveryOptionChange={this.handleDeliveryOptionChange} />
+                    </Col>
+
+                    <Col className="gutter-row "  xs={24} sm={24} md={12} lg={8} xl={8} >
+                        <Button className="fullWidth" onClick={this.handleAddDeliveryOption} >Add New Address</Button>
+                    </Col>
+                </Row>
+
+                <Row gutter={8}>
+                    <Col className="gutter-row"  xs={24} sm={24} md={12} lg={16} xl={16} >
+                        <DeliveryOptionSelected type='speed' deliverySelected={this.state.deliveryOptionSelect} selectItems={this.state.newAddress.speed ? this.state.newAddress.speed : []} handleDeliveryOptionChange={this.handleDeliveryOptionChange} />
+                    </Col>
+                </Row>
+
+                <Row gutter={8}>
+                    <Col className="gutter-row"  xs={24} sm={24} md={12} lg={16} xl={16} >
+                        <DeliveryOptionSelected deliverySelected={this.state.deliveryOptionSelect} selectItems={this.state.newAddress.service ? this.state.newAddress.service : []} handleDeliveryOptionChange={this.handleDeliveryOptionChange} />
+                    </Col>
+                </Row>
+           </OptionWrapper>
+        )
+    }
+}
 
 const bookingOptions = (
     <OptionWrapper style={{ paddingLeft: 24, marginBottom: 12  }}>
@@ -189,54 +350,7 @@ const bookingOptions = (
     </OptionWrapper>
   );
 
-  const deliveryOptions = (
-    <OptionWrapper style={{ paddingLeft: 24, marginBottom: 12 }}>
-    <FieldHeader title={"Delivery:"} price={"$12.01"} />
-            <FieldTitle title={"Delivry: "} selected="Fast from Celie Delivery to 1256 NW 849 Street, Miami, FL" />
-            <Row gutter={8}>
-                <Col className="gutter-row"  xs={24} sm={24} md={12} lg={16} xl={16} >
-                <Select
-                    mode="multiple"
-                    style={{ width: '100%' }}
-                    placeholder="Select an Address"
-                    defaultValue={['a10', 'c12']}
-                    onChange={handlePurchasingForChange}
-                >
-                    {dependentSelected}
-                </Select>
-                </Col>
-                <Col className="gutter-row "  xs={24} sm={24} md={12} lg={8} xl={8} >
-                    <Button className="fullWidth" >Add New Address</Button>
-                </Col>
-            </Row>
-            <Row gutter={8}>
-                <Col className="gutter-row"  xs={24} sm={24} md={12} lg={16} xl={16} >
-                <Select
-                    mode="multiple"
-                    style={{ width: '100%' }}
-                    placeholder="Delivery Speed"
-                    defaultValue={['Fast']}
-                    onChange={handlePurchasingForChange}
-                >
-                    {dependentSelected}
-                </Select>
-                </Col>
-            </Row>
-            <Row gutter={8}>
-                <Col className="gutter-row"  xs={24} sm={24} md={12} lg={16} xl={16} >
-                <Select
-                    mode="multiple"
-                    style={{ width: '100%' }}
-                    placeholder="Delivery Service"
-                    defaultValue={['Fast']}
-                    onChange={handlePurchasingForChange}
-                >
-                    {dependentSelected}
-                </Select>
-                </Col>
-            </Row>
-    </OptionWrapper>
-  );
+
 
   class RadioSelected extends React.Component {
     state = {
@@ -510,12 +624,20 @@ function onCarouselChange(a, b, c) {
 
 
 class ProductCard extends Component {
-    state = { visible: false }
+    state = {
+        visible: false,
+        purchasingFor: [
+            { id: 'a10', name: 'a10' },
+            { id: 'b11', name: 'b11' }
+        ]
+    }
+
     showModal = () => {
       this.setState({
         visible: true,
       });
     }
+
     handleOk = (e) => {
       console.log(e);
       this.setState({
@@ -528,6 +650,11 @@ class ProductCard extends Component {
         visible: false,
       });
     }
+
+    handleUpdateState = (newStateObject) => {
+        this.setState(newStateObject)
+    }
+
   render() {
     return (
         <div>
@@ -567,8 +694,8 @@ class ProductCard extends Component {
             <ProductDescription />
           </Panel>
           <Panel header="Select Options" disabled  key="2">
-            {PurchasingForOption}
-            {deliveryOptions}
+            <PurchasingForOption purchasingFor={this.state.purchasingFor} handleUpdateState={this.handleUpdateState} />
+            <DeliveryOptions />
             {bookingOptions}
             <RangeOptions title="Age Range:" totalPrice="12.01" />
             <RangeOptions title="Date Range:" totalPrice="12.01" />
